@@ -1,6 +1,7 @@
 
 from game import Game
 
+
 main_game = Game()
 
 while True:

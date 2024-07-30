@@ -1,8 +1,12 @@
 
 import random
+import utility as uti 
+
 from colorama import Fore
-RESET = Fore.RESET 
 from objects import GameObject, ObjectCategory
+
+RESET = Fore.RESET 
+
 
 class Grass(GameObject):
     
@@ -13,7 +17,7 @@ class Grass(GameObject):
 class Rock(GameObject):
 
     def __init__(self, position = []) -> None:
-        super().__init__( Fore.LIGHTBLACK_EX + "()" + RESET, position, ObjectCategory.ENVIORMENT, True)
+        super().__init__( Fore.LIGHTBLACK_EX + uti.bold("()") + RESET, position, ObjectCategory.ENVIORMENT, True)
     
     def __str__(self) -> str:
         return super().__str__()
