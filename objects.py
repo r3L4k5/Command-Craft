@@ -8,12 +8,12 @@ class ObjectCategory(Enum):
 
 
 class GameObject():
-    def __init__(self, sprite: str, position: list[int], category: ObjectCategory, collision: bool = False) -> None:
+    def __init__(self, sprite: str, pos: list[int], category: ObjectCategory, collision: bool = False) -> None:
         
         self.sprite = sprite
         self.category = category
         self.collision = collision
-        self.position = position
+        self.pos = pos
     
     def __str__(self) -> str:
         return self.sprite

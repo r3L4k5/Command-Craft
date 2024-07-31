@@ -7,43 +7,48 @@ player = Player()
 
 
 class Game():
+
+    game_map = [[],[],[],[],[],[],[],[],[],[],
+                [],[],[],[],[],[],[],[],[],[]]
     
-    def __init__(game) -> None:
+    game_hud = ["100"]
+
+    env.fill_map(game_map)
+
+    player.spawn([0,5], game_map)
+    
+    def __init__(self_game) -> None:
         
-        game.hud = ["100"]
+        self_game.hud = ["100"]
         
-        game.map = [[],[],[],[],[],[],[],[],[],[],
-                    [],[],[],[],[],[],[],[],[],[]]
+        self_game.map = 
               
-        env.fill_map(game.map)
         
-        player.position = [0,10]
-        game.map[0][10] = player
+        
+        
+        
 
-
-    def display_hud(game):
-        print(f"\n{game.hud[0]:>40}")
+    def display_hud(self_game):
+        print(f"\n{self_game.hud[0]:>40}")
 
     
-    def display_map(game):
+    def display_map(self_game):
         
-        for row in game.map:
+        for row in self_game.map:
             print()
             
             for tile in row:
                 print(str(tile), end="")
     
 
-    def update_game(game):
+    def update_game(self_game):
         uti.cls()
         
-        game.display_hud()
+        self_game.display_hud()
 
-        game.display_map()
+        self_game.display_map()
        
-        inp = input()
+        player.input_handler(self_game.map)
 
-        if inp == "s":
-            player.movement("down", game.map)
 
 

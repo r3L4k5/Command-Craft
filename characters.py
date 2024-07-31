@@ -1,6 +1,7 @@
 
 from enviorment import Grass
 
+
 class Stats():
     def __init__(self, health = 100, strength = 1, speed = 1) -> None:
         
@@ -11,49 +12,51 @@ class Stats():
 
 class Character():
     
-    def __init__(self, direction: list[int] = [], stats = Stats()) -> None:
+    def __init__(self, step: list[int] = [], stats = Stats()) -> None:
         
         self.stats = stats
-        self.direction = direction
+        self.step = step
         self.floor = Grass()
     
 
-    def will_collide(target_pos, map):
+    def will_collide(self, map):
+        try:
+            if map[self.pos[0] + self.step[0]][self.pos[1] + self.step[1]].collision == False:
+                return False
+            
+            else:
+                return True
         
-        if map[target_pos[0]][target_pos[1]].collision == False:
-            return False
-        
-        else:
+        except:
             return True
         
 
     def movement(self, direction, map):
         
-        destination = self.position
+        self.step = [0,0]
         
         match direction:
             
-            case "up":
-                destination[0] -= 1
+            case "w":
+                self.step[0] -= 1
             
-            case "down":
-                destination[0] += 1
+            case "s":
+                self.step[0] += 1
             
-            case "right":
-                destination[1] += 1
+            case "d":
+                self.step[1] += 1
             
-            case "left":
-                destination[1] -= 1
+            case "a":
+                self.step[1] -= 1
 
-        if not Character.will_collide(destination, map):
+        if not Character.will_collide(self, map):
+
+            map[self.pos[0]][self.pos[1]] = self.floor
+
+            self.pos[0] += self.step[0]
+            self.pos[1] += self.step[1]
             
-            map[self.position[0]][self.position[1]] = self.floor
-    
-            self.floor = map[destination[0]][destination[1]]
-            
-            self.position = destination
-            
-            map[destination[0]][destination[1]] = self
+            map[self.pos[0]][self.pos[1]] = self
         
         else:
             print("Can't")
@@ -61,15 +64,15 @@ class Character():
         return map
 
 
-    """def spawn(self, spawn_point, map):
+    def spawn(self, spawn_point, map):
         
         if map[spawn_point[0]][spawn_point[1]].collision == False:
             
-            self.position = spawn_point
+            self.pos = spawn_point
             map[spawn_point[0]][spawn_point[1]] = self
         
         else:
-            print("Can't")"""
+            print("Can't")
 
 
 
