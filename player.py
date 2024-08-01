@@ -4,18 +4,22 @@ from objects import GameObject, ObjectCategory
 
 
 controls = {
-    "movement": ["w", "s", "a", "d"]
+    "movement": ["w", "s", "a", "d"],
+    "interact": "e"
 }
 
 
 class Player(GameObject, Character):
     
-    def __init__(self) -> None:
+    def __init__(self, world) -> None:
         
-        super().__init__(" i", [], ObjectCategory.PLAYER)
+        super().__init__(" i", 0, 10, ObjectCategory.PLAYER)
         Character.__init__(self, stats= Stats())
+
+        world[self.y][self.x] = self
     
-    def input_handler(self, map):
+
+    def input_handler(self, world):
 
         player_input = list(input(" \n\n  Input controll: "))
 
@@ -23,7 +27,11 @@ class Player(GameObject, Character):
             
             if inputs in controls["movement"]:
             
-                self.movement(inputs, map)
+                self.movement(inputs, world)
+            
+            elif inputs in controls["interact"]:
+                pass
+
         
     
         

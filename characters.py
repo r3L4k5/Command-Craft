@@ -19,60 +19,54 @@ class Character():
         self.floor = Grass()
     
 
-    def will_collide(self, map):
+    def will_collide(self, step, world):
+        
         try:
-            if map[self.pos[0] + self.step[0]][self.pos[1] + self.step[1]].collision == False:
+            if world[self.y + step[0]][self.x + step[1]].collision == False:
                 return False
             
             else:
                 return True
         
-        except:
+        except IndexError:
             return True
         
 
-    def movement(self, direction, map):
+    def movement(self, direction, world):
         
-        self.step = [0,0]
+        step = [0,0]
         
         match direction:
             
             case "w":
-                self.step[0] -= 1
+                step[0] -= 1
             
             case "s":
-                self.step[0] += 1
+                step[0] += 1
             
             case "d":
-                self.step[1] += 1
+                step[1] += 1
             
             case "a":
-                self.step[1] -= 1
+                step[1] -= 1
 
-        if not Character.will_collide(self, map):
+        if not Character.will_collide(self, step, world):
+        
+            world[self.y][self.x] = self.floor
 
-            map[self.pos[0]][self.pos[1]] = self.floor
-
-            self.pos[0] += self.step[0]
-            self.pos[1] += self.step[1]
+            self.y += step[0]
+            self.x += step[1]
             
-            map[self.pos[0]][self.pos[1]] = self
+            self.floor = world[self.y][self.x]
+            
+            world[self.y][self.x] = self
         
         else:
             print("Can't")
         
-        return map
+        return world
 
 
-    def spawn(self, spawn_point, map):
-        
-        if map[spawn_point[0]][spawn_point[1]].collision == False:
-            
-            self.pos = spawn_point
-            map[spawn_point[0]][spawn_point[1]] = self
-        
-        else:
-            print("Can't")
 
 
 

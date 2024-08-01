@@ -3,52 +3,43 @@ import enviorment as env
 import utility as uti
 from player import Player
 
-player = Player()
-
 
 class Game():
 
-    game_map = [[],[],[],[],[],[],[],[],[],[],
-                [],[],[],[],[],[],[],[],[],[]]
-    
-    game_hud = ["100"]
-
-    env.fill_map(game_map)
-
-    player.spawn([0,5], game_map)
-    
-    def __init__(self_game) -> None:
+    def __init__(game) -> None:
         
-        self_game.hud = ["100"]
+        game.hud = ["100"]
         
-        self_game.map = 
+        game.world = [[],[],[],[],[],[],[],[],[],[],
+                    [],[],[],[],[],[],[],[],[],[]]
+        
+        env.fill_world(game.world)
+        
+        game.player = Player(game.world)
               
         
+    def display_hud(game):
         
-        
-        
-
-    def display_hud(self_game):
-        print(f"\n{self_game.hud[0]:>40}")
+        print(f"{game.hud[0]:>40}")
 
     
-    def display_map(self_game):
+    def display_world(game):
         
-        for row in self_game.map:
+        for row in game.world:
             print()
             
             for tile in row:
                 print(str(tile), end="")
     
 
-    def update_game(self_game):
+    def update_game(game):
         uti.cls()
         
-        self_game.display_hud()
+        game.display_hud()
 
-        self_game.display_map()
+        game.display_world()
        
-        player.input_handler(self_game.map)
+        game.player.input_handler(game.world)
 
 
 
