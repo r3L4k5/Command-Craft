@@ -1,7 +1,10 @@
 
 from enviorment import Grass
 
+
+
 class Stats():
+    
     def __init__(self, health = 100, strength = 1, speed = 1) -> None:
         
         self.health = health
@@ -14,17 +17,9 @@ class Character():
     def __init__(self, stats = Stats()) -> None:
         
         self.stats = stats
-
         self.facing = 'w'
         self.ground = Grass()
-    
-    
-    def __del__(self, world) -> None:
-    
-        world[self.y][self.x] = self.ground
         
-        del self
-    
 
     def direction_calc(self, direction, distance: int = 1):
         
@@ -75,7 +70,6 @@ class Character():
             
             world[self.y][self.x] = self
         
-        return world
 
 
 

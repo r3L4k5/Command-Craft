@@ -1,8 +1,10 @@
 
 import utility as uti
+
 from character_class import Character, Stats
 from object_class import GameObject, ObjectCategory
 from resource_class import Harvestable
+
 
 
 controls = {
@@ -22,7 +24,7 @@ navigation = {
 
 class Player(GameObject, Character):
     
-    def __init__(self, world = None) -> None:
+    def __init__(self, world) -> None:
         
         super().__init__(" i", 0, 10, ObjectCategory.PLAYER)
         Character.__init__(self, stats= Stats())
@@ -35,7 +37,7 @@ class Player(GameObject, Character):
     
     def display_hud(self):
         
-        print(f" Facing: {navigation[self.facing]} {"Health: ":>42}{self.stats.health}")
+        print(f" {uti.bold("Facing: ")}{navigation[self.facing]} {uti.bold("Health: "):>50}{self.stats.health}")
     
     
     def open_inventory(self):
@@ -44,10 +46,10 @@ class Player(GameObject, Character):
         print(uti.bold("Inventory: "), end="\n\n")
 
         for slot in self.inventory:
-            print(f"    {slot["item"].sprite} {slot["item"].name} x {slot["amount"]}")
-            print("    ----------------------")
+            print(f"    {slot["item"].sprite} {slot["item"].name} x {slot["amount"]}", end="\n\n")
+            #print("    ----------------------")
         
-        if input("\n'e' to exit: ") == 'e':
+        if input("'e' to exit: ") == 'e':
             return
         
         uti.cls()
@@ -64,14 +66,14 @@ class Player(GameObject, Character):
 
         if isinstance(interact_object, Harvestable):
             
-            interact_object.harvest(self.inventory, world)
+            interact_object.harvest(self, world)
     
     
     def input_handler(self, world):
         
         if len(self.input_queue) == 0:
             
-            incoming_input = list(input(" \n\n Action: ").strip())
+            incoming_input = list(input(" Action: ").strip())
             
             self.input_queue.extend(incoming_input)
             

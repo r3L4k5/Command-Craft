@@ -1,8 +1,9 @@
 
-import enviorment as env
-import utility as uti
-from player import Player
 
+import utility as uti
+
+from player_class import Player
+from time import sleep
 
 class Game():
 
@@ -15,6 +16,7 @@ class Game():
         
         game.outside = []
         
+        import enviorment as env
         env.fill_world(game.world)
         
         game.player = Player(game.world)
@@ -27,18 +29,17 @@ class Game():
             
             for tile in row:
                 print(tile.sprite, end="")
+        
+        print("\n")
     
-
+    
     def update_game(game):
         
         game.player.display_hud()
 
         game.display_world()
-       
+
+        sleep(0.05)
+        
         game.player.input_handler(game.world)
-
-
-
-
-
 
