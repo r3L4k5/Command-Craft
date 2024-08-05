@@ -4,7 +4,6 @@ from enum import Enum, auto
 
 def enviorment_import():
     import enviorment
-
     return enviorment
 
 
@@ -17,15 +16,22 @@ class ObjectCategory(Enum):
 
 class GameObject():
     
-    def __init__(self, sprite: str, y: int, x: int,  category: ObjectCategory, collision: bool = False) -> None:
+    def __init__(self, sprite: str, y: int, x: int, collision: bool = True) -> None:
         
         self.sprite = sprite
-        self.category = category
         self.collision = collision
+        
+        self.ground = enviorment_import().Grass()
         
         self.y = y
         self.x = x
     
+    def delete(self, world):
+        
+        world[self.y][self.x] = self.ground
+
+        del self
+
     
     
 

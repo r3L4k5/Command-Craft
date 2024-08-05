@@ -1,17 +1,16 @@
 
 import utility as uti
 
-from character_class import Character, Stats
-from object_class import GameObject, ObjectCategory
-from resource_class import Harvestable
-
+from Classes.character_class import Character, Stats
+from Classes.object_class import GameObject
+from Classes.resource_class import Harvestable
+from enviorment import Grass
 
 
 controls = {
     "movement": ['w', 's', 'a', 'd'],
     "inventory": 'q',
-    "interact": 'e',
-    "change_facing": 'c'
+    "interact": 'e'
 }
 
 navigation = {
@@ -26,7 +25,7 @@ class Player(GameObject, Character):
     
     def __init__(self, world) -> None:
         
-        super().__init__(" i", 0, 10, ObjectCategory.PLAYER)
+        super().__init__(" i", 0, 10)
         Character.__init__(self, stats= Stats())
 
         self.input_queue = []
@@ -37,20 +36,44 @@ class Player(GameObject, Character):
     
     def display_hud(self):
         
-        print(f" {uti.bold("Facing: ")}{navigation[self.facing]} {uti.bold("Health: "):>50}{self.stats.health}")
-    
-    
+        print(f" {uti.bold("Facing: ")}{navigation[self.facing]}", end="")
+        
+        print(f"{uti.bold("Health: "):>50}{self.stats.health}", end="\n")
+
+
+    def craft(self):
+        crafting_space = [[],[],[],[]]
+        
+        while True:
+            print(f"\n{crafting_space[0]}{crafting_space[1]}{"\n"}{crafting_space[2]}{crafting_space[3]}", end="\n\n")
+       
+
+            input()
+        
+
     def open_inventory(self):
         uti.cls()
         
         print(uti.bold("Inventory: "), end="\n\n")
 
+        index = 1
         for slot in self.inventory:
-            print(f"    {slot["item"].sprite} {slot["item"].name} x {slot["amount"]}", end="\n\n")
-            #print("    ----------------------")
+            print(f"    {slot["item"].sprite} {slot["item"].name} x {slot["amount"]}", end="  ")
+
+            if index % 4 == 0:
+                print("\n")
+            
+            index += 1
         
-        if input("'e' to exit: ") == 'e':
-            return
+        action = input("\n\n'e' to exit\n'c' to craft: ")
+        
+        match action:
+            
+            case "e":
+                return
+            
+            case "c":
+                self.craft()
         
         uti.cls()
 
@@ -59,13 +82,17 @@ class Player(GameObject, Character):
         
         step = self.direction_calc(self.facing)
 
-        interact_object = world[self.y + step[0]][self.x + step[1]]
+        try:
+            interact_object = world[self.y + step[0]][self.x + step[1]]
+        
+        except IndexError:
+            return
 
         if interact_object.collision == False:
             return
 
         if isinstance(interact_object, Harvestable):
-            
+            self.ground = Grass()
             interact_object.harvest(self, world)
     
     

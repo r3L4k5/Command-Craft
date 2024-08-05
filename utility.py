@@ -10,7 +10,7 @@ cls = lambda: (os.system("cls"), print("\n")) #Named after powershell command; c
 bold = lambda bold_txt: f"\033[1m{bold_txt}\033[0m" #Turns input text bold
 
 
-def clamp(value, max = None, min = None):
+def clamp(value, max = 0, min = None):
     
     if max is not None and value > max:
         value = max

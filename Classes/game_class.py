@@ -1,8 +1,6 @@
 
 
-import utility as uti
-
-from player_class import Player
+from Classes.player_class import Player
 from time import sleep
 
 class Game():
@@ -19,7 +17,8 @@ class Game():
         import enviorment as env
         env.fill_world(game.world)
         
-        game.player = Player(game.world)
+        global player
+        player = Player(game.world)
               
 
     def display_world(game):
@@ -35,11 +34,11 @@ class Game():
     
     def update_game(game):
         
-        game.player.display_hud()
+        player.display_hud()
 
         game.display_world()
 
         sleep(0.05)
         
-        game.player.input_handler(game.world)
+        player.input_handler(game.world)
 

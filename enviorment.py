@@ -1,49 +1,56 @@
 
 import random
-import resource_class as res
+import Classes.resource_class as res
 
 from termcolor import colored
-from object_class import GameObject, ObjectCategory
+from Classes.object_class import GameObject
 
-
-
-
-class Grass(GameObject):
+class Grass():
     
-    def __init__(self, y: int = 0, x: int = 0) -> None:
-        super().__init__(colored(" ;", "light_green"), y, x, ObjectCategory.ENVIORMENT)
+    def __init__(self) -> None:
 
-
+        self.sprite = colored(" ;", "light_green")
+        self.collision = False
+        
+    
 class Rock(GameObject, res.Harvestable):
 
     def __init__(self, y: int = 0, x: int = 0) -> None:
         
-        super().__init__(colored("()", "dark_grey", attrs=["bold"]), y, x, ObjectCategory.ENVIORMENT, True)
+        super().__init__(colored("()", "dark_grey", attrs=["bold"]), y, x)
         
-        res.Harvestable.__init__(self, res.Stone(), Grass(), 7)
+        res.Harvestable.__init__(self, res.Stone(), 7)
     
 
 class Tree(GameObject, res.Harvestable):
     
-    def __init__(self, y: int = 0, x: int = 0, world = None) -> None:
+    def __init__(self, y: int = 0, x: int = 0,) -> None:
             
-        super().__init__(colored("||", "red", attrs=["bold", "dark"]), y, x, ObjectCategory.ENVIORMENT, True)
+        super().__init__(colored("||", "red", attrs=["bold", "dark"]), y, x)
         
-        res.Harvestable.__init__(self, res.Wood(), Grass(), 3)
+        res.Harvestable.__init__(self, res.Wood(), 3)
 
-        self.leaves = world[self.y - 1][self.x]
     
+    def delete(self, world):
         
+        super().delete(world)
+        
+        if isinstance(world[self.y - 1][self.x], Leaves):
+            
+            world[self.y - 1][self.x].delete(world)
+
+
 class Leaves(GameObject):
     
-    def __init__(self, y: int, x: int, world = None) -> None:
+    def __init__(self, y: int, x: int, world = None, dont = True) -> None:
         
-        super().__init__(colored("  ", on_color= "on_green", attrs=["bold"]), y, x, ObjectCategory.ENVIORMENT)
+        super().__init__(colored("  ", on_color= "on_green", attrs=["bold"]), y, x, False)
 
         world[self.y][self.x] = self
 
 
 def random_enviorment(y, x, world):
+    
     probability = random.randint(1, 100)
     
     if probability == 1 : 
@@ -53,10 +60,9 @@ def random_enviorment(y, x, world):
         
         Leaves(y - 1, x, world)
         
-        return Tree(y, x, world)
+        return Tree(y, x)
     
-    else:
-        return Grass(y, x)
+    return Grass()
 
 
 def fill_world(world):

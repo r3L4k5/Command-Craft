@@ -5,31 +5,25 @@ from termcolor import colored
 class Wood():
     
     def __init__(self):
+        
         self.sprite = colored("||", "red", attrs=["bold", "dark"])
         self.name = "Wood"
     
-    def __str__(self) -> str:
-        return self.name
 
 class Stone():
     
     def __init__(self):
+        
         self.sprite = colored("()", "dark_grey", attrs=["bold"])
         self.name = "Stone"
         
     
-    def __str__(self) -> str:
-        return self.name
-    
-
 class Harvestable():
     
-    def __init__(self, resource: object, ground, hitpoints: int ):
+    def __init__(self, resource: object, hitpoints: int ):
         
         self.hitpoints = hitpoints
         self.resource = resource
-        self.ground = ground
-    
 
     def harvest(self, player, world):
         
@@ -40,20 +34,23 @@ class Harvestable():
             
             return
 
-        duplicates = [slot for slot in player.inventory if str(slot["item"]) == self.resource.name ]
-
-        if len(duplicates) == 0:
+        for slot in player.inventory:
             
-            inventory_slot = {"item": self.resource, "amount": 1}
-            player.inventory.append(inventory_slot)
+            if self.resource.name == slot["item"].name and slot["amount"] < 20:
+                
+                slot["amount"] += 1
+                self.delete(world)
+                
+                return
+
+        new_inventory_slot = {"item": self.resource, "amount": 1}
+        player.inventory.append(new_inventory_slot)
+
+        self.delete(world)
+            
         
-        else:
-            duplicates[0]["amount"] += 1
         
-        
-        world[self.y][self.x] = self.ground
-        
-        del self
+       
 
     
 
