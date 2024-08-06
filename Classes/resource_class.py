@@ -29,7 +29,7 @@ class Harvestable():
         
         if self.hitpoints > 1:
             
-            self.hitpoints -= player.stats.strength
+            self.hitpoints -= player.strength
             print(self.hitpoints)
             
             return

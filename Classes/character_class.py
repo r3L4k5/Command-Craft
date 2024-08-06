@@ -10,11 +10,14 @@ class Stats():
 
 class Character():
     
-    def __init__(self, stats = Stats()) -> None:
+    def __init__(self, health: int = 100, strength: int = 1, speed: int = 1) -> None:
         
-        self.stats = stats
-        self.facing = 'w'
+        self. health = health
+        self.strength = strength 
+        self.speed = speed
         
+        self.facing = 'w'   
+
 
     def direction_calc(self, direction, distance: int = 1):
         

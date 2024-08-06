@@ -38,7 +38,7 @@ class Game():
 
         game.display_world()
 
-        sleep(0.05)
+        sleep(0.07)
         
         player.input_handler(game.world)
 

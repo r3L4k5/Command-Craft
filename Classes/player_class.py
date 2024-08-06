@@ -26,7 +26,7 @@ class Player(GameObject, Character):
     def __init__(self, world) -> None:
         
         super().__init__(" i", 0, 10)
-        Character.__init__(self, stats= Stats())
+        Character.__init__(self)
 
         self.input_queue = []
         self.inventory = []
@@ -38,42 +38,67 @@ class Player(GameObject, Character):
         
         print(f" {uti.bold("Facing: ")}{navigation[self.facing]}", end="")
         
-        print(f"{uti.bold("Health: "):>50}{self.stats.health}", end="\n")
+        print(f"{uti.bold("Health: "):>50}{self.health}")
 
 
-    def craft(self):
-        crafting_space = [[],[],[],[]]
+    def craft(self, action, crafting_space):
         
-        while True:
-            print(f"\n{crafting_space[0]}{crafting_space[1]}{"\n"}{crafting_space[2]}{crafting_space[3]}", end="\n\n")
+        specifications = action.split("-")
+
+        print(specifications)
+        matching_resource = list(filter(lambda slot: slot["item"].name == specifications[1], self.inventory))
+        print(matching_resource)
+
+        if len(matching_resource) == 0:
+            print("none")
+
+        for resource in matching_resource:
+
+            if resource["amount"] > int(specifications[2]):
+                resource["amount"] - int(specifications[2])
+                print("W")
+                break
+            
+            else:
+                int(specifications[2]) - resource["amount"]
+                self.inventory.remove[matching_resource]
+                print("Del")
+
+        
+
+        #print(crafting_space[int(specifications[0])- 1])
+
+        input()
+        
        
-
-            input()
-        
-
     def open_inventory(self):
         uti.cls()
         
         print(uti.bold("Inventory: "), end="\n\n")
 
-        index = 1
-        for slot in self.inventory:
-            print(f"    {slot["item"].sprite} {slot["item"].name} x {slot["amount"]}", end="  ")
+        crafting_space = [[ 1 ],[ 2 ],[ 3 ],[ 4 ]]
 
-            if index % 4 == 0:
-                print("\n")
+        while True:
             
-            index += 1
+            print(f"\n{crafting_space[0]}{crafting_space[1]}{"\n"}{crafting_space[2]}{crafting_space[3]}", end="\n\n")
+
+            index = 1
+            
+            for slot in self.inventory:
+                
+                print(f"  {slot["item"].sprite} {slot["item"].name} x {slot["amount"]}", end=" ")
+
+                if index % 4 == 0: print("\n")
+                
+                index += 1
+            
+
+            action = input("\n\nAction: ")
+            
+            if action == 'e': break
+            
+            self.craft(action, crafting_space)
         
-        action = input("\n\n'e' to exit\n'c' to craft: ")
-        
-        match action:
-            
-            case "e":
-                return
-            
-            case "c":
-                self.craft()
         
         uti.cls()
 
@@ -101,30 +126,31 @@ class Player(GameObject, Character):
         if len(self.input_queue) == 0:
             
             incoming_input = list(input(" Action: ").strip())
+
+            if len(incoming_input) == 0:
+                return
             
             self.input_queue.extend(incoming_input)
             
 
-        if len(self.input_queue) != 0:
+        if self.input_queue[0] in controls["movement"]:
+            
+            self.facing = self.input_queue[0]
+            
+            self.movement(self.input_queue[0], world)
         
-            if self.input_queue[0] in controls["movement"]:
-                
-                self.facing = self.input_queue[0]
-                
-                self.movement(self.input_queue[0], world)
+        elif self.input_queue[0] == controls["interact"]:
             
-            elif self.input_queue[0] == controls["interact"]:
-                
-                self.interact(world)
+            self.interact(world)
+        
+        elif self.input_queue[0] == controls["inventory"]:
             
-            elif self.input_queue[0] == controls["inventory"]:
-                
-                self.open_inventory()
-            
-            else:
-                pass
+            self.open_inventory()
+        
+        else:
+            pass
 
-            self.input_queue.pop(0)
+        self.input_queue.pop(0)
         
 
 
