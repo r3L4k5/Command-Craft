@@ -25,11 +25,13 @@ class GameObject():
         
         self.y = y
         self.x = x
+
+    def __str__(self) -> str:
+        return f"{self.sprite}"
     
     def delete(self, world):
         
         world[self.y][self.x] = self.ground
-
         del self
 
     

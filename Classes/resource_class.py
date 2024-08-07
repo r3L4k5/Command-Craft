@@ -2,22 +2,35 @@
 from termcolor import colored
 
 
-class Wood():
+class Resource():
     
-    def __init__(self):
+    def __init__(self, name: str, sprite:  str):
         
-        self.sprite = colored("||", "red", attrs=["bold", "dark"])
-        self.name = "Wood"
+        self.name: str = name
+        self.sprite: str = sprite
+        self.amount: int = 1
     
+    def __str__(self) -> str:
+        return self.sprite
 
-class Stone():
+class Wood(Resource):
     
     def __init__(self):
-        
-        self.sprite = colored("()", "dark_grey", attrs=["bold"])
-        self.name = "Stone"
-        
+        super().__init__("Wood", colored("||", "red", attrs=["bold", "dark"]))
+
+class Stone(Resource):
     
+    def __init__(self):
+        super().__init__("Stone", colored("()", "dark_grey", attrs=["bold"]))
+
+
+resource_dict = {
+    
+    "Wood": Wood(),
+    "Stone": Stone(),
+}
+
+            
 class Harvestable():
     
     def __init__(self, resource: object, hitpoints: int ):
@@ -34,19 +47,19 @@ class Harvestable():
             
             return
 
-        for slot in player.inventory:
+        for item in player.inventory:
             
-            if self.resource.name == slot["item"].name and slot["amount"] < 20:
+            if self.resource.name == item.name and item.amount < 2:
                 
-                slot["amount"] += 1
+                item.amount += 1
                 self.delete(world)
                 
                 return
 
-        new_inventory_slot = {"item": self.resource, "amount": 1}
-        player.inventory.append(new_inventory_slot)
-
+        player.inventory.append(self.resource)
         self.delete(world)
+
+        
             
         
         

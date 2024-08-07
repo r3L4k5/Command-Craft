@@ -1,10 +1,12 @@
 
 import utility as uti
+import Classes.resource_class as res
 
-from Classes.character_class import Character, Stats
+from Classes.character_class import Character
 from Classes.object_class import GameObject
 from Classes.resource_class import Harvestable
 from enviorment import Grass
+
 
 
 controls = {
@@ -19,6 +21,8 @@ navigation = {
     'a': "West",
     'd': "East"
 }
+
+crafting_space = [[' 1 ',""], [' 2 ', ""], [' 3 ',""], [' 4 ',""]]
 
 
 class Player(GameObject, Character):
@@ -41,64 +45,74 @@ class Player(GameObject, Character):
         print(f"{uti.bold("Health: "):>50}{self.health}")
 
 
-    def craft(self, action, crafting_space):
+    def select_items(self, action, crafting_space):
+         
+        action = action.split("-")
         
-        specifications = action.split("-")
+        details = {"Place": int(action[0]) - 1, 
+                
+                "Resource": action[1].capitalize(), 
 
-        print(specifications)
-        matching_resource = list(filter(lambda slot: slot["item"].name == specifications[1], self.inventory))
-        print(matching_resource)
+                "Amount": int(action[2])}
+    
 
-        if len(matching_resource) == 0:
-            print("none")
+        matching_resource = list(filter(lambda item: item.name == details["Resource"], self.inventory))
+
+        if len(matching_resource) == 0: self.open_inventory()
+
+        if crafting_space[details["Place"]][0] == res.resource_dict[details["Resource"]].sprite:
+            
+            crafting_space[details["Place"]][1] += details["Amount"]
+        
+        else:
+
+            crafting_space[details["Place"]][0] = res.resource_dict[details["Resource"]].sprite
+            crafting_space[details["Place"]][1] = details["Amount"]
+
 
         for resource in matching_resource:
 
-            if resource["amount"] > int(specifications[2]):
-                resource["amount"] - int(specifications[2])
-                print("W")
-                break
+            if resource.amount > details["Amount"]:
+                resource.amount -= details["Amount"]
             
             else:
-                int(specifications[2]) - resource["amount"]
-                self.inventory.remove[matching_resource]
-                print("Del")
+                details["Amount"] -= resource.amount
+                self.inventory.remove(resource)
 
-        
+        self.open_inventory()
 
-        #print(crafting_space[int(specifications[0])- 1])
 
-        input()
-        
-       
     def open_inventory(self):
+        
         uti.cls()
         
         print(uti.bold("Inventory: "), end="\n\n")
 
-        crafting_space = [[ 1 ],[ 2 ],[ 3 ],[ 4 ]]
-
         while True:
-            
-            print(f"\n{crafting_space[0]}{crafting_space[1]}{"\n"}{crafting_space[2]}{crafting_space[3]}", end="\n\n")
 
-            index = 1
-            
-            for slot in self.inventory:
+            for index, item in enumerate(crafting_space, 1):
                 
-                print(f"  {slot["item"].sprite} {slot["item"].name} x {slot["amount"]}", end=" ")
-
-                if index % 4 == 0: print("\n")
+                print("[", item[0], item[1], "]" , end="")
                 
-                index += 1
+                if index == 2: 
+                    print()
             
+            print("\n")
 
+            for index, item in enumerate(self.inventory, 1):
+                
+                print(f"  {item.sprite} {item.name} x {item.amount}", end=" ")
+                
+                if index % 4 == 0: 
+                    print("\n")
+    
+            
             action = input("\n\nAction: ")
             
-            if action == 'e': break
+            if action == 'e': 
+                break
             
-            self.craft(action, crafting_space)
-        
+            self.select_items(action, crafting_space)
         
         uti.cls()
 
@@ -117,12 +131,13 @@ class Player(GameObject, Character):
             return
 
         if isinstance(interact_object, Harvestable):
+            
             self.ground = Grass()
             interact_object.harvest(self, world)
     
     
     def input_handler(self, world):
-        
+    
         if len(self.input_queue) == 0:
             
             incoming_input = list(input(" Action: ").strip())

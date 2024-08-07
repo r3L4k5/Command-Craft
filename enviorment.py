@@ -42,7 +42,7 @@ class Tree(GameObject, res.Harvestable):
 
 class Leaves(GameObject):
     
-    def __init__(self, y: int, x: int, world = None, dont = True) -> None:
+    def __init__(self, y: int, x: int, world = None) -> None:
         
         super().__init__(colored("  ", on_color= "on_green", attrs=["bold"]), y, x, False)
 
