@@ -19,8 +19,11 @@ How to play:
 Controls:
 
   Up - 'w'
+  
   Down - 's'
+  
   Left - 'a'
+  
   Right - 'd'
 
   Interact - 'e'
