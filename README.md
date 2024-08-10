@@ -4,6 +4,7 @@ Set-up:
   
    - pip install termcolor
 
+
 How to play:
 
   Play by entering keys and then pressing enter in the terminal. 
@@ -15,6 +16,7 @@ How to play:
   
   To mine rocks or chop down trees you need to stand next to one and face the objects direction. Then enter 'e' and press enter. Trees and rocks do have hitpoints,
   so you'll need to use it multiple times. 
+
 
 Controls:
 
