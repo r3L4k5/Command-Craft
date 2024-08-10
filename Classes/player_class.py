@@ -40,35 +40,6 @@ class Player(GameObject, Character):
         
         print(f"{uti.bold("Health: "):>50}{self.health}")
 
-
-    def craft(self, action, crafting_space):
-        
-        specifications = action.split("-")
-
-        print(specifications)
-        matching_resource = list(filter(lambda slot: slot["item"].name == specifications[1], self.inventory))
-        print(matching_resource)
-
-        if len(matching_resource) == 0:
-            print("none")
-
-        for resource in matching_resource:
-
-            if resource["amount"] > int(specifications[2]):
-                resource["amount"] - int(specifications[2])
-                print("W")
-                break
-            
-            else:
-                int(specifications[2]) - resource["amount"]
-                self.inventory.remove[matching_resource]
-                print("Del")
-
-        
-
-        #print(crafting_space[int(specifications[0])- 1])
-
-        input()
         
        
     def open_inventory(self):
@@ -76,12 +47,9 @@ class Player(GameObject, Character):
         
         print(uti.bold("Inventory: "), end="\n\n")
 
-        crafting_space = [[ 1 ],[ 2 ],[ 3 ],[ 4 ]]
 
         while True:
             
-            print(f"\n{crafting_space[0]}{crafting_space[1]}{"\n"}{crafting_space[2]}{crafting_space[3]}", end="\n\n")
-
             index = 1
             
             for slot in self.inventory:
@@ -96,8 +64,6 @@ class Player(GameObject, Character):
             action = input("\n\nAction: ")
             
             if action == 'e': break
-            
-            self.craft(action, crafting_space)
         
         
         uti.cls()
