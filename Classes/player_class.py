@@ -1,14 +1,13 @@
 
 import utility as uti
-
+import Classes.harvestable_class as har
 import Classes.resource_class as res
 
 from Classes.character_class import Character
 from Classes.object_class import GameObject
-
 from Classes.storage_class import Storage
-from enviorment import Grass
 
+from enviorment import Grass
 
 
 controls = {
@@ -17,21 +16,22 @@ controls = {
     "interact": 'e'
 }
 
-navigation = {
+facing_directions = {
     'w': "North",
     's': "South",
     'a': "West",
     'd': "East"
 }
 
-crafting_space = Storage(9, 10, "Crafting Space")
 
-for index, slot in enumerate(crafting_space.slots, 1): slot.item = "-" + str(index) + "-"
+crafting_space = Storage(9, 10, name= "Crafting Space")
 
+for index, slot in enumerate(crafting_space.slots, 1): slot.item = index 
+    
 
 class Player(GameObject, Character):
     
-    def __init__(self, world) -> None:
+    def __init__(self, world: list) -> None:
         
         super().__init__(" i", 0, 10)
         Character.__init__(self)
@@ -44,53 +44,62 @@ class Player(GameObject, Character):
     
     def display_hud(self):
         
-        print(f" {uti.bold("Facing: ")}{navigation[self.facing]}", end="")
+        print(f" {uti.bold("Facing: ")}{facing_directions[self.facing]}", end="")
         
         print(f"{uti.bold("Health: "):>50}{self.health}")
+
+
+    def craft():
+        pass
 
 
     def select_items(self, action: str, crafting_space: Storage):
          
         action = action.split("-")
         
-
         place =  int(action[0]) - 1     
-        
         resource = res.resource_dict[action[1].capitalize()]
+ 
+        amount: int = int(action[2])
+        total_amount: int = 0
 
+        for slot in self.inventory.slots:
+            
+            if type(slot.item) == type(resource):
+                print(slot.amount)
+                
+                total_amount += slot.amount
 
-        total_amount = [slot.amount for slot in self.inventory.slots if type(slot.item) == type(resource)]
-        
-        resource_amount = uti.clamp(int(action[2]), max= total_amount, min= 0 )
+        if total_amount <= 0:
+            return    
+
+        resource.amount = uti.clamp(amount, max= total_amount, min= 0)
+
+        crafting_space.add_item_specific(resource, place)
     
+        self.inventory.remove_item(resource, "-Empty-")
 
-        crafting_space.add_item_specific(res.resource_dict[resource](resource_amount), place)
-    
-        self.inventory.remove_item(res.resource_dict[resource](resource_amount), "-Empty-")
         
-        self.open_inventory()
-
-
     def open_inventory(self):
-        
+
         while True:
 
-            uti.cls()
+            uti.clear()
             
             print(uti.bold(self.inventory.name + ": "), end="\n\n")
-
+ 
             
             for index, slot in enumerate(crafting_space.slots, 1):
 
                 if slot.empty: 
-                    print(f"[{slot.item}]", end= " ")
+                    print(f"[-{slot.item}-]", end= "  ")
 
                 else:
-                    print(f"[{str(slot.item)} x {slot.amount}]", end= " ")
+                    print(f"[{str(slot.item)} x{slot.amount}]", end= "  ")
                 
-                uti.row_break(index, 3, 1)
+                uti.row_break(index, 3, 2)
             
-            print()
+            print("\n")
 
             for index, slot in enumerate(self.inventory.slots, 1):
 
@@ -111,7 +120,6 @@ class Player(GameObject, Character):
             except ValueError: break
         
 
-
     def interact(self, world: list):
         
         step = self.direction_calc(self.facing)
@@ -125,7 +133,7 @@ class Player(GameObject, Character):
         if interact_object.collision == False:
             return
 
-        if isinstance(interact_object, res.Harvestable):
+        if isinstance(interact_object, har.Harvestable):
             
             self.ground = Grass()
             interact_object.harvest(self, world)
@@ -137,7 +145,7 @@ class Player(GameObject, Character):
             
             incoming_input = list(input(" Action: ").strip())
 
-            if len(incoming_input) == 0:return
+            if len(incoming_input) == 0: return
             
             self.input_queue.extend(incoming_input)
             
@@ -161,9 +169,3 @@ class Player(GameObject, Character):
 
         self.input_queue.pop(0)
         
-
-
-            
-        
-
-

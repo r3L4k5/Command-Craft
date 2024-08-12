@@ -1,12 +1,12 @@
 
-from utility import cls
+from utility import clear
 from Classes.game_class import Game
 
 main_game = Game()
 
 while True:
-   cls()
+   clear()
    main_game.update_game()
-   cls()
+   clear()
 
     

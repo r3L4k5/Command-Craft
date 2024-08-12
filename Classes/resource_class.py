@@ -1,7 +1,6 @@
 
 from termcolor import colored
 
-
 class Resource():
     
     def __init__(self, name: str, sprite:  str, amount: int = 1):
@@ -26,29 +25,11 @@ class Stone(Resource):
 
 resource_dict = {
     
-    "Wood": Wood,
-    "Stone": Stone,
+    "Wood": Wood(),
+    "Stone": Stone(),
 }
 
             
-class Harvestable():
-    
-    def __init__(self, resource: object, hitpoints: int ):
-        
-        self.hitpoints = hitpoints
-        self.resource = resource
-
-    def harvest(self, player, world):
-        
-        if self.hitpoints > 1:
-            
-            self.hitpoints -= player.strength
-            return
-
-        player.inventory.add_item(self.resource)
-        
-        self.delete(world)
-
         
             
         
