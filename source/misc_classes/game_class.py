@@ -1,6 +1,6 @@
 
 
-from Classes.player_class import Player
+from characters.player_class import Player
 from time import sleep
 
 class Game():
@@ -14,8 +14,9 @@ class Game():
         
         game.outside = []
         
-        import enviorment as env
-        env.fill_world(game.world)
+        from enviorment.create_world import fill_world
+        
+        fill_world(game.world)
         
         global player
         player = Player(game.world)
