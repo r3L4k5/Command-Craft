@@ -32,5 +32,5 @@ Controls:
 
   Inventory - 'q'
 
-  Exit inventory - 'e'
+  Exit inventory - 'q'
     
