@@ -3,6 +3,7 @@ import utility as uti
 import materials.harvestable_class as har
 import materials.resources as res
 
+from materials.item_dict import item_dict
 from characters.character_class import Character
 from misc_classes.object_class import GameObject
 from misc_classes.storage_class import Storage
@@ -24,10 +25,6 @@ facing_directions = {
 }
 
 
-crafting_space = Storage(9, 10, name= "Crafting Space")
-
-for index, slot in enumerate(crafting_space.slots, 1): slot.item = index 
-    
 
 class Player(GameObject, Character):
     
@@ -49,37 +46,37 @@ class Player(GameObject, Character):
         print(f"{uti.bold("Health: "):>50}{self.health}")
 
 
-    def craft(self):
-        pass
+    def count_items(self):
 
-
-    def select_items(self, action: str, crafting_space: Storage):
-         
-        action = action.split("-")
+        item_count = {}
         
-        place =  int(action[0]) - 1     
-        resource = res.resource_dict[action[1].capitalize()]
- 
-        amount: int = int(action[2])
-        total_amount: int = 0
-
         for slot in self.inventory.slots:
             
-            if type(slot.item) == type(resource):
-                print(slot.amount)
-                
-                total_amount += slot.amount
+            if type(slot.item) in item_count:
 
-        if total_amount <= 0:
-            return    
+                item_count[type(slot.item)] += slot.amount
 
-        resource.amount = uti.clamp(amount, max= total_amount, min= 0)
-
-        crafting_space.add_item_specific(resource, place)
-    
-        self.inventory.remove_item(resource, "-Empty-")
-
+            else:
+                item_count[type(slot.item)] = slot.amount
         
+        return item_count
+
+
+    def craft_item(self, action: str):
+        print(action)
+
+        item = item_dict[action]
+        
+        item_count = self.count_items()
+        
+        for ingredient in item.recipe.keys():
+            
+            if ingredient in item_count and item_count[ingredient] >= item.recipe[ingredient] :
+                print("Craft")
+        
+        input()
+                
+            
     def open_inventory(self):
 
         while True:
@@ -87,19 +84,6 @@ class Player(GameObject, Character):
             uti.clear()
             
             print(uti.bold(self.inventory.name + ": "), end="\n\n")
- 
-            
-            for index, slot in enumerate(crafting_space.slots, 1):
-
-                if slot.empty: 
-                    print(f"[-{slot.item}-]", end= "  ")
-
-                else:
-                    print(f"[{str(slot.item)} x{slot.amount}]", end= "  ")
-                
-                uti.row_break(index, 3, 2)
-            
-            print("\n")
 
             for index, slot in enumerate(self.inventory.slots, 1):
 
@@ -114,8 +98,8 @@ class Player(GameObject, Character):
 
             action = input("\nAction: ")
             
-            try: 
-                self.select_items(action, crafting_space)
+            try:
+                self.craft_item(action)
             
             except ValueError: break
         

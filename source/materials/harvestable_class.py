@@ -1,9 +1,10 @@
 
 import materials.resources as res
+import characters.character_class as cha
+import enviorment.ground as gro
 
 from misc_classes.object_class import GameObject
 from termcolor import colored
-
 
 
 class Harvestable():
@@ -47,10 +48,19 @@ class Tree(GameObject, Harvestable):
         
         super().delete(world)
         
-        if isinstance(world[self.y - 1][self.x], Leaves):
-            
-            world[self.y - 1][self.x].delete(world)
+        for i in range(self.y):
+        
+            if isinstance(world[self.y - (i + 1) ][self.x], Leaves):
 
+                world[self.y - (i + 1)][self.x].delete(world)
+            
+            elif isinstance(world[self.y - i - 1][self.x], cha.Character):
+                
+                self.ground == gro.Grass() 
+            
+            else: 
+                break
+ 
 
 class Leaves(GameObject):
     

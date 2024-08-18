@@ -1,5 +1,5 @@
 
-
+from materials.item_class import Item
 
 class Slot():
     
@@ -24,7 +24,8 @@ class Storage():
         self.max_stack = max_stack
         self.name = name
     
-    def add_item_specific(self, new_item, place):
+
+    def add_item_specific(self, new_item: Item, place: int):
         
         target = self.slots[place]
         new_amount = target.amount + new_item.amount        
@@ -57,9 +58,9 @@ class Storage():
                 target.amount = new_amount
 
 
-    def add_item(self, new_item):
-        
-        matching_slots = list(filter(lambda slot: type(slot.item) == type(new_item), self.slots))
+    def add_item(self, new_item: Item):
+    
+        matching_slots = list(filter(lambda slot: slot.item == new_item, self.slots))
 
         for slot in matching_slots:
             
@@ -96,13 +97,12 @@ class Storage():
                 
                 new_item.amount -= self.max_stack
 
-        
         return new_item
     
 
-    def remove_item(self, del_item, placeholder: str = "Empty"):
+    def remove_item(self, del_item: Item, placeholder: str = "Empty"):
 
-        matching_slots = list(filter(lambda slot: type(slot.item) == type(del_item), self.slots))
+        matching_slots = list(filter(lambda slot: slot.item == del_item, self.slots))
 
         for slot in matching_slots:
 
@@ -117,6 +117,7 @@ class Storage():
                 slot.empty_slot(placeholder)
 
         return del_item
+
 
 if __name__ == "__main__":
     

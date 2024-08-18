@@ -1,4 +1,0 @@
-
-crafting_recipe = {
-    
-}
