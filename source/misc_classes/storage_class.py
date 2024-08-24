@@ -1,5 +1,5 @@
 
-from materials.item_class import Item
+from materials.items.item_class import Item
 
 class Slot():
     

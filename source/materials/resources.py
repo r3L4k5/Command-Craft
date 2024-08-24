@@ -1,7 +1,7 @@
 
 from termcolor import colored
 
-from materials.item_class import Item
+from materials.items.item_class import Item
 
 
 class Wood(Item):

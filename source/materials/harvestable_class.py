@@ -60,7 +60,10 @@ class Tree(GameObject, Harvestable):
             
             else: 
                 break
- 
+
+            self.resource.amount += i
+        
+        
 
 class Leaves(GameObject):
     

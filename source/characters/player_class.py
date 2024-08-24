@@ -3,7 +3,7 @@ import utility as uti
 import materials.harvestable_class as har
 import materials.resources as res
 
-from materials.item_dict import item_dict
+from materials.items.item_dict import item_dict
 from characters.character_class import Character
 from misc_classes.object_class import GameObject
 from misc_classes.storage_class import Storage
@@ -74,16 +74,20 @@ class Player(GameObject, Character):
         
         inventory_count = self.count_items()
         
-        
+        index = 0
         for ingredient in item.recipe.keys():
             
             if ingredient in inventory_count and inventory_count[ingredient] >= item.recipe[ingredient]:
-                continue
-
+                
+                for _ in range(item.recipe[ingredient]):
+                    self.inventory.remove_item(item_dict[ingredient])
+            
             else:
                 return
         
+        print(index)
         self.inventory.add_item(item)
+        input()
             
 
     def open_inventory(self):
