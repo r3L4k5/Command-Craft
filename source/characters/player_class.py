@@ -36,6 +36,10 @@ class Player(GameObject, Character):
         self.input_queue = []
         self.inventory = Storage(12, 10, "-Empty-", "Inventory")
 
+        #For devolopement, so no need to harvest resources
+        for _ in range(3):
+            self.inventory.add_item(res.Wood())
+
         world[self.y][self.x] = self
 
     
@@ -51,32 +55,37 @@ class Player(GameObject, Character):
         item_count = {}
         
         for slot in self.inventory.slots:
-            
-            if type(slot.item) in item_count:
 
-                item_count[type(slot.item)] += slot.amount
+            if slot.empty: continue
+
+            elif slot.item.name in item_count:
+
+                item_count[slot.item.name] += slot.amount
 
             else:
-                item_count[type(slot.item)] = slot.amount
+                item_count[slot.item.name] = slot.amount
         
         return item_count
 
 
     def craft_item(self, action: str):
-        print(action)
 
-        item = item_dict[action]
+        item = item_dict[action.capitalize()]
         
-        item_count = self.count_items()
+        inventory_count = self.count_items()
+        
         
         for ingredient in item.recipe.keys():
             
-            if ingredient in item_count and item_count[ingredient] >= item.recipe[ingredient] :
-                print("Craft")
+            if ingredient in inventory_count and inventory_count[ingredient] >= item.recipe[ingredient]:
+                continue
+
+            else:
+                return
         
-        input()
-                
+        self.inventory.add_item(item)
             
+
     def open_inventory(self):
 
         while True:
@@ -101,7 +110,8 @@ class Player(GameObject, Character):
             try:
                 self.craft_item(action)
             
-            except ValueError: break
+            except ValueError: 
+                break
         
 
     def interact(self, world: list):

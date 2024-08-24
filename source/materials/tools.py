@@ -1,15 +1,15 @@
 
 from materials.item_class import Item
-from materials.resources import resource_dict 
+from termcolor import colored
 
 class Tool(Item):
 
-    def __init__(self, name: str, sprite: str, amount: int) -> None:
+    def __init__(self, name: str = "Sword", sprite: str = "\ ", amount: int = 1) -> None:
+        
         super().__init__(name, sprite, amount)
         
-        self.recipe = {type(resource_dict["Wood"]): 3}
+        self.recipe = {"Wood": 3}
 
  
-sword = Tool("Sword", "]", 3)    
+sword = Tool("Sword", colored("/", "grey"))    
 
-print(sword.recipe)
