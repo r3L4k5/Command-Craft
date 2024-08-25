@@ -37,34 +37,40 @@ class Rock(GameObject, Harvestable):
 
 class Tree(GameObject, Harvestable):
     
-    def __init__(self, y: int = 0, x: int = 0,) -> None:
+    def __init__(self, y: int, x: int, world) -> None:
             
         super().__init__(colored("||", "red", attrs=["bold", "dark"]), y, x)
         
         Harvestable.__init__(self, res.Wood(), 3)
 
-    
+        for i in range(1, self.y):
+
+            if isinstance(world[self.y - i][self.x], Leaves):
+                continue
+                
+            else:
+                self.resource.amount = i - 1
+                break
+
+                
     def delete(self, world):
         
         super().delete(world)
         
-        for i in range(self.y):
+        for i in range(1, self.y):
         
-            if isinstance(world[self.y - (i + 1) ][self.x], Leaves):
+            if isinstance(world[self.y - i][self.x], Leaves):
 
-                world[self.y - (i + 1)][self.x].delete(world)
+                world[self.y - i][self.x].delete(world)
             
-            elif isinstance(world[self.y - i - 1][self.x], cha.Character):
-                
-                self.ground == gro.Grass() 
+            elif isinstance(world[self.y - i][self.x], cha.Character):
+        
+                world[self.y - i][self.x].ground = gro.Grass() 
             
             else: 
                 break
-
-            self.resource.amount += i
-        
-        
-
+           
+      
 class Leaves(GameObject):
     
     def __init__(self, y: int, x: int, world = None) -> None:

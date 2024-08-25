@@ -16,6 +16,7 @@ class Slot():
         self.amount = 0
         self.empty = True        
 
+
 class Storage():
     
     def __init__(self, size: int, max_stack: int, placeholder: str = "Empty", name: str = "Storage") -> None:
@@ -32,17 +33,17 @@ class Storage():
         
         if type(target.item) == type(new_item):
 
-            if new_amount >= self.max_stack :
+            if new_amount <= self.max_stack :
                 
+                target.amount = new_amount
+                return
+
+            else:
                 target.amount = self.max_stack
                 new_item.amount -= self.max_stack
 
                 return new_item
-            
-            else:
-                target.amount = new_amount
-                return
-
+                
         else:
             target.item = new_item
             target.empty = False
@@ -66,12 +67,11 @@ class Storage():
             
             new_amount = slot.amount + new_item.amount
             
-            if new_amount < self.max_stack:
-                
-                slot.amount += new_item.amount
+            if new_amount <= self.max_stack:
+                slot.amount = new_amount
                 return
             
-            elif new_amount >= self.max_stack:
+            elif new_amount > self.max_stack:
                 
                 new_item.amount = new_amount - self.max_stack
                 slot.amount = self.max_stack
@@ -119,24 +119,8 @@ class Storage():
         return del_item
 
 
-if __name__ == "__main__":
+
     
-    import resource as res
-    
-    store = Storage(8, 2)
-
-    store.add_item(res.Wood(3))
-    store.add_item(res.Wood(6))
-    store.add_item(res.Wood(7))
-
-    print(list(str(slot.item) for slot in store.slots))
-    print(sum(list(slot.amount for slot in store.slots)))
-
-    store.remove_item(res.Wood(10), "Empty")
-
-    print(list(str(slot.item) for slot in store.slots))
-    print(sum(list(slot.amount for slot in store.slots)))
-
 
 
 

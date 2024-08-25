@@ -37,8 +37,9 @@ class Player(GameObject, Character):
         self.inventory = Storage(12, 10, "-Empty-", "Inventory")
 
         #For devolopement, so no need to harvest resources
-        for _ in range(3):
-            self.inventory.add_item(res.Wood())
+        
+        #self.inventory.add_item(res.Wood())
+        #self.inventory.slots[0].amount = 10
 
         world[self.y][self.x] = self
 
@@ -74,22 +75,21 @@ class Player(GameObject, Character):
         
         inventory_count = self.count_items()
         
-        index = 0
         for ingredient in item.recipe.keys():
             
             if ingredient in inventory_count and inventory_count[ingredient] >= item.recipe[ingredient]:
                 
-                for _ in range(item.recipe[ingredient]):
-                    self.inventory.remove_item(item_dict[ingredient])
-            
+                resource = item_dict[ingredient]
+                resource.amount = item.recipe[ingredient]
+
+                self.inventory.remove_item(resource)
+                 
             else:
                 return
         
-        print(index)
         self.inventory.add_item(item)
-        input()
+   
             
-
     def open_inventory(self):
 
         while True:
@@ -111,11 +111,10 @@ class Player(GameObject, Character):
 
             action = input("\nAction: ")
             
-            try:
-                self.craft_item(action)
-            
-            except ValueError: 
-                break
+            if action == 'q':
+                return
+                
+            self.craft_item(action)
         
 
     def interact(self, world: list):
@@ -133,7 +132,6 @@ class Player(GameObject, Character):
 
         if isinstance(interact_object, har.Harvestable):
             
-            self.ground = Grass()
             interact_object.harvest(self, world)
     
     
