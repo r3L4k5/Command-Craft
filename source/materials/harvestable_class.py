@@ -1,5 +1,5 @@
 
-import materials.resources as res
+import materials.items.resources as res
 import characters.character_class as cha
 import enviorment.ground as gro
 

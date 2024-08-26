@@ -1,14 +1,12 @@
 
 import utility as uti
 import materials.harvestable_class as har
-import materials.resources as res
+import materials.items.resources as res
 
-from materials.items.item_dict import item_dict
+import materials.items.item_dict as it_dt
 from characters.character_class import Character
 from misc_classes.object_class import GameObject
 from misc_classes.storage_class import Storage
-
-from enviorment.ground import Grass
 
 
 controls = {
@@ -25,7 +23,6 @@ facing_directions = {
 }
 
 
-
 class Player(GameObject, Character):
     
     def __init__(self, world: list) -> None:
@@ -35,12 +32,12 @@ class Player(GameObject, Character):
 
         self.input_queue = []
         self.inventory = Storage(12, 10, "-Empty-", "Inventory")
+        
+        self.equiped: object 
 
         #For devolopement, so no need to harvest resources
+        self.inventory.add_item(res.Wood(10))
         
-        #self.inventory.add_item(res.Wood())
-        #self.inventory.slots[0].amount = 10
-
         world[self.y][self.x] = self
 
     
@@ -71,22 +68,28 @@ class Player(GameObject, Character):
 
     def craft_item(self, action: str):
 
-        item = item_dict[action.capitalize()]
+        item = it_dt.craftable_dict[action.capitalize()]
         
         inventory_count = self.count_items()
         
+        consumed_items = []
+
         for ingredient in item.recipe.keys():
             
             if ingredient in inventory_count and inventory_count[ingredient] >= item.recipe[ingredient]:
                 
-                resource = item_dict[ingredient]
+                resource = it_dt.resource_dict[ingredient]
                 resource.amount = item.recipe[ingredient]
 
-                self.inventory.remove_item(resource)
+                consumed_items.append(resource)
                  
             else:
                 return
         
+        for item in consumed_items:
+            
+            self.inventory.remove_item(item)
+
         self.inventory.add_item(item)
    
             

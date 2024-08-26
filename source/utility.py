@@ -1,5 +1,7 @@
 
 import os
+from termcolor import colored
+
 
 blank_space = lambda amount: " " * amount #Dynamically creates a specified amount of blank spaces   
  
@@ -18,6 +20,7 @@ def clamp(value, max = None, min = None):
         
     return value
 
+#Breaks into new line after a certain length
 def row_break(index, row_length, line_breaks = 1):
 
     if index % row_length == 0: 

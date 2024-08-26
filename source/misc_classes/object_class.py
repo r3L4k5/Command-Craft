@@ -1,26 +1,27 @@
 
 from enum import Enum, auto
-
-def enviorment_import():
-    import enviorment.ground
-    return enviorment.ground
+from enviorment.ground import Grass
 
 
-class ObjectCategory(Enum):
+class Category(Enum):
+    
+    RESOURCES = auto()
     HARVESTABLE = auto()
-    ENVIORMENT = auto()
+    GROUND = auto()
     PLAYER = auto()
     ENEMY = auto()
+    TOOLS = auto()
 
 
 class GameObject():
     
-    def __init__(self, sprite: str, y: int, x: int, collision: bool = True) -> None:
+    def __init__(self, sprite: str, y: int, x: int, category: Category, collision: bool = True) -> None:
         
         self.sprite = sprite
         self.collision = collision
+        self.category = category
         
-        self.ground = enviorment_import().Grass()
+        self.ground = Grass()
         
         self.y = y
         self.x = x

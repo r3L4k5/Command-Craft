@@ -4,6 +4,7 @@ from characters.player_class import Player
 from enviorment.create_enviorment import fill_world
 from time import sleep
 
+
 class Game():
 
     def __init__(game) -> None:

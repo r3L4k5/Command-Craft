@@ -1,9 +1,18 @@
 
-import materials.resources as res
+import materials.items.resources as res
 import materials.items.tools as too 
 
-item_dict = {
+from enum import Enum
+
+class Material(Enum):
+    WOOD = {"color": "red", "attrs": ["bold", "dark"]}
+    STONE = {"color": "grey", "attrs": ["bold", "dark"]}
+
+resource_dict = {
     "Wood": res.Wood(),
     "Stone": res.Stone(),
-    "Sword": too.Sword()
+}
+
+craftable_dict = {
+    "WoodenSword": too.Sword(Material.WOOD)
 }
