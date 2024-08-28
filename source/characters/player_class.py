@@ -78,14 +78,13 @@ class Player(GameObject, Character):
         for ingredient in item.recipe.keys():
             
             if ingredient in inventory_count and inventory_count[ingredient] >= item.recipe[ingredient]:
-                print("yah")
+                
                 resource = it_dt.resource_dict[ingredient]
                 resource.amount = item.recipe[ingredient]
 
                 consumed_items.append(resource)
                  
             else:
-                print("nah")
                 return
         
         for consumed in consumed_items:
