@@ -1,9 +1,9 @@
 
-import materials.items.resources as res
+import materials.items.item_types.resources as res
 import characters.character_class as cha
 import enviorment.ground as gro
 
-from misc_classes.object_class import GameObject
+from misc_classes.object_class import GameObject, Category
 from termcolor import colored
 
 
@@ -30,7 +30,7 @@ class Rock(GameObject, Harvestable):
 
     def __init__(self, y: int = 0, x: int = 0) -> None:
         
-        super().__init__(colored("()", "dark_grey", attrs=["bold"]), y, x)
+        super().__init__(colored("()", "dark_grey", attrs=["bold"]), y, x, Category.HARVESTABLE )
         
         Harvestable.__init__(self, res.Stone(), 7)
 
@@ -39,7 +39,7 @@ class Tree(GameObject, Harvestable):
     
     def __init__(self, y: int, x: int, world) -> None:
             
-        super().__init__(colored("||", "red", attrs=["bold", "dark"]), y, x)
+        super().__init__(colored("||", "red", attrs=["bold", "dark"]), y, x, Category.HARVESTABLE)
         
         Harvestable.__init__(self, res.Wood(), 3)
 
@@ -75,6 +75,6 @@ class Leaves(GameObject):
     
     def __init__(self, y: int, x: int, world = None) -> None:
         
-        super().__init__(colored("  ", on_color= "on_green", attrs=["bold"]), y, x, False)
+        super().__init__(colored("  ", on_color= "on_green", attrs=["bold"]), y, x, Category.HARVESTABLE, False)
 
         world[self.y][self.x] = self

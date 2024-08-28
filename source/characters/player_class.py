@@ -1,11 +1,11 @@
 
 import utility as uti
 import materials.harvestable_class as har
-import materials.items.resources as res
+import materials.items.item_types.resources as res
 
 import materials.items.item_dict as it_dt
 from characters.character_class import Character
-from misc_classes.object_class import GameObject
+from misc_classes.object_class import GameObject, Category
 from misc_classes.storage_class import Storage
 
 
@@ -27,7 +27,7 @@ class Player(GameObject, Character):
     
     def __init__(self, world: list) -> None:
         
-        super().__init__(" i", 0, 10)
+        super().__init__(" i", 0, 10, Category.PLAYER)
         Character.__init__(self)
 
         self.input_queue = []
@@ -37,6 +37,7 @@ class Player(GameObject, Character):
 
         #For devolopement, so no need to harvest resources
         self.inventory.add_item(res.Wood(10))
+        self.inventory.add_item(res.Stone(10))
         
         world[self.y][self.x] = self
 
@@ -68,7 +69,7 @@ class Player(GameObject, Character):
 
     def craft_item(self, action: str):
 
-        item = it_dt.craftable_dict[action.capitalize()]
+        item = it_dt.craft_dict[uti.del_space(action).lower()]
         
         inventory_count = self.count_items()
         
@@ -77,21 +78,23 @@ class Player(GameObject, Character):
         for ingredient in item.recipe.keys():
             
             if ingredient in inventory_count and inventory_count[ingredient] >= item.recipe[ingredient]:
-                
+                print("yah")
                 resource = it_dt.resource_dict[ingredient]
                 resource.amount = item.recipe[ingredient]
 
                 consumed_items.append(resource)
                  
             else:
+                print("nah")
                 return
         
-        for item in consumed_items:
+        for consumed in consumed_items:
             
-            self.inventory.remove_item(item)
+            self.inventory.remove_item(consumed)
 
         self.inventory.add_item(item)
-   
+
+        input()
             
     def open_inventory(self):
 
@@ -107,7 +110,7 @@ class Player(GameObject, Character):
                     print(f"  [{slot.item}]", end= " ")
                 
                 else:
-                    print(f"  [{str(slot.item)} {slot.item.name} x{slot.amount}]", end= " ")
+                    print(f"  [{str(slot.item)} {slot.item.name.capitalize()} x{slot.amount}]", end= " ")
                 
                 uti.row_break(index, 4, 2)
             
@@ -116,13 +119,14 @@ class Player(GameObject, Character):
             
             if action == 'q':
                 return
-                
+
+            input(action)    
             self.craft_item(action)
         
 
     def interact(self, world: list):
         
-        step = self.direction_calc(self.facing)
+        step: list = self.direction_calc(self.facing)
 
         try:
             interact_object = world[self.y + step[0]][self.x + step[1]]
@@ -133,7 +137,7 @@ class Player(GameObject, Character):
         if interact_object.collision == False:
             return
 
-        if isinstance(interact_object, har.Harvestable):
+        if interact_object.category == Category.HARVESTABLE:
             
             interact_object.harvest(self, world)
     
