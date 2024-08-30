@@ -1,5 +1,5 @@
 
-import materials.items.item_types.resources as res
+import items.resources as res
 import characters.character_class as cha
 import enviorment.ground as gro
 
@@ -14,7 +14,7 @@ class Harvestable():
         self.hitpoints = hitpoints
         self.resource = resource
 
-    def harvest(self, player, world):
+    def harvest(self, player: WorldObject, world):
         
         if self.hitpoints > 1:
             
@@ -57,13 +57,15 @@ class Tree(WorldObject, Harvestable):
         
         super().delete(world)
         
-        for i in range(1, self.y):
+        for i in range(0, self.y):
+
+            above = world[self.y - i][self.x]
         
-            if isinstance(world[self.y - i][self.x], Leaves):
+            if isinstance(above, Leaves):
 
                 world[self.y - i][self.x].delete(world)
             
-            elif isinstance(world[self.y - i][self.x], cha.Character):
+            elif isinstance(above, cha.Character):
         
                 world[self.y - i][self.x].ground = gro.Grass() 
             

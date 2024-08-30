@@ -1,6 +1,6 @@
 
-import materials.items.item_types.resources as res
-import materials.items.item_types.tools as too 
+import  items. resources as res
+import  items. tools as too 
 
 
 class MaterialColor():

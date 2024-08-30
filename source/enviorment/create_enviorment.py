@@ -1,5 +1,5 @@
 
-import materials.harvestable_class as har
+import  enviorment.harvestable_class as har
 import enviorment.ground as env
 
 from random import randint

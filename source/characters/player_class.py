@@ -1,12 +1,11 @@
 
 import utility as uti
-import materials.harvestable_class as har
-import materials.items.item_types.resources as res
+import items.item_dict as item_dict
 
-import materials.items.item_dict as it_dt
 from characters.character_class import Character
 from misc_classes.object_class import WorldObject, Category
 from misc_classes.storage_class import Storage
+from items.item_class import Item
 
 
 controls = {
@@ -33,7 +32,7 @@ class Player(WorldObject, Character):
         self.input_queue = []
         self.inventory = Storage(12, 10, "-Empty-", "Inventory")
         
-        self.equiped: object 
+        self.equipped: Item
 
         #For devolopement, so no need to harvest resources
         #self.inventory.add_item(res.Wood(10))
@@ -47,6 +46,19 @@ class Player(WorldObject, Character):
         print(f" {uti.bold('Facing: ')}{facing_directions[self.facing]}", end="")
         
         print(f"{uti.bold('Health: '):>50}{self.health}")
+
+
+    def equip_item(self, item: str):
+        
+        to_equip: Item = item_dict.resource_dict[item]
+
+        inventory_count = self.count_items()
+
+        if to_equip.name in inventory_count:
+            
+            self.inventory.remove_item(to_equip)
+            self.equipped = to_equip
+            self.sprite = to_equip.sprite + self.sprite
 
 
     def count_items(self):
@@ -67,20 +79,20 @@ class Player(WorldObject, Character):
         return item_count
 
 
-    def craft_item(self, action: str):
+    def craft_item(self, item: str):
 
-        item = it_dt.craft_dict[uti.del_space(action).lower()]
+        to_craft: Item = item_dict.craft_dict[item]
         
         inventory_count = self.count_items()
         
         consumed_items = []
 
-        for ingredient in item.recipe.keys():
+        for ingredient in to_craft.recipe.keys():
             
-            if ingredient in inventory_count and inventory_count[ingredient] >= item.recipe[ingredient]:
+            if ingredient in inventory_count and inventory_count[ingredient] >= to_craft.recipe[ingredient]:
                 
-                resource = it_dt.resource_dict[ingredient]
-                resource.amount = item.recipe[ingredient]
+                resource = item_dict.resource_dict[ingredient]
+                resource.amount = to_craft.recipe[ingredient]
 
                 consumed_items.append(resource)
                  
@@ -91,22 +103,18 @@ class Player(WorldObject, Character):
             
             self.inventory.remove_item(consumed)
 
-        self.inventory.add_item(item)
+        self.inventory.add_item(to_craft)
 
-<<<<<<< HEAD
-        input()
     
-            
-=======
-    
->>>>>>> 42edc03490cf1b487e21e7a25de1ff761bc9f839
     def open_inventory(self):
+        
+        mode = "craft"
 
         while True:
 
             uti.clear()
             
-            print(uti.bold(self.inventory.name + ": "), end="\n\n")
+            print(uti.bold(self.inventory.name + ': '), end="\n\n")
 
             for index, slot in enumerate(self.inventory.slots, 1):
 
@@ -119,12 +127,27 @@ class Player(WorldObject, Character):
                 uti.row_break(index, 4, 2)
             
 
-            action = input("\nAction: ")
+            action = uti.del_space(input("\nAction: ")).lower()
+
+            print(action)
             
             if action == 'q':
                 return
+            
+            elif action in ("equip", "craft"):
+                mode = action
+                continue
+
+            match mode:
+
+                case "craft":
+                    self.craft_item(action)
+
+                case "equip":
+                    self.equip_item(action)
+                
  
-            self.craft_item(action)
+            
         
 
     def interact(self, world: list):
@@ -139,17 +162,14 @@ class Player(WorldObject, Character):
 
         if interact_object.collision == False:
             return
-        
 
         match interact_object.category:
 
             case Category.HARVESTABLE:
                 
                 interact_object.harvest(self, world)
-
-        #if interact_object.category == Category.HARVESTABLE:
-            
-           
+    
+    
     def input_handler(self, world: list):
     
         if len(self.input_queue) == 0:

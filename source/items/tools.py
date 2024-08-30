@@ -1,5 +1,5 @@
 
-from materials.items.item_class import Item
+from items.item_class import Item
 from termcolor import colored
 from misc_classes.object_class import Category
 
@@ -22,3 +22,9 @@ class Sword(Item):
 
     def attack():
         pass
+
+
+class Axe(Item):
+    
+    def __init__(self, name: str, sprite: str, category: Category, amount: int = 1) -> None:
+        super().__init__(name, sprite, category, amount)
