@@ -13,7 +13,7 @@ class Category(Enum):
     TOOLS = auto()
 
 
-class GameObject():
+class WorldObject():
     
     def __init__(self, sprite: str, y: int, x: int, category: Category, collision: bool = True) -> None:
         

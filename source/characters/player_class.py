@@ -5,7 +5,7 @@ import materials.items.item_types.resources as res
 
 import materials.items.item_dict as it_dt
 from characters.character_class import Character
-from misc_classes.object_class import GameObject, Category
+from misc_classes.object_class import WorldObject, Category
 from misc_classes.storage_class import Storage
 
 
@@ -23,7 +23,7 @@ facing_directions = {
 }
 
 
-class Player(GameObject, Character):
+class Player(WorldObject, Character):
     
     def __init__(self, world: list) -> None:
         
@@ -129,7 +129,7 @@ class Player(GameObject, Character):
         step: list = self.direction_calc(self.facing)
 
         try:
-            interact_object: GameObject = world[self.y + step[0]][self.x + step[1]]
+            interact_object: WorldObject = world[self.y + step[0]][self.x + step[1]]
         
         except IndexError:
             return

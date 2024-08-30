@@ -3,7 +3,7 @@ import materials.items.item_types.resources as res
 import characters.character_class as cha
 import enviorment.ground as gro
 
-from misc_classes.object_class import GameObject, Category
+from misc_classes.object_class import WorldObject, Category
 from termcolor import colored
 
 
@@ -26,7 +26,7 @@ class Harvestable():
         self.delete(world)
 
 
-class Rock(GameObject, Harvestable):
+class Rock(WorldObject, Harvestable):
 
     def __init__(self, y: int = 0, x: int = 0) -> None:
         
@@ -35,7 +35,7 @@ class Rock(GameObject, Harvestable):
         Harvestable.__init__(self, res.Stone(), 7)
 
 
-class Tree(GameObject, Harvestable):
+class Tree(WorldObject, Harvestable):
     
     def __init__(self, y: int, x: int, world) -> None:
             
@@ -71,7 +71,7 @@ class Tree(GameObject, Harvestable):
                 break
            
       
-class Leaves(GameObject):
+class Leaves(WorldObject):
     
     def __init__(self, y: int, x: int, world = None) -> None:
         
