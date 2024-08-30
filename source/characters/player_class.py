@@ -36,17 +36,17 @@ class Player(GameObject, Character):
         self.equiped: object 
 
         #For devolopement, so no need to harvest resources
-        self.inventory.add_item(res.Wood(10))
-        self.inventory.add_item(res.Stone(10))
+        #self.inventory.add_item(res.Wood(10))
+        #self.inventory.add_item(res.Stone(10))
         
         world[self.y][self.x] = self
 
     
     def display_hud(self):
         
-        print(f" {uti.bold("Facing: ")}{facing_directions[self.facing]}", end="")
+        print(f" {uti.bold('Facing: ')}{facing_directions[self.facing]}", end="")
         
-        print(f"{uti.bold("Health: "):>50}{self.health}")
+        print(f"{uti.bold('Health: '):>50}{self.health}")
 
 
     def count_items(self):
@@ -93,8 +93,7 @@ class Player(GameObject, Character):
 
         self.inventory.add_item(item)
 
-        input()
-            
+    
     def open_inventory(self):
 
         while True:
@@ -118,8 +117,7 @@ class Player(GameObject, Character):
             
             if action == 'q':
                 return
-
-            input(action)    
+ 
             self.craft_item(action)
         
 
