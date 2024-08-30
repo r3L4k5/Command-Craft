@@ -36,8 +36,8 @@ class Player(GameObject, Character):
         self.equiped: object 
 
         #For devolopement, so no need to harvest resources
-        self.inventory.add_item(res.Wood(10))
-        self.inventory.add_item(res.Stone(10))
+        #self.inventory.add_item(res.Wood(10))
+        #self.inventory.add_item(res.Stone(10))
         
         world[self.y][self.x] = self
 
@@ -94,6 +94,7 @@ class Player(GameObject, Character):
         self.inventory.add_item(item)
 
         input()
+    
             
     def open_inventory(self):
 
@@ -128,19 +129,24 @@ class Player(GameObject, Character):
         step: list = self.direction_calc(self.facing)
 
         try:
-            interact_object = world[self.y + step[0]][self.x + step[1]]
+            interact_object: GameObject = world[self.y + step[0]][self.x + step[1]]
         
         except IndexError:
             return
 
         if interact_object.collision == False:
             return
+        
 
-        if interact_object.category == Category.HARVESTABLE:
+        match interact_object.category:
+
+            case Category.HARVESTABLE:
+                
+                interact_object.harvest(self, world)
+
+        #if interact_object.category == Category.HARVESTABLE:
             
-            interact_object.harvest(self, world)
-    
-    
+           
     def input_handler(self, world: list):
     
         if len(self.input_queue) == 0:
