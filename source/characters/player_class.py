@@ -56,7 +56,7 @@ class Player(WorldObject, Character):
 
         if to_equip.name in inventory_count:
             
-            self.inventory.remove_item(to_equip)
+            self.inventory.remove_item(to_equip, "-Equipped-")
             self.equipped = to_equip
             self.sprite = to_equip.sprite + self.sprite
 

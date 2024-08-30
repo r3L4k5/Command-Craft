@@ -57,17 +57,17 @@ class Tree(WorldObject, Harvestable):
         
         super().delete(world)
         
-        for i in range(0, self.y):
+        for i in range(1, self.y):
 
             above = world[self.y - i][self.x]
         
             if isinstance(above, Leaves):
 
-                world[self.y - i][self.x].delete(world)
+                above.delete(world)
             
             elif isinstance(above, cha.Character):
         
-                world[self.y - i][self.x].ground = gro.Grass() 
+                above.ground = gro.Grass() 
             
             else: 
                 break
