@@ -44,9 +44,9 @@ class Player(WorldObject, Character):
     
     def display_hud(self):
         
-        print(f" {uti.bold("Facing: ")}{facing_directions[self.facing]}", end="")
+        print(f" {uti.bold('Facing: ')}{facing_directions[self.facing]}", end="")
         
-        print(f"{uti.bold("Health: "):>50}{self.health}")
+        print(f"{uti.bold('Health: '):>50}{self.health}")
 
 
     def count_items(self):
@@ -93,9 +93,13 @@ class Player(WorldObject, Character):
 
         self.inventory.add_item(item)
 
+<<<<<<< HEAD
         input()
     
             
+=======
+    
+>>>>>>> 42edc03490cf1b487e21e7a25de1ff761bc9f839
     def open_inventory(self):
 
         while True:
@@ -119,8 +123,7 @@ class Player(WorldObject, Character):
             
             if action == 'q':
                 return
-
-            input(action)    
+ 
             self.craft_item(action)
         
 
