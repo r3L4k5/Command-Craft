@@ -1,13 +1,11 @@
 
 import utility as uti
-import materials.harvestable_class as har
-import materials.resources as res
+import items.item_dict as item_dict
 
 from characters.character_class import Character
-from misc_classes.object_class import GameObject
+from misc_classes.object_class import WorldObject, Category
 from misc_classes.storage_class import Storage
-
-from enviorment.ground import Grass
+from items.item_class import Item
 
 
 controls = {
@@ -24,82 +22,99 @@ facing_directions = {
 }
 
 
-crafting_space = Storage(9, 10, name= "Crafting Space")
-
-for index, slot in enumerate(crafting_space.slots, 1): slot.item = index 
-    
-
-class Player(GameObject, Character):
+class Player(WorldObject, Character):
     
     def __init__(self, world: list) -> None:
         
-        super().__init__(" i", 0, 10)
+        super().__init__(" i", 0, 10, Category.PLAYER)
         Character.__init__(self)
 
         self.input_queue = []
         self.inventory = Storage(12, 10, "-Empty-", "Inventory")
+        
+        self.equipped: Item
 
+        #For devolopement, so no need to harvest resources
+        #self.inventory.add_item(res.Wood(10))
+        #self.inventory.add_item(res.Stone(10))
+        
         world[self.y][self.x] = self
 
     
     def display_hud(self):
         
-        print(f" {uti.bold("Facing: ")}{facing_directions[self.facing]}", end="")
+        print(f" {uti.bold('Facing: ')}{facing_directions[self.facing]}", end="")
         
-        print(f"{uti.bold("Health: "):>50}{self.health}")
+        print(f"{uti.bold('Health: '):>50}{self.health}")
 
 
-    def craft(self):
-        pass
-
-
-    def select_items(self, action: str, crafting_space: Storage):
-         
-        action = action.split("-")
+    def equip_item(self, item: str):
         
-        place =  int(action[0]) - 1     
-        resource = res.resource_dict[action[1].capitalize()]
- 
-        amount: int = int(action[2])
-        total_amount: int = 0
+        to_equip: Item = item_dict.resource_dict[item]
 
-        for slot in self.inventory.slots:
+        inventory_count = self.count_items()
+
+        if to_equip.name in inventory_count:
             
-            if type(slot.item) == type(resource):
-                print(slot.amount)
-                
-                total_amount += slot.amount
+            self.inventory.remove_item(to_equip, "-Equipped-")
+            self.equipped = to_equip
+            self.sprite = to_equip.sprite + self.sprite
 
-        if total_amount <= 0:
-            return    
 
-        resource.amount = uti.clamp(amount, max= total_amount, min= 0)
+    def count_items(self):
 
-        crafting_space.add_item_specific(resource, place)
-    
-        self.inventory.remove_item(resource, "-Empty-")
-
+        item_count = {}
         
+        for slot in self.inventory.slots:
+
+            if slot.empty: continue
+
+            elif slot.item.name in item_count:
+
+                item_count[slot.item.name] += slot.amount
+
+            else:
+                item_count[slot.item.name] = slot.amount
+        
+        return item_count
+
+
+    def craft_item(self, item: str):
+
+        to_craft: Item = item_dict.craft_dict[item]
+        
+        inventory_count = self.count_items()
+        
+        consumed_items = []
+
+        for ingredient in to_craft.recipe.keys():
+            
+            if ingredient in inventory_count and inventory_count[ingredient] >= to_craft.recipe[ingredient]:
+                
+                resource = item_dict.resource_dict[ingredient]
+                resource.amount = to_craft.recipe[ingredient]
+
+                consumed_items.append(resource)
+                 
+            else:
+                return
+        
+        for consumed in consumed_items:
+            
+            self.inventory.remove_item(consumed)
+
+        self.inventory.add_item(to_craft)
+
+    
     def open_inventory(self):
+        
+        mode = "craft"
 
         while True:
 
             uti.clear()
             
-            print(uti.bold(self.inventory.name + ": "), end="\n\n")
- 
-            
-            for index, slot in enumerate(crafting_space.slots, 1):
-
-                if slot.empty: 
-                    print(f"[-{slot.item}-]", end= "  ")
-
-                else:
-                    print(f"[{str(slot.item)} x{slot.amount}]", end= "  ")
-                
-                uti.row_break(index, 3, 2)
-            
-            print("\n")
+            print(uti.bold(self.inventory.name + ': '), end="\n\n")
 
             for index, slot in enumerate(self.inventory.slots, 1):
 
@@ -107,25 +122,40 @@ class Player(GameObject, Character):
                     print(f"  [{slot.item}]", end= " ")
                 
                 else:
-                    print(f"  [{str(slot.item)} {slot.item.name} x{slot.amount}]", end= " ")
+                    print(f"  [{str(slot.item)} {slot.item.name.capitalize()} x{slot.amount}]", end= " ")
                 
                 uti.row_break(index, 4, 2)
             
 
-            action = input("\nAction: ")
+            action = uti.del_space(input("\nAction: ")).lower()
+
+            print(action)
             
-            try: 
-                self.select_items(action, crafting_space)
+            if action == 'q':
+                return
             
-            except ValueError: break
+            elif action in ("equip", "craft"):
+                mode = action
+                continue
+
+            match mode:
+
+                case "craft":
+                    self.craft_item(action)
+
+                case "equip":
+                    self.equip_item(action)
+                
+ 
+            
         
 
     def interact(self, world: list):
         
-        step = self.direction_calc(self.facing)
+        step: list = self.direction_calc(self.facing)
 
         try:
-            interact_object = world[self.y + step[0]][self.x + step[1]]
+            interact_object: WorldObject = world[self.y + step[0]][self.x + step[1]]
         
         except IndexError:
             return
@@ -133,10 +163,11 @@ class Player(GameObject, Character):
         if interact_object.collision == False:
             return
 
-        if isinstance(interact_object, har.Harvestable):
-            
-            self.ground = Grass()
-            interact_object.harvest(self, world)
+        match interact_object.category:
+
+            case Category.HARVESTABLE:
+                
+                interact_object.harvest(self, world)
     
     
     def input_handler(self, world: list):
