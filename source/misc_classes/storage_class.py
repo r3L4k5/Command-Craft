@@ -1,5 +1,6 @@
 
-from  items.item_class import Item
+from items.item_class import Item
+import utility as uti
 
 class Slot():
     

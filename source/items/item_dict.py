@@ -13,12 +13,9 @@ class MaterialColor():
 WOOD = MaterialColor("red", "dark")
 STONE = MaterialColor("grey", "dark")
 
-craft_dict = {
+item_dict = {
+    "wood" : res.Wood(1),
+    "stone": res.Stone(1),
     "woodensword": too.Sword(WOOD, {"wood": 3}, 2, 10),
     "stonesword": too.Sword(STONE, {"stone": 3}, 5, 20)
-}
-
-resource_dict = {
-    "wood" : res.Wood(),
-    "stone": res.Stone()
 }

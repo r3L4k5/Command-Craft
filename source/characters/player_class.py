@@ -1,11 +1,13 @@
 
 import utility as uti
 import items.item_dict as item_dict
+import items.resources as res
 
 from characters.character_class import Character
 from misc_classes.object_class import WorldObject, Category
 from misc_classes.storage_class import Storage
 from items.item_class import Item
+
 
 
 controls = {
@@ -32,11 +34,11 @@ class Player(WorldObject, Character):
         self.input_queue = []
         self.inventory = Storage(12, 10, "-Empty-", "Inventory")
         
-        self.equipped: Item
+        self.equipped: Item = None
 
         #For devolopement, so no need to harvest resources
-        #self.inventory.add_item(res.Wood(10))
-        #self.inventory.add_item(res.Stone(10))
+        #self.inventory.add_item(res.Wood(1))
+        #self.inventory.add_item(res.Stone(1))
         
         world[self.y][self.x] = self
 
@@ -44,22 +46,35 @@ class Player(WorldObject, Character):
     def display_hud(self):
         
         print(f" {uti.bold('Facing: ')}{facing_directions[self.facing]}", end="")
+
+
+        if self.equipped is not None:
+
+            print(f"{uti.bold('Equipped: '):>25} [{self.equipped}]", end="")
+            
+        else:
+            print(f"{uti.bold('Equipped: '):>25} []", end="")
+
         
-        print(f"{uti.bold('Health: '):>50}{self.health}")
+        print(f"{uti.bold('Health: '):>25}{self.health}")
 
 
     def equip_item(self, item: str):
         
-        to_equip: Item = item_dict.resource_dict[item]
+        to_equip: Item = item_dict.item_dict[item]
 
         inventory_count = self.count_items()
 
         if to_equip.name in inventory_count:
-            
-            self.inventory.remove_item(to_equip, "-Equipped-")
-            self.equipped = to_equip
-            self.sprite = to_equip.sprite + self.sprite
 
+            if self.equipped is not None:
+
+                self.equipped.amount = 1
+                self.inventory.add_item(self.equipped)
+            
+            self.equipped = to_equip
+            self.inventory.remove_item(to_equip, "-Equipped-")
+        
 
     def count_items(self):
 
@@ -81,7 +96,7 @@ class Player(WorldObject, Character):
 
     def craft_item(self, item: str):
 
-        to_craft: Item = item_dict.craft_dict[item]
+        to_craft: Item = item_dict. item_dict[item]
         
         inventory_count = self.count_items()
         
@@ -91,7 +106,7 @@ class Player(WorldObject, Character):
             
             if ingredient in inventory_count and inventory_count[ingredient] >= to_craft.recipe[ingredient]:
                 
-                resource = item_dict.resource_dict[ingredient]
+                resource = item_dict. item_dict[ingredient]
                 resource.amount = to_craft.recipe[ingredient]
 
                 consumed_items.append(resource)
@@ -116,6 +131,16 @@ class Player(WorldObject, Character):
             
             print(uti.bold(self.inventory.name + ': '), end="\n\n")
 
+            if self.equipped is not None:
+
+                print(f"  {uti.bold('Equipped: ')} [{self.equipped}]", end="   ")
+            
+            else:
+                print(f"  {uti.bold('Equipped: ')} []", end="   ")
+            
+            print(f"~{mode}", end="\n\n\n")
+
+
             for index, slot in enumerate(self.inventory.slots, 1):
 
                 if slot.empty: 
@@ -125,11 +150,9 @@ class Player(WorldObject, Character):
                     print(f"  [{str(slot.item)} {slot.item.name.capitalize()} x{slot.amount}]", end= " ")
                 
                 uti.row_break(index, 4, 2)
+
             
-
             action = uti.del_space(input("\nAction: ")).lower()
-
-            print(action)
             
             if action == 'q':
                 return
@@ -137,7 +160,7 @@ class Player(WorldObject, Character):
             elif action in ("equip", "craft"):
                 mode = action
                 continue
-
+            
             match mode:
 
                 case "craft":
@@ -146,10 +169,7 @@ class Player(WorldObject, Character):
                 case "equip":
                     self.equip_item(action)
                 
- 
-            
-        
-
+    
     def interact(self, world: list):
         
         step: list = self.direction_calc(self.facing)
@@ -199,4 +219,5 @@ class Player(WorldObject, Character):
             pass
 
         self.input_queue.pop(0)
-        
+    
+
