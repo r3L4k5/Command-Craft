@@ -9,7 +9,6 @@ from misc_classes.storage_class import Storage
 from items.item_class import Item
 
 
-
 controls = {
     "movement": ['w', 's', 'a', 'd'],
     "inventory": 'q',
@@ -43,20 +42,23 @@ class Player(WorldObject, Character):
         world[self.y][self.x] = self
 
     
-    def display_hud(self):
-        
-        print(f" {uti.bold('Facing: ')}{facing_directions[self.facing]}", end="")
-
+    def display_equip(self):
 
         if self.equipped is not None:
 
-            print(f"{uti.bold('Equipped: '):>25} [{self.equipped}]", end="")
+            return f"{uti.bold('Equipped:')} [{self.equipped} {self.equipped.name}]" 
             
         else:
-            print(f"{uti.bold('Equipped: '):>25} []", end="")
+            return uti.bold('Equipped:') + " []"
 
+
+    def display_hud(self):
         
-        print(f"{uti.bold('Health: '):>25}{self.health}")
+        print(f" {uti.bold('Facing: ')}{facing_directions[self.facing]}", end="     ")
+
+        print(f"{self.display_equip()}", end="     ")
+
+        print(f"{uti.bold('Health: ')}{self.health}")
 
 
     def equip_item(self, item: str):
@@ -69,6 +71,8 @@ class Player(WorldObject, Character):
 
             if self.equipped is not None:
 
+                #Sloppy fix, should be worked on in the future
+                #Otherwise, it would give back an item with zero amount
                 self.equipped.amount = 1
                 self.inventory.add_item(self.equipped)
             
@@ -106,7 +110,7 @@ class Player(WorldObject, Character):
             
             if ingredient in inventory_count and inventory_count[ingredient] >= to_craft.recipe[ingredient]:
                 
-                resource = item_dict. item_dict[ingredient]
+                resource = item_dict.item_dict[ingredient]
                 resource.amount = to_craft.recipe[ingredient]
 
                 consumed_items.append(resource)
@@ -129,14 +133,9 @@ class Player(WorldObject, Character):
 
             uti.clear()
             
-            print(uti.bold(self.inventory.name + ': '), end="\n\n")
+            print(uti.bold(self.inventory.name + ': '), end="\n\n\n")
 
-            if self.equipped is not None:
-
-                print(f"  {uti.bold('Equipped: ')} [{self.equipped}]", end="   ")
-            
-            else:
-                print(f"  {uti.bold('Equipped: ')} []", end="   ")
+            print("  " + self.display_equip(), end="   ")
             
             print(f"~{mode}", end="\n\n\n")
 
@@ -154,21 +153,32 @@ class Player(WorldObject, Character):
             
             action = uti.del_space(input("\nAction: ")).lower()
             
-            if action == 'q':
-                return
-            
-            elif action in ("equip", "craft"):
-                mode = action
-                continue
-            
-            match mode:
-
-                case "craft":
-                    self.craft_item(action)
-
-                case "equip":
-                    self.equip_item(action)
+            match action:
                 
+                case 'q': 
+                    return
+
+                case 'e':
+                    
+                    if mode == "craft": 
+                        mode = "equip"
+                    else:
+                        mode = "craft"
+                    
+                    continue
+            
+            try:
+                match mode:
+
+                    case "craft":
+                        self.craft_item(action)
+
+                    case "equip":
+                        self.equip_item(action)
+            
+            except KeyError:
+                continue
+        
     
     def interact(self, world: list):
         
