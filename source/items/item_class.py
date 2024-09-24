@@ -1,5 +1,5 @@
 
-from misc_classes.object_class import Category
+from system.object_class import Category
 
 class Item():
     

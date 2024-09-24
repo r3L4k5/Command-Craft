@@ -1,7 +1,7 @@
 
 from termcolor import colored
 
-from misc_classes.object_class import Category
+from system.object_class import Category
 from  items.item_class import Item
 
 

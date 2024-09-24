@@ -4,8 +4,8 @@ import items.item_dict as item_dict
 import items.resources as res
 
 from characters.character_class import Character
-from misc_classes.object_class import WorldObject, Category
-from misc_classes.storage_class import Storage
+from system.object_class import WorldObject, Category
+from system.storage_class import Storage
 from items.item_class import Item
 
 
@@ -31,13 +31,14 @@ class Player(WorldObject, Character):
         Character.__init__(self)
 
         self.input_queue = []
+
         self.inventory = Storage(12, 10, "-Empty-", "Inventory")
-        
         self.equipped: Item = None
 
+
         #For devolopement, so no need to harvest resources
-        #self.inventory.add_item(res.Wood(1))
-        #self.inventory.add_item(res.Stone(1))
+        self.inventory.add_item(res.Wood(3))
+        self.inventory.add_item(res.Stone(1))
         
         world[self.y][self.x] = self
 
@@ -46,7 +47,7 @@ class Player(WorldObject, Character):
 
         if self.equipped is not None:
 
-            return f"{uti.bold('Equipped:')} [{self.equipped} {self.equipped.name}]" 
+            return f"{uti.bold('Equipped:')} [{self.equipped} {self.equipped.name.capitalize()}]" 
             
         else:
             return uti.bold('Equipped:') + " []"
@@ -64,6 +65,7 @@ class Player(WorldObject, Character):
     def equip_item(self, item: str):
         
         to_equip: Item = item_dict.item_dict[item]
+        to_equip.amount = 1
 
         inventory_count = self.count_items()
 
@@ -100,7 +102,7 @@ class Player(WorldObject, Character):
 
     def craft_item(self, item: str):
 
-        to_craft: Item = item_dict. item_dict[item]
+        to_craft: Item = item_dict.item_dict[item]
         
         inventory_count = self.count_items()
         
@@ -229,5 +231,12 @@ class Player(WorldObject, Character):
             pass
 
         self.input_queue.pop(0)
+    
+
+    def update_player(self, world: list):
+
+        self.input_handler(world)
+        self.display_hud()
+
     
 

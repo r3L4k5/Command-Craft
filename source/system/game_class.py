@@ -3,6 +3,7 @@
 from characters.player_class import Player
 from enviorment.create_enviorment import fill_world
 from time import sleep
+from utility import clear
 
 
 class Game():
@@ -32,6 +33,8 @@ class Game():
     
     
     def update_game(game):
+
+        clear()
         
         player.display_hud()
 
@@ -39,5 +42,7 @@ class Game():
 
         sleep(0.07)
         
-        player.input_handler(game.world)
+        player.update_player(game.world)
+
+        clear()
 

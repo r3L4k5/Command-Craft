@@ -1,12 +1,11 @@
 
-from utility import clear
-from misc_classes.game_class import Game
+from system.game_class import Game
 
+#The game, duh
 main_game = Game()
 
+#Moves to next frame
 while True:
-   clear()
    main_game.update_game()
-   clear()
 
     

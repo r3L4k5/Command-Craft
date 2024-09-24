@@ -19,23 +19,23 @@ class Character():
         self.facing = 'w'   
 
 
-    def direction_calc(self, direction, distance: int = 1):
+    def direction_calc(self, direction):
         
         step = [0,0]
         
         match direction:
             
             case 'w':
-                step[0] -= distance
+                step[0] -= 1
             
             case 's':
-                step[0] += distance
+                step[0] += 1
             
             case 'd':
-                step[1] += distance
+                step[1] += 1
             
             case 'a':
-                step[1] -= distance
+                step[1] -= 1
         
         return step
             
@@ -54,19 +54,21 @@ class Character():
     
     
     def movement(self, direction, world):
-        
-        step = self.direction_calc(direction)
-        
-        if not self.will_collide(step, world):
-        
-            world[self.y][self.x] = self.ground
 
-            self.y += step[0]
-            self.x += step[1]
+        for _ in range(self.speed):
+
+            step = self.direction_calc(direction)
             
-            self.ground = world[self.y][self.x]
+            if not self.will_collide(step, world):
             
-            world[self.y][self.x] = self
+                world[self.y][self.x] = self.ground
+
+                self.y += step[0]
+                self.x += step[1]
+                
+                self.ground = world[self.y][self.x]
+                
+                world[self.y][self.x] = self
         
 
 

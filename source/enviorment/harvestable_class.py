@@ -3,7 +3,7 @@ import items.resources as res
 import characters.character_class as cha
 import enviorment.ground as gro
 
-from misc_classes.object_class import WorldObject, Category
+from system.object_class import WorldObject, Category
 from termcolor import colored
 
 
