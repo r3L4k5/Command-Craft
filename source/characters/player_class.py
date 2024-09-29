@@ -1,6 +1,7 @@
 
+from ast import Dict
 import utility as uti
-import items.item_dict as item_dict
+import items.item_access as item_access
 import items.resources as res
 
 from characters.character_class import Character
@@ -35,15 +36,14 @@ class Player(WorldObject, Character):
         self.inventory = Storage(12, 10, "-Empty-", "Inventory")
         self.equipped: Item = None
 
-
         #For devolopement, so no need to harvest resources
-        self.inventory.add_item(res.Wood(3))
+        self.inventory.add_item(res.Wood(10))
         self.inventory.add_item(res.Stone(1))
         
-        world[self.y][self.x] = self
+        world[self.y][self.x] = self   
 
     
-    def display_equip(self):
+    def display_equip(self) -> str:
 
         if self.equipped is not None:
 
@@ -53,7 +53,7 @@ class Player(WorldObject, Character):
             return uti.bold('Equipped:') + " []"
 
 
-    def display_hud(self):
+    def display_hud(self) -> None:
         
         print(f" {uti.bold('Facing: ')}{facing_directions[self.facing]}", end="     ")
 
@@ -62,9 +62,9 @@ class Player(WorldObject, Character):
         print(f"{uti.bold('Health: ')}{self.health}")
 
 
-    def equip_item(self, item: str):
+    def equip_item(self, item: str) -> None:
         
-        to_equip: Item = item_dict.item_dict[item]
+        to_equip: Item = item_access.get_item(item)
         to_equip.amount = 1
 
         inventory_count = self.count_items()
@@ -75,14 +75,14 @@ class Player(WorldObject, Character):
 
                 #Sloppy fix, should be worked on in the future
                 #Otherwise, it would give back an item with zero amount
-                self.equipped.amount = 1
+                #self.equipped.amount = 1
                 self.inventory.add_item(self.equipped)
             
             self.equipped = to_equip
-            self.inventory.remove_item(to_equip, "-Equipped-")
+            self.inventory.remove_item(to_equip)
         
 
-    def count_items(self):
+    def count_items(self) -> Dict:
 
         item_count = {}
         
@@ -100,9 +100,9 @@ class Player(WorldObject, Character):
         return item_count
 
 
-    def craft_item(self, item: str):
+    def craft_item(self, item: str) -> None:
 
-        to_craft: Item = item_dict.item_dict[item]
+        to_craft: Item = item_access.get_item(item)
         
         inventory_count = self.count_items()
         
@@ -112,7 +112,7 @@ class Player(WorldObject, Character):
             
             if ingredient in inventory_count and inventory_count[ingredient] >= to_craft.recipe[ingredient]:
                 
-                resource = item_dict.item_dict[ingredient]
+                resource = item_access.get_item(ingredient)
                 resource.amount = to_craft.recipe[ingredient]
 
                 consumed_items.append(resource)
@@ -127,7 +127,7 @@ class Player(WorldObject, Character):
         self.inventory.add_item(to_craft)
 
     
-    def open_inventory(self):
+    def open_inventory(self) -> None:
         
         mode = "craft"
 
@@ -182,7 +182,7 @@ class Player(WorldObject, Character):
                 continue
         
     
-    def interact(self, world: list):
+    def interact(self, world: list) -> None:
         
         step: list = self.direction_calc(self.facing)
 
@@ -202,7 +202,7 @@ class Player(WorldObject, Character):
                 interact_object.harvest(self, world)
     
     
-    def input_handler(self, world: list):
+    def input_handler(self, world: list) -> None:
     
         if len(self.input_queue) == 0:
             
@@ -233,7 +233,7 @@ class Player(WorldObject, Character):
         self.input_queue.pop(0)
     
 
-    def update_player(self, world: list):
+    def update_player(self, world: list) -> None:
 
         self.input_handler(world)
         self.display_hud()

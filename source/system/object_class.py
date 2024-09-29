@@ -10,7 +10,7 @@ class Category(Enum):
     GROUND = auto()
     PLAYER = auto()
     ENEMY = auto()
-    TOOLS = auto()
+    CRAFTABLE = auto()
 
 
 class WorldObject():
@@ -29,7 +29,7 @@ class WorldObject():
     def __str__(self) -> str:
         return f"{self.sprite}"
     
-    def delete(self, world):
+    def delete(self, world) -> None:
         
         world[self.y][self.x] = self.ground
         del self

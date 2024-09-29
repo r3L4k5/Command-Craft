@@ -1,17 +1,16 @@
 
 from items.item_class import Item
-import utility as uti
 
 class Slot():
     
-    def __init__(self, item = "Empty", amount: int = 0, ) -> None:
+    def __init__(self, item, amount: int = 0) -> None:
         
         self.item = item
         self.amount = amount
         self.empty = True
         
     
-    def empty_slot(self, placeholder: str = "Empty"):
+    def empty_slot(self, placeholder: str = "-Empty-"):
         
         self.item = placeholder
         self.amount = 0
@@ -20,7 +19,7 @@ class Slot():
 
 class Storage():
     
-    def __init__(self, size: int, max_stack: int, placeholder: str = "Empty", name: str = "Storage") -> None:
+    def __init__(self, size: int, max_stack: int, placeholder: str = "-Empty-", name: str = "Storage") -> None:
         
         self.slots = [Slot(placeholder) for _ in range(size)]
         self.max_stack = max_stack
@@ -32,7 +31,7 @@ class Storage():
         target = self.slots[place]
         new_amount = target.amount + new_item.amount        
         
-        if type(target.item) == type(new_item):
+        if target.item == new_item:
 
             if new_amount <= self.max_stack :
                 
@@ -65,7 +64,7 @@ class Storage():
         matching_slots = list(filter(lambda slot: slot.item == new_item, self.slots))
 
         for slot in matching_slots:
-            
+
             new_amount = slot.amount + new_item.amount
             
             if new_amount <= self.max_stack:
@@ -101,7 +100,7 @@ class Storage():
         return new_item
     
 
-    def remove_item(self, del_item: Item, placeholder: str = "Empty"):
+    def remove_item(self, del_item: Item):
 
         matching_slots = list(filter(lambda slot: slot.item == del_item, self.slots))
 
@@ -115,7 +114,7 @@ class Storage():
             
             else:
                 del_item.amount -= slot.amount
-                slot.empty_slot(placeholder)
+                slot.empty_slot()
 
         return del_item
 

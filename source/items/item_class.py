@@ -3,7 +3,7 @@ from system.object_class import Category
 
 class Item():
     
-    def __init__(self, name: str, sprite: str, category: Category, amount: int = 1, ) -> None:
+    def __init__(self, name: str, sprite: str, category: Category, amount: int = 1) -> None:
         
         self.name: str = name
         self.sprite: str = sprite
