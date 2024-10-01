@@ -1,5 +1,5 @@
 
-from system.game_class import Game
+from systems.game_class import Game
 
 #The game, duh
 main_game = Game()

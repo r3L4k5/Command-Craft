@@ -1,8 +1,8 @@
 
 from termcolor import colored
 
-from system.object_class import Category
-from  items.item_class import Item
+from systems.object_class import Category
+from items.item_class import Item
 
 
 class Wood(Item):

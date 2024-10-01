@@ -15,11 +15,12 @@ class Category(Enum):
 
 class WorldObject():
     
-    def __init__(self, sprite: str, y: int, x: int, category: Category, collision: bool = True) -> None:
+    def __init__(self, name: str, sprite: str, y: int, x: int, category: Category, collision: bool = True) -> None:
         
         self.sprite = sprite
         self.collision = collision
         self.category = category
+        self.name = name
         
         self.ground = Grass()
         

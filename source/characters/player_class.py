@@ -5,8 +5,8 @@ import items.item_access as item_access
 import items.resources as res
 
 from characters.character_class import Character
-from system.object_class import WorldObject, Category
-from system.storage_class import Storage
+from systems.object_class import WorldObject, Category
+from systems.storage_class import Storage
 from items.item_class import Item
 
 
@@ -28,7 +28,7 @@ class Player(WorldObject, Character):
     
     def __init__(self, world: list) -> None:
         
-        super().__init__(" i", 0, 10, Category.PLAYER)
+        super().__init__("player", " i", 0, 10, Category.PLAYER)
         Character.__init__(self)
 
         self.input_queue = []
@@ -113,7 +113,7 @@ class Player(WorldObject, Character):
             if ingredient in inventory_count and inventory_count[ingredient] >= to_craft.recipe[ingredient]:
                 
                 resource = item_access.get_item(ingredient)
-                resource.amount = to_craft.recipe[ingredient]
+                reamount = to_craft.recipe[ingredient]
 
                 consumed_items.append(resource)
                  

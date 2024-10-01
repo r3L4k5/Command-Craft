@@ -3,6 +3,7 @@ import  enviorment.harvestable_class as har
 import enviorment.ground as env
 
 from random import randint
+from characters.npc.dog import Dog
 
 def random_enviorment(y, x, world):
     
@@ -21,11 +22,15 @@ def random_enviorment(y, x, world):
     return env.Grass()
 
 
-def fill_world(world):
+def fill_world(world: list[list]):
    
     for y in range(len(world)):
         
         for x in range(30):
             
             world[y].append(random_enviorment(y, x, world))
+    
+    dog = Dog(1,2)
+
+    world[1][2] = dog
          
