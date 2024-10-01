@@ -14,7 +14,7 @@ class Harvestable():
         self.hitpoints = hitpoints
         self.resource = resource
 
-    def harvest(self, player: WorldObject, world):
+    def harvest(self, player: WorldObject , world):
         
         if self.hitpoints > 1:
             

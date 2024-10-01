@@ -9,6 +9,9 @@ class Item():
         self.sprite: str = sprite
         self.amount: int = amount
         self.category: Category = category
+    
+    def effect():
+        return
 
     def __str__(self) -> str:
         return self.sprite

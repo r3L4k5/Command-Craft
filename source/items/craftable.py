@@ -20,11 +20,12 @@ class Sword(Item):
         if type(self) == type(value) and self.material == value.material:
             return True
         
-    def attack():
+    def effect():
         pass
 
 
 class Axe(Item):
     
     def __init__(self, name: str, sprite: str, category: Category) -> None:
+        
         super().__init__(name, sprite, category)
