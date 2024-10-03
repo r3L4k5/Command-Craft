@@ -200,7 +200,9 @@ class Player(WorldObject, Character):
             case Category.HARVESTABLE:
                 
                 interact_object.harvest(self, world)
-    
+
+            case Category.ENEMY:
+                interact_object.interact(self)
     
     def input_handler(self, world: list) -> None:
     

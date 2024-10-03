@@ -5,6 +5,8 @@ from characters.npc.npc_class import NPC
 from enviorment.create_enviorment import fill_world
 from time import sleep
 from utility import clear
+from characters.npc.dog import Dog
+
 
 
 class Game():
@@ -17,6 +19,10 @@ class Game():
         game.npc: list[NPC] = []
         
         fill_world(game.world)
+
+        dog = Dog(1,2)
+        game.world[1][2] = dog
+        game.npc.append(dog)
         
         global player
         player = Player(game.world)
