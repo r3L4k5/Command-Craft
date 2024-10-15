@@ -4,11 +4,25 @@ from termcolor import colored
 from systems.worldobject import Category
 
 
+def color_to_material(sprite, material) -> str:
+
+    match material:
+
+        case "wood":
+            return colored(sprite, "red", attrs=["bold", "dark"])
+        
+        case "stone":
+            return colored(sprite, "dark_grey", attrs=["bold", "dark"])
+        
+        case _:
+            raise "Materialnot found"
+
+
 class Sword(Item):
 
-    def __init__(self, material, recipe: dict, damage: int, durability: int) -> None:
+    def __init__(self, material: str, recipe: dict, damage: int, durability: int) -> None:
         
-        super().__init__("sword", colored("\\", material.color, attrs= [material.brightness, "bold"]), Category.CRAFTABLE)
+        super().__init__("sword", color_to_material("\\", material), Category.CRAFTABLE)
         
         self.material = material
         self.recipe: dict = recipe
