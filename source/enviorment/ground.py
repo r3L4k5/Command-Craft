@@ -4,9 +4,14 @@ from termcolor import colored
 
 class Grass():
     
-    def __init__(self) -> None:
+    def __init__(self, y: int, x: int) -> None:
 
         self.sprite = colored(" ;", "light_green")
+        self.name = "grass"
+
+        self.y = y
+        self.x = x
+
         self.collision = False
         
     

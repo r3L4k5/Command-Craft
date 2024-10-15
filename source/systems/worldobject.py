@@ -7,9 +7,8 @@ class Category(Enum):
     
     RESOURCES = auto()
     HARVESTABLE = auto()
-    GROUND = auto()
     PLAYER = auto()
-    ENEMY = auto()
+    NPC = auto()
     CRAFTABLE = auto()
 
 
@@ -22,10 +21,11 @@ class WorldObject():
         self.category = category
         self.name = name
         
-        self.ground = Grass()
-        
         self.y = y
         self.x = x
+        
+        self.ground = Grass(y, x)
+        
 
     def __str__(self) -> str:
         return f"{self.sprite}"

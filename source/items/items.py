@@ -1,5 +1,5 @@
 
-from systems.object_class import Category
+from systems.worldobject import Category
 
 class Item():
     

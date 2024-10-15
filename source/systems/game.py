@@ -1,13 +1,11 @@
 
 
-from characters.player_class import Player
-from characters.npc.npc_class import NPC
+from characters.player import Player
+from characters.npc import NPC
 from enviorment.create_enviorment import fill_world
 from time import sleep
 from utility import clear
-from characters.npc.dog import Dog
-
-
+from characters.neutral.dog import Dog
 
 class Game():
 
@@ -38,21 +36,23 @@ class Game():
         
         print("\n")
     
+
     def update_all_npc(game):
         
         for npc in game.npc:
 
             npc.update_npc(game.world)
     
+
     def update_game(game):
 
         clear()
         
+        game.update_all_npc()
+
         player.display_hud()
 
         game.display_world()
-        
-        game.update_all_npc()
 
         sleep(0.07)
         

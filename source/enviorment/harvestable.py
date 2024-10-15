@@ -1,9 +1,9 @@
 
 import items.resources as res
-import characters.character_class as cha
+import characters.character as cha
 import enviorment.ground as gro
 
-from systems.object_class import WorldObject, Category
+from systems.worldobject import WorldObject, Category
 from termcolor import colored
 
 
@@ -14,7 +14,7 @@ class Harvestable():
         self.hitpoints = hitpoints
         self.resource = resource
 
-    def harvest(self, player: WorldObject , world):
+    def harvest(self, player: WorldObject, world):
         
         if self.hitpoints > 1:
             
@@ -49,7 +49,7 @@ class Tree(WorldObject, Harvestable):
                 continue
                 
             else:
-                self.reamount = i - 1
+                self.resource.amount = i - 1
                 break
 
                 

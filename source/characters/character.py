@@ -25,16 +25,16 @@ class Character():
         
         match direction:
             
-            case 'w':
+            case 'north':
                 step[0] -= 1
             
-            case 's':
+            case 'south':
                 step[0] += 1
             
-            case 'd':
+            case 'east':
                 step[1] += 1
             
-            case 'a':
+            case 'west':
                 step[1] -= 1
         
         return step

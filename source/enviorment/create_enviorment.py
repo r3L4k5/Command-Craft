@@ -1,5 +1,5 @@
 
-import  enviorment.harvestable_class as har
+import enviorment.harvestable as har
 import enviorment.ground as env
 
 from random import randint
@@ -19,7 +19,7 @@ def random_enviorment(y, x, world):
         
         return har.Tree(y, x, world)
     
-    return env.Grass()
+    return env.Grass(y, x)
 
 
 def fill_world(world: list[list]):

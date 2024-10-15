@@ -1,7 +1,7 @@
 
-from items.item_class import Item
+from items.items import Item
 from termcolor import colored
-from systems.object_class import Category
+from systems.worldobject import Category
 
 
 class Sword(Item):

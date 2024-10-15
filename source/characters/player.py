@@ -4,10 +4,10 @@ import utility as uti
 import items.item_access as item_access
 import items.resources as res
 
-from characters.character_class import Character
-from systems.object_class import WorldObject, Category
-from systems.storage_class import Storage
-from items.item_class import Item
+from characters.character import Character
+from systems.worldobject import WorldObject, Category
+from systems.storage import Storage
+from items.items import Item
 
 
 controls = {
@@ -17,10 +17,10 @@ controls = {
 }
 
 facing_directions = {
-    'w': "North",
-    's': "South",
-    'a': "West",
-    'd': "East"
+    'w': "north",
+    's': "south",
+    'a': "west",
+    'd': "east"
 }
 
 
@@ -33,10 +33,11 @@ class Player(WorldObject, Character):
 
         self.input_queue = []
 
-        self.inventory = Storage(12, 10, "-Empty-", "Inventory")
+        self.inventory: Storage = Storage(12, 10, "-Empty-", "Inventory")
         self.equipped: Item = None
 
-        #For devolopement, so no need to harvest resources
+        #For devolopement, so no need to harvest 
+        #resources to craft
         self.inventory.add_item(res.Wood(10))
         self.inventory.add_item(res.Stone(1))
         
@@ -55,7 +56,7 @@ class Player(WorldObject, Character):
 
     def display_hud(self) -> None:
         
-        print(f" {uti.bold('Facing: ')}{facing_directions[self.facing]}", end="     ")
+        print(f" {uti.bold('Facing: ')}{self.facing.capitalize()}", end="     ")
 
         print(f"{self.display_equip()}", end="     ")
 
@@ -113,7 +114,7 @@ class Player(WorldObject, Character):
             if ingredient in inventory_count and inventory_count[ingredient] >= to_craft.recipe[ingredient]:
                 
                 resource = item_access.get_item(ingredient)
-                reamount = to_craft.recipe[ingredient]
+                resource.amount = to_craft.recipe[ingredient]
 
                 consumed_items.append(resource)
                  
@@ -198,28 +199,29 @@ class Player(WorldObject, Character):
         match interact_object.category:
 
             case Category.HARVESTABLE:
-                
                 interact_object.harvest(self, world)
 
-            case Category.ENEMY:
+            case Category.NPC:
                 interact_object.interact(self)
+        
     
     def input_handler(self, world: list) -> None:
     
         if len(self.input_queue) == 0:
-            
+
             incoming_input = list(input(" Action: ").strip())
 
-            if len(incoming_input) == 0: return
+            if len(incoming_input) == 0: 
+                return
             
             self.input_queue.extend(incoming_input)
             
 
         if self.input_queue[0] in controls["movement"]:
             
-            self.facing = self.input_queue[0]
+            self.facing = facing_directions[self.input_queue[0]]
             
-            self.movement(self.input_queue[0], world)
+            self.movement(self.facing, world)
         
         elif self.input_queue[0] == controls["interact"]:
             

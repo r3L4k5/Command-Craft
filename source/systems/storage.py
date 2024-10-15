@@ -1,5 +1,5 @@
 
-from items.item_class import Item
+from items.items import Item
 
 class Slot():
     
