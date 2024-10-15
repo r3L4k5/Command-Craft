@@ -58,4 +58,4 @@ class NPC(WorldObject, Character):
         self.movement(direction, world)
     
     def update_npc(self, world):
-        self.vision_calc(world)
+        pass

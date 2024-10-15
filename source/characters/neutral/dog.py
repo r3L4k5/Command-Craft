@@ -9,7 +9,9 @@ class Dog(NPC):
         super().__init__("dog", " m", y, x, 100, 10, 1, 3)
 
     def interact(self, object: WorldObject):
-        input("Woof >:(")
+        
+        if object.name == "player":
+            input("Woof >:(")
     
     def detection(self, world: list):
 
@@ -18,5 +20,7 @@ class Dog(NPC):
         for y in range(vision_field["north"], vision_field["south"]):
             for x in range(vision_field["west"], vision_field["east"]):
                 
-                if world[y][x].name == "player":
-                    self.move_toward(world[y][x])
+                self.interact(world[y][x])
+
+    def update_npc(self, world):
+        self.detection(world)
