@@ -2,7 +2,7 @@
 from characters.character import Character
 from systems.worldobject import Category, WorldObject
 from utility import clamp
-from termcolor import colored
+
 
 class NPC(WorldObject, Character):
 
@@ -19,11 +19,11 @@ class NPC(WorldObject, Character):
 
     def vision_calc(self, world):
 
-        north_vision: int = clamp(self.y - self.vision, len(world), 0)
-        south_vision: int = clamp(self.y + self.vision, len(world), 0)
+        north_vision: int = clamp(self.y - self.vision, len(world) - 1, 0)
+        south_vision: int = clamp(self.y + self.vision, len(world) - 1, 0)
 
-        west_vision: int = clamp(self.x - self.vision, len(world[self.y]), 0)
-        east_vision: int = clamp(self.x + self.vision, len(world[self.y]), 0)
+        west_vision: int = clamp(self.x - self.vision, len(world[self.y]) - 1, 0)
+        east_vision: int = clamp(self.x + self.vision, len(world[self.y]) - 1, 0)
 
         #Add 1 to south and east because when used in ex.'range(north_vision, south_vision)' in for loop, 
         #the highest number isn't included as the last number. 
@@ -34,28 +34,30 @@ class NPC(WorldObject, Character):
 
     def move_toward(self, target: WorldObject, world: list):
         
-        distance: list = [0,0]
-        direction: str = ''
+        if target.name == "player":
 
-        distance[0] = target.y - self.y
-        distance[1] = target.x - self.x
+            distance: list = [0,0]
+            direction: str = ''
 
-        if distance[0] > 1:
-            direction = 'east'
+            distance[0] = target.y - self.y
+            distance[1] = target.x - self.x
 
-        elif distance[0] < -1:
-            direction = 'west'
+            if distance[0] > 1:
+                direction = 'south'
+
+            elif distance[0] < -1:
+                direction = 'north'
+            
+            elif distance[1] > 1:
+                direction = 'east'
+            
+            elif distance[1] < - 1:
+                direction = "west"
+            
+            else:
+                return
         
-        elif distance[1] > 1:
-            direction = 'south'
-        
-        elif distance[1] < - 1:
-            direction = "north"
-        
-        else:
-            return
-    
-        self.movement(direction, world)
+            self.movement(direction, world)
     
     def update_npc(self, world):
         pass

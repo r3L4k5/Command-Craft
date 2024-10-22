@@ -18,6 +18,5 @@ class Item():
     
     def __eq__(self, value: object) -> bool:
         return type(self) == type(value)
-    
 
-    
+

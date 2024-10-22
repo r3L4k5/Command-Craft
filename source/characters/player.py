@@ -34,12 +34,12 @@ class Player(WorldObject, Character):
         self.input_queue = []
 
         self.inventory: Storage = Storage(12, 10, "-Empty-", "Inventory")
-        self.equipped: Item = None
+        self.equipped: Item | None = None
 
         #For devolopement, so no need to harvest 
         #resources to craft
         self.inventory.add_item(res.Wood(10))
-        self.inventory.add_item(res.Stone(1))
+        self.inventory.add_item(res.Stone(10))
         
         world[self.y][self.x] = self   
 
@@ -66,9 +66,8 @@ class Player(WorldObject, Character):
     def equip_item(self, item: str) -> None:
         
         to_equip: Item = item_access.get_item(item)
-        to_equip.amount = 1
 
-        inventory_count = self.count_items()
+        inventory_count: Dict = self.count_items()
 
         if to_equip.name in inventory_count:
 
@@ -113,7 +112,7 @@ class Player(WorldObject, Character):
             
             if ingredient in inventory_count and inventory_count[ingredient] >= to_craft.recipe[ingredient]:
                 
-                resource = item_access.get_item(ingredient)
+                resource: Item = item_access.get_item(ingredient)
                 resource.amount = to_craft.recipe[ingredient]
 
                 consumed_items.append(resource)

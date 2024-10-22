@@ -23,12 +23,13 @@ class WorldObject():
         
         self.y = y
         self.x = x
-        
+
         self.ground = Grass(y, x)
         
 
     def __str__(self) -> str:
         return f"{self.sprite}"
+    
     
     def delete(self, world) -> None:
         
