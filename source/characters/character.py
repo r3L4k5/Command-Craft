@@ -16,7 +16,7 @@ class Character():
         self.strength = strength 
         self.speed = speed
         
-        self.facing = 'w'   
+        self.facing = 'north'   
 
 
     def direction_calc(self, direction):

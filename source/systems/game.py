@@ -54,7 +54,7 @@ class Game():
 
         game.display_world()
 
-        sleep(0.07)
+        #sleep(0.07)
         
         player.update_player(game.world)
 
