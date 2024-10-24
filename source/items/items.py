@@ -16,7 +16,7 @@ class Item():
         self.amount: int = amount
         self.material: Material = material
     
-    def effect():
+    def effect(*args):
         pass
     
     def __str__(self) -> str:

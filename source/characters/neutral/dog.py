@@ -7,14 +7,10 @@ class Dog(NPC):
 
     def __init__(self, y: int, x: int) -> None:
 
-        super().__init__("dog", " m", y, x, 100, 10, 1, 3)
-
-
-    def interact(self, object: WorldObject):
-        
-        if object.name == "player":
-            print("Woof >:(")
-
+        super().__init__("dog", " m", y, x, 5, 1, 1, 3)
+    
+    def react(self, actor, world):
+        input("Woof >:O")
     
     def detection(self, world: list):
 

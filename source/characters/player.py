@@ -1,13 +1,15 @@
 
-from ast import Dict
+from math import e
 import utility as uti
-import items.item_access as item_access
 import items.resources as res
+import items.tools as too
+
 
 from characters.character import Character
 from systems.worldobject import WorldObject, ObjectCategory
 from systems.storage import Storage
 from items.items import Item
+from items.item_access import get_item
 
 
 controls = {
@@ -64,9 +66,9 @@ class Player(Character):
 
     def equip_item(self, item: str) -> None:
         
-        to_equip: Item = item_access.get_item(item)
+        to_equip: Item = get_item(item)
 
-        inventory_count: Dict = self.count_items()
+        inventory_count: dict = self.count_items()
 
         if to_equip.name in inventory_count:
 
@@ -81,7 +83,7 @@ class Player(Character):
             self.inventory.remove_item(to_equip)
         
 
-    def count_items(self) -> Dict:
+    def count_items(self) -> dict:
 
         item_count = {}
         
@@ -101,7 +103,7 @@ class Player(Character):
 
     def craft_item(self, item: str) -> None:
 
-        to_craft: Item = item_access.get_item(item)
+        to_craft: Item = get_item(item)
         
         inventory_count = self.count_items()
         
@@ -111,7 +113,7 @@ class Player(Character):
             
             if ingredient in inventory_count and inventory_count[ingredient] >= to_craft.recipe[ingredient]:
                 
-                resource: Item = item_access.get_item(ingredient)
+                resource: Item = get_item(ingredient)
                 resource.amount = to_craft.recipe[ingredient]
 
                 consumed_items.append(resource)
@@ -186,21 +188,27 @@ class Player(Character):
         step: dict = self.direction_calc(self.facing)
 
         try:
-            interact_object: WorldObject = world[self.y + step["y-axis"]][self.x + step["x-axis"]]
+            target: WorldObject = world[self.y + step["y-axis"]][self.x + step["x-axis"]]
         
         except IndexError:
             return
 
-        if interact_object.collision == False:
+        if target.collision == False:
             return
 
-        match interact_object.category:
+        match target.category:
 
             case ObjectCategory.HARVESTABLE:
-                interact_object.harvest(self, world)
+                target.harvest(self, world)
 
             case ObjectCategory.NPC:
-                interact_object.interact(self, world)
+
+                if isinstance(self.equipped, too.Sword):
+
+                    self.attack(target, world)
+                    return
+                
+                target.react(self, world)
     
     
     def input_handler(self, world: list) -> None:
@@ -234,6 +242,12 @@ class Player(Character):
 
         self.input_queue.pop(0)
     
+
+    def attack(self, target: Character, world):
+
+        total_strength = self.strength * self.equipped.effect()
+        target.take_damage(total_strength, world)
+
 
     def update_player(self, world: list) -> None:
 

@@ -14,13 +14,13 @@ class Game():
         game.world: list = [[],[],[],[],[],[],[],[],[],[],
                     [],[],[],[],[],[],[],[],[],[]]
 
-        game.npc: list[NPC] = []
+        game.npcs: list[NPC] = []
         
         fill_world(game.world)
 
         dog = Dog(1,2)
         game.world[1][2] = dog
-        game.npc.append(dog)
+        game.npcs.append(dog)
         
         global player
         player = Player(game.world)
@@ -39,7 +39,7 @@ class Game():
 
     def update_all_npc(game):
         
-        for npc in game.npc:
+        for npc in game.npcs:
 
             npc.update_npc(game.world)
     

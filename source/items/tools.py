@@ -1,4 +1,5 @@
 
+from re import S
 from items.items import Item, Material
 from systems.worldobject import ObjectCategory
 from termcolor import colored
@@ -46,10 +47,9 @@ class Sword(Tool):
         
         super().__init__("sword", "/", material, recipe, durability, power)
     
-    def effect(self, target):
-        
-        if target.category == ObjectCategory.NPC:
-            return self.power
+    def effect(self):
+        self.durability -= 1
+        return self.power
         
     
 class Axe(Tool):
@@ -61,6 +61,8 @@ class Axe(Tool):
     def effect(self, target):
         
         if target.material == Material.WOOD:
+            
+            self.durability -= 1
             return self.power
         
 
@@ -73,4 +75,6 @@ class Pickaxe(Tool):
     def effect(self, target):
 
         if target.material == Material.STONE:
+
+            self.durability -= 1
             return self.power

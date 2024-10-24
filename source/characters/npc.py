@@ -1,5 +1,4 @@
 
-from items.tools import Sword
 from characters.character import Character
 from systems.worldobject import ObjectCategory, WorldObject
 from utility import clamp
@@ -12,12 +11,6 @@ class NPC(Character):
         super().__init__(name, sprite, y, x, ObjectCategory.NPC, True, health, strength, speed)
 
         self.vision = vision
-
-
-    def interact(self, object: WorldObject, world: list):
-        
-        if isinstance(object.equipped, Sword):
-            self.take_damage(object, world)
     
 
     def vision_calc(self, world):
@@ -62,6 +55,14 @@ class NPC(Character):
 
             self.movement(direction, world)
                 
-                
-    def update_npc(self, world):
-        pass
+
+    def status_check(self, npcs: list, world):
+        
+        if self.health <= 0:
+            self.delete(world)
+            npcs.remove(self)
+
+
+    def update_npc(self, game, world):
+        
+        self.status_check(game.npcs, world)

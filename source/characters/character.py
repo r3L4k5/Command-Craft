@@ -1,4 +1,5 @@
 
+from tkinter import W
 from systems.worldobject import WorldObject, ObjectCategory
 
 class Character(WorldObject):
@@ -67,11 +68,23 @@ class Character(WorldObject):
                 world[self.y][self.x] = self
     
 
-    def take_damage(self, attacker, world):
+    def react(self, actor, world):
+        pass
 
-        if self.health - attacker.strength != 0:
 
-            self.health - attacker.strength
-            return
+    def take_damage(self, damage):
+
+        if self.health - damage > 0:
+
+            self.health -= damage
+            input(self.health)
         
-        self.delete(world)
+
+    def status_check(self, world):
+
+        if self.health <= 0:
+            self.delete(world)
+        
+    
+    def update_character(self, game, world):
+        self.status_check(world)
