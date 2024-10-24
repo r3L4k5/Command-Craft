@@ -1,16 +1,12 @@
 
-class Stats():
-    
-    def __init__(self, health = 100, strength = 1, speed = 1) -> None:
-        
-        self.health = health
-        self.strength =  strength
-        self.speed =  speed
+from systems.worldobject import WorldObject, ObjectCategory
 
-
-class Character():
+class Character(WorldObject):
     
-    def __init__(self, health: int = 100, strength: int = 1, speed: int = 1) -> None:
+    def __init__(self, name: str, sprite: str, y: int, x: int, category: ObjectCategory, 
+                 collison: bool = True,  health: int = 100, strength: int = 1, speed: int = 1) -> None:
+
+        super().__init__(name, sprite, y, x, category, collison)
         
         self. health = health
         self.strength = strength 
@@ -69,13 +65,13 @@ class Character():
                 self.ground = world[self.y][self.x]
                 
                 world[self.y][self.x] = self
-            
+    
+
+    def take_damage(self, attacker, world):
+
+        if self.health - attacker.strength != 0:
+
+            self.health - attacker.strength
+            return
         
-
-
-
-
-
-
-
-
+        self.delete(world)

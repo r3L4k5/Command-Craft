@@ -1,22 +1,24 @@
 
+from items.tools import Sword
 from characters.character import Character
 from systems.worldobject import ObjectCategory, WorldObject
 from utility import clamp
 
 
-class NPC(WorldObject, Character):
+class NPC(Character):
 
     def __init__(self, name: str, sprite: str, y: int, x: int, health: int, strength: int, speed: int, vision: int) -> None:
 
-        super().__init__(name, sprite, y, x, ObjectCategory.NPC)
-        Character.__init__(self, health, strength, speed)
+        super().__init__(name, sprite, y, x, ObjectCategory.NPC, True, health, strength, speed)
 
         self.vision = vision
 
 
-    def interact(self, object: WorldObject):
-        pass
-
+    def interact(self, object: WorldObject, world: list):
+        
+        if isinstance(object.equipped, Sword):
+            self.take_damage(object, world)
+    
 
     def vision_calc(self, world):
 

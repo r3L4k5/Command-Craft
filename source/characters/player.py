@@ -24,12 +24,11 @@ facing_directions = {
 }
 
 
-class Player(WorldObject, Character):
+class Player(Character):
     
     def __init__(self, world: list) -> None:
         
         super().__init__("player", " i", 0, 10, ObjectCategory.PLAYER)
-        Character.__init__(self)
 
         self.input_queue = []
 
@@ -184,10 +183,10 @@ class Player(WorldObject, Character):
     
     def interact(self, world: list) -> None:
         
-        step: list = self.direction_calc(self.facing)
+        step: dict = self.direction_calc(self.facing)
 
         try:
-            interact_object: WorldObject = world[self.y + step[0]][self.x + step[1]]
+            interact_object: WorldObject = world[self.y + step["y-axis"]][self.x + step["x-axis"]]
         
         except IndexError:
             return
@@ -201,8 +200,8 @@ class Player(WorldObject, Character):
                 interact_object.harvest(self, world)
 
             case ObjectCategory.NPC:
-                interact_object.interact(self)
-        
+                interact_object.interact(self, world)
+    
     
     def input_handler(self, world: list) -> None:
     

@@ -1,5 +1,6 @@
 
-from items.items import Item, Material, ItemCategory
+from items.items import Item, Material
+from systems.worldobject import ObjectCategory
 from termcolor import colored
 
 
@@ -21,22 +22,22 @@ class Tool(Item):
     
     def __init__(self, name: str, sprite: str, material: Material, recipe: dict, durability: int, power: int) -> None:
         
-        super().__init__(name, material_color(sprite, material), ItemCategory.CRAFTABLE, material)
+        super().__init__(name, material_color(sprite, material), material)
 
         self.recipe = recipe
         self.durability = durability
         self.material = material
         self.power = power
-    
+
+
+    def effect(self, target):
+        pass
+
 
     def __eq__(self, value: object) -> bool:
         
         if type(self) == type(value) and self.material == value.material:
             return True
-    
-
-    def effect(target):
-        pass
         
     
 class Sword(Tool):
@@ -45,8 +46,10 @@ class Sword(Tool):
         
         super().__init__("sword", "/", material, recipe, durability, power)
     
-    def effect(target):
-        return super().effect()
+    def effect(self, target):
+        
+        if target.category == ObjectCategory.NPC:
+            return self.power
         
     
 class Axe(Tool):
@@ -55,9 +58,19 @@ class Axe(Tool):
         
         super().__init__("axe", "P", material, recipe, durability, power)
     
+    def effect(self, target):
+        
+        if target.material == Material.WOOD:
+            return self.power
+        
 
 class Pickaxe(Tool):
 
     def __init__(self, material: str, recipe: dict, durability: int, power: int) -> None:
         
         super().__init__("pickaxe", "T", material, recipe, durability, power)
+    
+    def effect(self, target):
+
+        if target.material == Material.STONE:
+            return self.power

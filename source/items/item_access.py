@@ -18,7 +18,7 @@ item_access = {
     "woodensword": too.Sword(mat.WOOD, {"wood": 4}, 10, 1.5),
     "stonesword": too.Sword(mat.STONE, {"stone": 3, "wood": 1}, 20, 3),
 
-    "woodenaxe": too.Axe(mat.WOOD, {"wood": 4}, 10, 1.5),
+    "woodenaxe": too.Axe(mat.WOOD, {"wood": 4}, 10, 3),
     "stoneaxe": too.Axe(mat.STONE, {"stone": 3, "wood": 1}, 20, 3),
 
     "woodenpickaxe": too.Pickaxe(mat.WOOD, {"wood": 4}, 10, 1.5),

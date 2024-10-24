@@ -4,27 +4,31 @@ import characters.character as cha
 import enviorment.ground as gro
 
 from systems.worldobject import WorldObject, ObjectCategory
+from items.items import Item
 from termcolor import colored
 
 
 class Harvestable():
     
-    def __init__(self, resource: object, hitpoints: int ):
+    def __init__(self, resource: Item, hitpoints: int ):
         
         self.hitpoints = hitpoints
         self.resource = resource
 
 
-    def harvest(self, player: WorldObject | cha.Character , world):
+    def harvest(self, player: WorldObject | cha.Character, world):
 
-        true_strength = player.strength * player.equipped.effect(self)
+        total_strength: int = player.strength
+
+        if isinstance(player.equipped, Item):
+
+            total_strength *= player.equipped.effect(self.resource)
         
-        
-        if self.hitpoints > 1:
-            
-            self.hitpoints -= player.strength
+        if self.hitpoints - total_strength > 0:
+
+            self.hitpoints -= total_strength
             return
-
+            
         player.inventory.add_item(self.resource)
         
         self.delete(world)

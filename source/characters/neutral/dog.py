@@ -1,6 +1,7 @@
 
-from systems.worldobject import WorldObject, ObjectCategory
+from systems.worldobject import WorldObject
 from characters.npc import NPC
+
 
 class Dog(NPC):
 
