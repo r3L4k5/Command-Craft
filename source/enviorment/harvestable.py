@@ -3,7 +3,7 @@ import items.resources as res
 import characters.character as cha
 import enviorment.ground as gro
 
-from systems.worldobject import WorldObject, Category
+from systems.worldobject import WorldObject, ObjectCategory
 from termcolor import colored
 
 
@@ -14,7 +14,11 @@ class Harvestable():
         self.hitpoints = hitpoints
         self.resource = resource
 
-    def harvest(self, player: WorldObject, world):
+
+    def harvest(self, player: WorldObject | cha.Character , world):
+
+        true_strength = player.strength * player.equipped.effect(self)
+        
         
         if self.hitpoints > 1:
             
@@ -30,7 +34,7 @@ class Rock(WorldObject, Harvestable):
 
     def __init__(self, y: int = 0, x: int = 0) -> None:
         
-        super().__init__("rock", colored("()", "dark_grey", attrs=["bold", "dark"]), y, x, Category.HARVESTABLE )
+        super().__init__("rock", colored("()", "dark_grey", attrs=["bold"]), y, x, ObjectCategory.HARVESTABLE )
         
         Harvestable.__init__(self, res.Stone(), 7)
 
@@ -39,7 +43,7 @@ class Tree(WorldObject, Harvestable):
     
     def __init__(self, y: int, x: int, world) -> None:
             
-        super().__init__("tree", colored("||", "red", attrs=["bold", "dark"]), y, x, Category.HARVESTABLE)
+        super().__init__("tree", colored("||", "red", attrs=["bold", "dark"]), y, x, ObjectCategory.HARVESTABLE)
         
         Harvestable.__init__(self, res.Wood(), 3)
 
@@ -67,7 +71,7 @@ class Tree(WorldObject, Harvestable):
             
             elif isinstance(above, cha.Character):
         
-                above.ground = gro.Grass() 
+                above.ground = gro.Grass(above.y, above.x) 
             
             else: 
                 break
@@ -77,6 +81,6 @@ class Leaves(WorldObject):
     
     def __init__(self, y: int, x: int, world = None) -> None:
         
-        super().__init__("leaves", colored("  ", on_color= "on_green", attrs=["bold"]), y, x, Category.HARVESTABLE, False)
+        super().__init__("leaves", colored("  ", on_color= "on_green", attrs=["bold"]), y, x, ObjectCategory.HARVESTABLE, False)
 
         world[self.y][self.x] = self

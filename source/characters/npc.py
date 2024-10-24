@@ -1,6 +1,6 @@
 
 from characters.character import Character
-from systems.worldobject import Category, WorldObject
+from systems.worldobject import ObjectCategory, WorldObject
 from utility import clamp
 
 
@@ -8,7 +8,7 @@ class NPC(WorldObject, Character):
 
     def __init__(self, name: str, sprite: str, y: int, x: int, health: int, strength: int, speed: int, vision: int) -> None:
 
-        super().__init__(name, sprite, y, x, Category.NPC)
+        super().__init__(name, sprite, y, x, ObjectCategory.NPC)
         Character.__init__(self, health, strength, speed)
 
         self.vision = vision
@@ -16,6 +16,7 @@ class NPC(WorldObject, Character):
 
     def interact(self, object: WorldObject):
         pass
+
 
     def vision_calc(self, world):
 
@@ -36,28 +37,29 @@ class NPC(WorldObject, Character):
         
         if target.name == "player":
 
-            distance: list = [0,0]
+            distance: list = {"y-axis": 0, "x-axis": 0}
             direction: str = ''
 
-            distance[0] = target.y - self.y
-            distance[1] = target.x - self.x
+            distance["y-axis"] = target.y - self.y
+            distance["x-axis"] = target.x - self.x
 
-            if distance[0] > 1:
+            if distance["y-axis"] > 1:
                 direction = 'south'
 
-            elif distance[0] < -1:
+            elif distance["y-axis"] < -1:
                 direction = 'north'
             
-            elif distance[1] > 1:
+            elif distance["x-axis"] > 1:
                 direction = 'east'
             
-            elif distance[1] < - 1:
+            elif distance["x-axis"] < - 1:
                 direction = "west"
             
             else:
                 return
-        
+
             self.movement(direction, world)
-    
+                
+                
     def update_npc(self, world):
         pass

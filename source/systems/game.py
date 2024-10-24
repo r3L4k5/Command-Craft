@@ -53,8 +53,6 @@ class Game():
         player.display_hud()
 
         game.display_world()
-
-        #sleep(0.07)
         
         player.update_player(game.world)
 

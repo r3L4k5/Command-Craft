@@ -3,18 +3,15 @@ from enum import Enum, auto
 from enviorment.ground import Grass
 
 
-class Category(Enum):
-    
-    RESOURCES = auto()
+class ObjectCategory(Enum):
     HARVESTABLE = auto()
     PLAYER = auto()
     NPC = auto()
-    CRAFTABLE = auto()
-
+ 
 
 class WorldObject():
     
-    def __init__(self, name: str, sprite: str, y: int, x: int, category: Category, collision: bool = True) -> None:
+    def __init__(self, name: str, sprite: str, y: int, x: int, category: ObjectCategory, collision: bool = True) -> None:
         
         self.sprite = sprite
         self.collision = collision

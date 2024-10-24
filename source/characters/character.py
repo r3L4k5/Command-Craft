@@ -19,31 +19,31 @@ class Character():
         self.facing = 'north'   
 
 
-    def direction_calc(self, direction):
+    def direction_calc(self, direction: str):
         
-        step = [0,0]
+        step: dict = {"y-axis": 0, "x-axis": 0}
         
         match direction:
             
             case 'north':
-                step[0] -= 1
+                step["y-axis"] -= 1
             
             case 'south':
-                step[0] += 1
+                step["y-axis"] += 1
             
             case 'east':
-                step[1] += 1
+                step["x-axis"] += 1
             
             case 'west':
-                step[1] -= 1
+                step["x-axis"] -= 1
         
         return step
             
 
-    def will_collide(self, step, world):
+    def will_collide(self, step: dict, world: list):
         
         try:
-            if world[self.y + step[0]][self.x + step[1]].collision == False:
+            if world[self.y + step["y-axis"]][self.x + step["x-axis"]].collision == False:
                 return False
             
             else:
@@ -53,7 +53,7 @@ class Character():
             return True
     
     
-    def movement(self, direction, world):
+    def movement(self, direction: str, world: list):
 
         for _ in range(self.speed):
 
@@ -63,12 +63,13 @@ class Character():
             
                 world[self.y][self.x] = self.ground
 
-                self.y += step[0]
-                self.x += step[1]
+                self.y += step["y-axis"]
+                self.x += step["x-axis"]
                 
                 self.ground = world[self.y][self.x]
                 
                 world[self.y][self.x] = self
+            
         
 
 

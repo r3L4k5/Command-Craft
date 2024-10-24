@@ -1,18 +1,17 @@
 
-from items.items import Item
+from items.items import Item, Material, ItemCategory
 from termcolor import colored
-from systems.worldobject import Category
 
 
 def material_color(sprite: str, material: str) -> str:
 
     match material:
 
-        case "wood":
+        case Material.WOOD:
             return colored(sprite, "red", attrs=["bold", "dark"])
         
-        case "stone":
-            return colored(sprite, "dark_grey", attrs=["bold", "dark"])
+        case Material.STONE:
+            return colored(sprite, "dark_grey", attrs=["bold"])
         
         case _:
             raise "Material not found"
@@ -20,14 +19,14 @@ def material_color(sprite: str, material: str) -> str:
 
 class Tool(Item):
     
-    def __init__(self, name: str, sprite: str, material: str, recipe: dict, durability: int, damage: int) -> None:
+    def __init__(self, name: str, sprite: str, material: Material, recipe: dict, durability: int, power: int) -> None:
         
-        super().__init__(name, material_color(sprite, material), Category.CRAFTABLE)
+        super().__init__(name, material_color(sprite, material), ItemCategory.CRAFTABLE, material)
 
         self.recipe = recipe
         self.durability = durability
         self.material = material
-        self.damage = damage
+        self.power = power
     
 
     def __eq__(self, value: object) -> bool:
@@ -36,25 +35,29 @@ class Tool(Item):
             return True
     
 
-    def effect():
+    def effect(target):
         pass
         
     
 class Sword(Tool):
 
-    def __init__(self, material: str, recipe: dict, durability: int, damage: int) -> None:
+    def __init__(self, material: str, recipe: dict, durability: int, power: int) -> None:
         
-        super().__init__("sword", "/", material, recipe, durability, damage)
+        super().__init__("sword", "/", material, recipe, durability, power)
+    
+    def effect(target):
+        return super().effect()
         
     
 class Axe(Tool):
     
-    def __init__(self, material: str, recipe: dict, durability: int, damage: int) -> None:
+    def __init__(self, material: str, recipe: dict, durability: int, power: int) -> None:
         
-        super().__init__("axe", "P", material, recipe, durability, damage)
+        super().__init__("axe", "P", material, recipe, durability, power)
     
 
 class Pickaxe(Tool):
 
-    def __init__(self, material: str, recipe: dict, durability: int, damage: int) -> None:
-        super().__init__("pickaxe", "T", material, recipe, durability, damage)
+    def __init__(self, material: str, recipe: dict, durability: int, power: int) -> None:
+        
+        super().__init__("pickaxe", "T", material, recipe, durability, power)

@@ -5,7 +5,7 @@ import items.item_access as item_access
 import items.resources as res
 
 from characters.character import Character
-from systems.worldobject import WorldObject, Category
+from systems.worldobject import WorldObject, ObjectCategory
 from systems.storage import Storage
 from items.items import Item
 
@@ -28,7 +28,7 @@ class Player(WorldObject, Character):
     
     def __init__(self, world: list) -> None:
         
-        super().__init__("player", " i", 0, 10, Category.PLAYER)
+        super().__init__("player", " i", 0, 10, ObjectCategory.PLAYER)
         Character.__init__(self)
 
         self.input_queue = []
@@ -197,10 +197,10 @@ class Player(WorldObject, Character):
 
         match interact_object.category:
 
-            case Category.HARVESTABLE:
+            case ObjectCategory.HARVESTABLE:
                 interact_object.harvest(self, world)
 
-            case Category.NPC:
+            case ObjectCategory.NPC:
                 interact_object.interact(self)
         
     
