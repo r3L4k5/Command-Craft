@@ -14,13 +14,10 @@ class Dog(NPC):
     
     def detection(self, world: list):
 
-        vision_field = super().vision_calc(world)
+        vision_field = self.vision_calc(world)
 
         for y in range(vision_field["north"], vision_field["south"]):
             for x in range(vision_field["west"], vision_field["east"]):
                 
                 self.move_toward(world[y][x], world)
 
-
-    def update_npc(self, world):
-        self.detection(world)

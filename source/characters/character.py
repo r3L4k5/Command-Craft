@@ -72,19 +72,8 @@ class Character(WorldObject):
         pass
 
 
-    def take_damage(self, damage):
-
-        if self.health - damage > 0:
-
-            self.health -= damage
-            input(self.health)
-        
-
-    def status_check(self, world):
+    def status_check(self, world: list):
 
         if self.health <= 0:
             self.delete(world)
         
-    
-    def update_character(self, game, world):
-        self.status_check(world)

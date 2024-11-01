@@ -204,11 +204,10 @@ class Player(Character):
             case ObjectCategory.NPC:
 
                 if isinstance(self.equipped, too.Sword):
-
-                    self.attack(target, world)
-                    return
+                    self.attack(target)
                 
-                target.react(self, world)
+                else:
+                    target.react(self, world)
     
     
     def input_handler(self, world: list) -> None:
@@ -243,16 +242,16 @@ class Player(Character):
         self.input_queue.pop(0)
     
 
-    def attack(self, target: Character, world):
+    def attack(self, target: Character):
 
         total_strength = self.strength * self.equipped.effect()
-        target.take_damage(total_strength, world)
+        target.health -= total_strength
 
 
     def update_player(self, world: list) -> None:
 
+        self.status_check(world)
         self.input_handler(world)
-        self.display_hud()
 
     
 

@@ -26,7 +26,17 @@ class NPC(Character):
         vision_field =  {"north": north_vision, "south": south_vision + 1, "west": west_vision, "east": east_vision + 1}
 
         return vision_field
-    
+
+
+    def detection(self, world: list):
+
+        vision_field = self.vision_calc(world)
+
+        for y in range(vision_field["north"], vision_field["south"]):
+            for x in range(vision_field["west"], vision_field["east"]):
+                
+                self.move_toward(world[y][x], world)
+
 
     def move_toward(self, target: WorldObject, world: list):
         
@@ -56,13 +66,16 @@ class NPC(Character):
             self.movement(direction, world)
                 
 
-    def status_check(self, npcs: list, world):
+    def status_check(self, npcs: list, world: list):
         
         if self.health <= 0:
             self.delete(world)
             npcs.remove(self)
 
 
-    def update_npc(self, game, world):
-        
-        self.status_check(game.npcs, world)
+    def update_npc(self, game):
+        world: list = game.world
+        npcs: list = game.npcs
+
+        self.detection(world)
+        self.status_check(npcs, world)

@@ -34,14 +34,14 @@ class Game():
             for tile in row:
                 print(tile.sprite, end="")
         
-        print("\n")
+        print(end="\n\n")
     
 
     def update_all_npc(game):
         
-        for npc in game.npcs:
+        for npcs in game.npcs:
 
-            npc.update_npc(game.world)
+            npcs.update_npc(game)
     
 
     def update_game(game):
