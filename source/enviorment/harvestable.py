@@ -38,7 +38,7 @@ class Rock(WorldObject, Harvestable):
 
     def __init__(self, y: int = 0, x: int = 0) -> None:
         
-        super().__init__("rock", colored("()", "dark_grey", attrs=["bold"]), y, x, ObjectCategory.HARVESTABLE )
+        super().__init__("rock", colored("()", "dark_grey", attrs=["bold"]), y, x, ObjectCategory.HARVESTABLE)
         
         Harvestable.__init__(self, res.Stone(), 7)
 

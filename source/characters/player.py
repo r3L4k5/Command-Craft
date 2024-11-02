@@ -1,5 +1,4 @@
 
-from math import e
 import utility as uti
 import items.resources as res
 import items.tools as too
@@ -10,6 +9,7 @@ from systems.worldobject import WorldObject, ObjectCategory
 from systems.storage import Storage
 from items.items import Item
 from items.item_access import get_item
+from copy import deepcopy
 
 
 controls = {
@@ -78,9 +78,12 @@ class Player(Character):
                 #Otherwise, it would give back an item with zero amount
                 #self.equipped.amount = 1
                 self.inventory.add_item(self.equipped)
-            
-            self.equipped = to_equip
+
+            #Deepcopy so as to not assing the same object in memory
+            self.equipped = deepcopy(to_equip)
             self.inventory.remove_item(to_equip)
+        
+        input()
         
 
     def count_items(self) -> dict:
@@ -89,7 +92,8 @@ class Player(Character):
         
         for slot in self.inventory.slots:
 
-            if slot.empty: continue
+            if slot.empty: 
+                continue
 
             elif slot.item.name in item_count:
 

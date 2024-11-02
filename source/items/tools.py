@@ -1,5 +1,5 @@
 
-from re import S
+from unicodedata import category
 from items.items import Item, Material
 from systems.worldobject import ObjectCategory
 from termcolor import colored
@@ -46,10 +46,20 @@ class Sword(Tool):
     def __init__(self, material: str, recipe: dict, durability: int, power: int) -> None:
         
         super().__init__("sword", "/", material, recipe, durability, power)
-    
-    def effect(self):
-        self.durability -= 1
-        return self.power
+
+    #Temporary solution:
+    #Predefined target parameter to avoid error when calling the shared effect()
+    #while harvesting. Otherwise target argument would be given without corresponding
+    #parameter. Also returns 1 due to strength attribute being multiplied by the return
+    #value of function. Default Nonetype return leads to error, so 1 is returned instead
+    def effect(self, target = None):
+
+        if target is None:
+
+            self.durability -= 1
+            return self.power
+        
+        return 1
         
     
 class Axe(Tool):
