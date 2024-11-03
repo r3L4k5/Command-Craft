@@ -66,11 +66,7 @@ class Character(WorldObject):
                 self.ground = world[self.y][self.x]
                 
                 world[self.y][self.x] = self
-    
-
-    def react(self, actor, world):
-        pass
-
+                
 
     def status_check(self, world: list):
 

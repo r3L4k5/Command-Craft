@@ -119,7 +119,8 @@ class Storage():
         if del_item.amount <= 0:
             del del_item
             
-        return del_item
+        else:
+            return del_item
 
 
 

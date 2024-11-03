@@ -36,7 +36,7 @@ class Harvestable():
 
 class Rock(WorldObject, Harvestable):
 
-    def __init__(self, y: int = 0, x: int = 0) -> None:
+    def __init__(self, y: int, x: int) -> None:
         
         super().__init__("rock", colored("()", "dark_grey", attrs=["bold"]), y, x, ObjectCategory.HARVESTABLE)
         
@@ -67,8 +67,8 @@ class Tree(WorldObject, Harvestable):
         
         for i in range(1, self.y):
 
-            above = world[self.y - i][self.x]
-        
+            above: WorldObject = world[self.y - i][self.x]
+
             if isinstance(above, Leaves):
 
                 above.delete(world)
@@ -76,7 +76,7 @@ class Tree(WorldObject, Harvestable):
             elif isinstance(above, cha.Character):
         
                 above.ground = gro.Grass(above.y, above.x) 
-            
+
             else: 
                 break
            

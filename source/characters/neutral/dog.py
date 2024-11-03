@@ -1,16 +1,38 @@
 
 from systems.worldobject import WorldObject
 from characters.npc import NPC
+from termcolor import colored
+from random import choice
 
 
 class Dog(NPC):
 
     def __init__(self, y: int, x: int) -> None:
 
-        super().__init__("dog", " m", y, x, 5, 1, 1, 3)
-    
+        colors: list = ["white", "black", "brown"]
+        sprite: str
+        
+        match choice(colors):
+
+            case "white":
+                sprite = colored(" m", attrs=["bold"])
+            
+            case "black":
+                sprite = colored(" m", "black", attrs=["bold"])
+            
+            case "brown":
+                sprite = colored(" m", "red", attrs=["bold", "dark"])
+            
+            case "grey":
+                sprite = colored(" m", "light_grey", attrs=["bold"])
+
+
+        super().__init__("dog", sprite, y, x, 5, 1, 1, 3)
+
+
     def react(self, actor, world):
-        input("Woof >:O")
+        input("Ruff!")
+
     
     def detection(self, world: list):
 

@@ -83,8 +83,6 @@ class Player(Character):
             self.equipped = deepcopy(to_equip)
             self.inventory.remove_item(to_equip)
         
-        input()
-        
 
     def count_items(self) -> dict:
 

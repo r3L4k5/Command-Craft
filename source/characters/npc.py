@@ -11,6 +11,10 @@ class NPC(Character):
         super().__init__(name, sprite, y, x, ObjectCategory.NPC, True, health, strength, speed)
 
         self.vision = vision
+
+
+    def react(self, actor, world):
+        pass
     
 
     def vision_calc(self, world):
