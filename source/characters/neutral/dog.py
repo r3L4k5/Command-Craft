@@ -1,16 +1,17 @@
 
-from systems.worldobject import WorldObject
+from items.item_access import get_item
 from characters.npc import NPC
+from characters.character import Character
 
 
 class Dog(NPC):
 
     def __init__(self, y: int, x: int) -> None:
 
-        super().__init__("dog", " m", y, x, 5, 1, 1, 3)
+        super().__init__("dog", " m", y, x, 5, 1, 1, 3, [get_item("wood")])
     
-    def react(self, actor, world):
-        input("Woof >:O")
+    def react(self, actor: Character, world: list):
+        input("Ruff!")
     
     def detection(self, world: list):
 

@@ -6,11 +6,13 @@ from utility import clamp
 
 class NPC(Character):
 
-    def __init__(self, name: str, sprite: str, y: int, x: int, health: int, strength: int, speed: int, vision: int) -> None:
+    def __init__(self, name: str, sprite: str, y: int, x: int, 
+                 health: int, strength: int, speed: int, vision: int, loot: list = []) -> None:
 
         super().__init__(name, sprite, y, x, ObjectCategory.NPC, True, health, strength, speed)
 
         self.vision = vision
+        self.loot = loot
     
 
     def vision_calc(self, world):
@@ -66,16 +68,16 @@ class NPC(Character):
             self.movement(direction, world)
                 
 
-    def status_check(self, npcs: list, world: list):
-        
-        if self.health <= 0:
-            self.delete(world)
-            npcs.remove(self)
+    def status_check(self):
 
+        if self.health <= 0:
+            return "dead"
+        
 
     def update_npc(self, game):
         world: list = game.world
-        npcs: list = game.npcs
 
         self.detection(world)
-        self.status_check(npcs, world)
+        
+        return self.status_check()
+

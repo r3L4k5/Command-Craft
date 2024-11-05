@@ -4,10 +4,12 @@ import items.resources as res
 import items.tools as too
 
 
+
 from characters.character import Character
 from systems.worldobject import WorldObject, ObjectCategory
 from systems.storage import Storage
 from items.items import Item
+from characters.npc import NPC
 from items.item_access import get_item
 from copy import deepcopy
 
@@ -81,9 +83,7 @@ class Player(Character):
 
             #Deepcopy so as to not assing the same object in memory
             self.equipped = deepcopy(to_equip)
-            self.inventory.remove_item(to_equip)
-        
-        input()
+            self.inventory.remove_item(to_equip) 
         
 
     def count_items(self) -> dict:
@@ -189,15 +189,12 @@ class Player(Character):
     
     def interact(self, world: list) -> None:
         
-        step: dict = self.direction_calc(self.facing)
+        direction: dict = self.direction_calc(self.facing)
 
         try:
-            target: WorldObject = world[self.y + step["y-axis"]][self.x + step["x-axis"]]
+            target: WorldObject = world[self.y + direction["y-axis"]][self.x + direction["x-axis"]]
         
         except IndexError:
-            return
-
-        if target.collision == False:
             return
 
         match target.category:
@@ -212,6 +209,7 @@ class Player(Character):
                 
                 else:
                     target.react(self, world)
+        
     
     
     def input_handler(self, world: list) -> None:
@@ -246,15 +244,20 @@ class Player(Character):
         self.input_queue.pop(0)
     
 
-    def attack(self, target: Character):
+    def attack(self, target: NPC):
 
         total_strength = self.strength * self.equipped.effect()
         target.health -= total_strength
 
+        if target.status_check() == "dead" and len(target.loot) == 0:
+            for item in target.loot:
+                self.inventory.add_item(item)
+
+
 
     def update_player(self, world: list) -> None:
 
-        self.status_check(world)
+        self.status_check()
         self.input_handler(world)
 
     

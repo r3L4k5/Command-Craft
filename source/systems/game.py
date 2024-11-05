@@ -2,10 +2,10 @@
 
 from characters.player import Player
 from characters.npc import NPC
-from enviorment.create_enviorment import fill_world
-from time import sleep
-from utility import clear
 from characters.neutral.dog import Dog
+
+from utility import clear
+from enviorment.fill_world import fill_world
 
 class Game():
 
@@ -39,9 +39,13 @@ class Game():
 
     def update_all_npc(game):
         
-        for npcs in game.npcs:
+        for npc in game.npcs:
 
-            npcs.update_npc(game)
+            if npc.status_check() == "dead":
+                game.npcs.remove(npc)
+                npc.delete(game.world)
+
+            npc.update_npc(game)
     
 
     def update_game(game):

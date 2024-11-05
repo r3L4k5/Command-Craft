@@ -68,12 +68,12 @@ class Character(WorldObject):
                 world[self.y][self.x] = self
     
 
-    def react(self, actor, world):
+    def react(self, actor, world: list):
         pass
 
 
-    def status_check(self, world: list):
+    def status_check(self):
 
         if self.health <= 0:
-            self.delete(world)
+            return "dead"
         

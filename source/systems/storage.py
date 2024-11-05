@@ -115,9 +115,6 @@ class Storage():
             else:
                 del_item.amount -= slot.amount
                 slot.empty_slot()
-        
-        if del_item.amount <= 0:
-            del del_item
             
         return del_item
 

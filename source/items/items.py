@@ -4,7 +4,7 @@ from enum import Enum, auto
 class Material(Enum):
     WOOD = auto(),
     STONE = auto(),
-    NONE = auto
+    NONE = auto()
 
 
 class Item():
