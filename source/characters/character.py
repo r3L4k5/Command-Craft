@@ -72,8 +72,11 @@ class Character(WorldObject):
         pass
 
 
-    def status_check(self):
+    def alive(self):
 
         if self.health <= 0:
-            return "dead"
+            return False
+        
+        else:
+            return True
         

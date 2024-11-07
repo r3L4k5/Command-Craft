@@ -16,11 +16,7 @@ class Game():
 
         game.npcs: list[NPC] = []
         
-        fill_world(game.world)
-
-        dog = Dog(1,2)
-        game.world[1][2] = dog
-        game.npcs.append(dog)
+        fill_world(game)
         
         global player
         player = Player(game.world)
@@ -41,7 +37,8 @@ class Game():
         
         for npc in game.npcs:
 
-            if npc.status_check() == "dead":
+            if npc.alive() == False:
+
                 game.npcs.remove(npc)
                 npc.delete(game.world)
 

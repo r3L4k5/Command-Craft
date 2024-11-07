@@ -32,7 +32,7 @@ class Player(Character):
     
     def __init__(self, world: list) -> None:
         
-        super().__init__("player", " i", 0, 10, ObjectCategory.PLAYER)
+        super().__init__("player", " I", 0, 10, ObjectCategory.PLAYER)
 
         self.input_queue = []
 
@@ -196,6 +196,9 @@ class Player(Character):
         
         except IndexError:
             return
+        
+        if not hasattr(target, "category"):
+            return
 
         match target.category:
 
@@ -249,15 +252,13 @@ class Player(Character):
         total_strength = self.strength * self.equipped.effect()
         target.health -= total_strength
 
-        if target.status_check() == "dead" and len(target.loot) == 0:
+        if target.alive() == False and target.loot is not None:
             for item in target.loot:
                 self.inventory.add_item(item)
 
-
-
     def update_player(self, world: list) -> None:
 
-        self.status_check()
+        self.alive()
         self.input_handler(world)
 
     

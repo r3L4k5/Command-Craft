@@ -3,11 +3,10 @@ from characters.character import Character
 from systems.worldobject import ObjectCategory, WorldObject
 from utility import clamp
 
-
 class NPC(Character):
 
-    def __init__(self, name: str, sprite: str, y: int, x: int, 
-                 health: int, strength: int, speed: int, vision: int, loot: list = []) -> None:
+    def __init__(self, name: str, sprite: str, y: int, x: int, health: int, strength: int, speed: int, 
+                 vision: int, loot: list | None = None) -> None:
 
         super().__init__(name, sprite, y, x, ObjectCategory.NPC, True, health, strength, speed)
 
@@ -66,18 +65,12 @@ class NPC(Character):
                 return
 
             self.movement(direction, world)
-                
 
-    def status_check(self):
-
-        if self.health <= 0:
-            return "dead"
-        
 
     def update_npc(self, game):
-        world: list = game.world
 
+        world: list = game.world
         self.detection(world)
-        
-        return self.status_check()
+
+        return self.alive()
 

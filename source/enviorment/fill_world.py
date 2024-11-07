@@ -3,6 +3,7 @@ import enviorment.harvestable as har
 import enviorment.ground as env
 
 from characters.neutral.dog import Dog
+from characters.npc import NPC
 
 from random import randint
 
@@ -24,18 +25,26 @@ def random_enviorment(y: int, x: int, world: list[list]):
     return env.Grass(y, x)
 
 
-def spawn_npc(y: int, x: int , world: list[list]):
+def spawn_npc(y: int, x: int , world: list[list], npc_list: list):
 
-    probability = randint(1, 300)
+    probability: int = randint(1, 500)
+    new_npc: NPC 
 
     if probability == 1:
        
-       return Dog(y, x)
+       new_npc = Dog(y, x)
     
-    return world[y][x]
+    else:
+        return world[y][x]
+    
+    npc_list.append(new_npc)
+    return new_npc
 
 
-def fill_world(world: list[list]):
+def fill_world(game: object):
+
+    world: list[list] = game.world
+    npcs: list[NPC] = game.npcs
    
     for y in range(len(world)):
         
@@ -47,5 +56,8 @@ def fill_world(world: list[list]):
 
         for x in range(len(world[y])):
 
-            world[y][x] = spawn_npc(y, x, world)
+            world[y][x] = spawn_npc(y, x, world, npcs)
+
+
+
     
