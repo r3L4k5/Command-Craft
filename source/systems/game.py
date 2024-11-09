@@ -2,10 +2,10 @@
 
 from characters.player import Player
 from characters.npc import NPC
-from enviorment.create_enviorment import fill_world
-from time import sleep
-from utility import clear
 from characters.neutral.dog import Dog
+
+from utility import clear
+from enviorment.fill_world import fill_world
 
 class Game():
 
@@ -16,11 +16,7 @@ class Game():
 
         game.npcs: list[NPC] = []
         
-        fill_world(game.world)
-
-        dog = Dog(1,2)
-        game.world[1][2] = dog
-        game.npcs.append(dog)
+        fill_world(game)
         
         global player
         player = Player(game.world)
@@ -39,9 +35,14 @@ class Game():
 
     def update_all_npc(game):
         
-        for npcs in game.npcs:
+        for npc in game.npcs:
 
-            npcs.update_npc(game)
+            if npc.alive() == False:
+
+                game.npcs.remove(npc)
+                npc.delete(game.world)
+
+            npc.update_npc(game)
     
 
     def update_game(game):

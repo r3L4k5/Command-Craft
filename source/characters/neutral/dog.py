@@ -1,38 +1,17 @@
 
-from systems.worldobject import WorldObject
+from items.item_access import get_item
 from characters.npc import NPC
-from termcolor import colored
-from random import choice
+from characters.character import Character
 
 
 class Dog(NPC):
 
     def __init__(self, y: int, x: int) -> None:
 
-        colors: list = ["white", "black", "brown"]
-        sprite: str
-        
-        match choice(colors):
-
-            case "white":
-                sprite = colored(" m", attrs=["bold"])
-            
-            case "black":
-                sprite = colored(" m", "black", attrs=["bold"])
-            
-            case "brown":
-                sprite = colored(" m", "red", attrs=["bold", "dark"])
-            
-            case "grey":
-                sprite = colored(" m", "light_grey", attrs=["bold"])
-
-
-        super().__init__("dog", sprite, y, x, 5, 1, 1, 3)
-
-
-    def react(self, actor, world):
+        super().__init__("dog", " m", y, x, health= 5, strength= 1, speed= 1, vision= 6, loot= [get_item("wood")])
+    
+    def react(self, actor: Character, world: list):
         input("Ruff!")
-
     
     def detection(self, world: list):
 

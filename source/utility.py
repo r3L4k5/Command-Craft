@@ -1,8 +1,7 @@
 
 import os
 
-
-blank_space = lambda amount: " " * amount #Dynamically creates a specified amount of blank spaces   
+blank_space = lambda amount: " " * amount #Creates a specified amount of blank spaces   
  
 clear = lambda: (os.system("cls"), print("\n")) #Named after powershell command; clears the terminal and adds an empty line
 

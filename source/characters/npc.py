@@ -3,18 +3,15 @@ from characters.character import Character
 from systems.worldobject import ObjectCategory, WorldObject
 from utility import clamp
 
-
 class NPC(Character):
 
-    def __init__(self, name: str, sprite: str, y: int, x: int, health: int, strength: int, speed: int, vision: int) -> None:
+    def __init__(self, name: str, sprite: str, y: int, x: int, health: int, strength: int, speed: int, 
+                 vision: int, loot: list | None = None) -> None:
 
         super().__init__(name, sprite, y, x, ObjectCategory.NPC, True, health, strength, speed)
 
         self.vision = vision
-
-
-    def react(self, actor, world):
-        pass
+        self.loot = loot
     
 
     def vision_calc(self, world):
@@ -68,18 +65,12 @@ class NPC(Character):
                 return
 
             self.movement(direction, world)
-                
-
-    def status_check(self, npcs: list, world: list):
-        
-        if self.health <= 0:
-            self.delete(world)
-            npcs.remove(self)
 
 
     def update_npc(self, game):
-        world: list = game.world
-        npcs: list = game.npcs
 
+        world: list = game.world
         self.detection(world)
-        self.status_check(npcs, world)
+
+        return self.alive()
+

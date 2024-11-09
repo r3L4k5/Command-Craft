@@ -14,7 +14,7 @@ def get_item(item_name: str) -> object:
 
 item_access: dict = {
 
-    "wood" : res.Wood(1),
+    "wood": res.Wood(1),
     "stone": res.Stone(1),
 
     "woodensword": too.Sword(mat.WOOD, {"wood": 4}, 10, 1.5),

@@ -1,5 +1,5 @@
 
-from tkinter import W
+
 from systems.worldobject import WorldObject, ObjectCategory
 
 class Character(WorldObject):
@@ -66,10 +66,17 @@ class Character(WorldObject):
                 self.ground = world[self.y][self.x]
                 
                 world[self.y][self.x] = self
-                
+    
 
-    def status_check(self, world: list):
+    def react(self, actor, world: list):
+        pass
+
+
+    def alive(self):
 
         if self.health <= 0:
-            self.delete(world)
+            return False
+        
+        else:
+            return True
         
