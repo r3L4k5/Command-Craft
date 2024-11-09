@@ -1,9 +1,9 @@
 
 import items.resources as res
-import characters.character as cha
 import enviorment.ground as gro
 
 from systems.worldobject import WorldObject, ObjectCategory
+from items.tools import Tool
 from items.items import Item
 from termcolor import colored
 
@@ -16,11 +16,11 @@ class Harvestable():
         self.resource = resource
 
 
-    def harvest(self, player: WorldObject | cha.Character, world):
+    def harvest(self, player: WorldObject, world):
 
         total_strength: int = player.strength
 
-        if isinstance(player.equipped, Item):
+        if isinstance(player.equipped, Tool):
 
             total_strength *= player.equipped.effect(self.resource)
         

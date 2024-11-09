@@ -30,9 +30,11 @@ class Tool(Item):
         self.material = material
         self.power = power
 
-
+    #Returns 1 instead of default due to strength attribute of player being multiplied 
+    #by the return value of the function. Default Nonetype return leads to error, 
+    #so 1 is returned instead.
     def effect(self, target):
-        pass
+        return 1 
 
 
     def __eq__(self, value: object) -> bool:
@@ -50,8 +52,7 @@ class Sword(Tool):
     #Temporary solution:
     #Predefined target parameter to avoid error when calling the shared effect()
     #while harvesting. Otherwise target argument would be given without corresponding
-    #parameter. Also returns 1 due to strength attribute being multiplied by the return
-    #value of function. Default Nonetype return leads to error, so 1 is returned instead
+    #parameter. 
     def effect(self, target = None):
 
         if target is None:
@@ -59,7 +60,7 @@ class Sword(Tool):
             self.durability -= 1
             return self.power
         
-        return 1
+        super().effect(target)
         
     
 class Axe(Tool):
@@ -75,6 +76,8 @@ class Axe(Tool):
             self.durability -= 1
             return self.power
         
+        super().effect(target)
+        
 
 class Pickaxe(Tool):
 
@@ -88,3 +91,5 @@ class Pickaxe(Tool):
 
             self.durability -= 1
             return self.power
+        
+        super().effect(target)
