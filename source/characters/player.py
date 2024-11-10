@@ -36,7 +36,7 @@ class Player(Character):
 
         self.input_queue = []
 
-        self.inventory: Storage = Storage(12, 10, "-Empty-", "Inventory")
+        self.inventory: Storage = Storage(12, 10, name= "Inventory")
         self.equipped: Item | None = None
 
         #For devolopement, so no need to harvest 
@@ -249,7 +249,7 @@ class Player(Character):
 
     def attack(self, target: NPC):
 
-        total_strength = self.strength * self.equipped.effect()
+        total_strength = self.strength * self.equipped.effect(self)
         target.health -= total_strength
 
         if target.alive() == False and target.loot is not None:

@@ -1,7 +1,7 @@
 
 from unicodedata import category
 from items.items import Item, Material
-from systems.worldobject import ObjectCategory
+from systems.worldobject import ObjectCategory, WorldObject
 from termcolor import colored
 
 
@@ -30,11 +30,25 @@ class Tool(Item):
         self.material = material
         self.power = power
 
-    #Returns 1 instead of default due to strength attribute of player being multiplied 
-    #by the return value of the function. Default Nonetype return leads to error, 
-    #so 1 is returned instead.
-    def effect(self, target):
-        return 1 
+    #Temporary solution:
+    #Predefined target parameter because it is not needed and to avoid error when 
+    #calling the shared effect() while harvesting. Otherwise target argument 
+    #would be given without corresponding parameter in certain cases 
+    def effect(self, player: WorldObject, target = None):
+        
+        if self.durability == 1:
+
+            #Tools power stored in variable, due to not beeing
+            #accesible after deletion of item
+            power: int = self.power 
+
+            player.equipped = None
+            del self    
+
+            return power
+        
+        self.durability -= 1
+        return self.power
 
 
     def __eq__(self, value: object) -> bool:
@@ -45,51 +59,47 @@ class Tool(Item):
     
 class Sword(Tool):
 
-    def __init__(self, material: str, recipe: dict, durability: int, power: int) -> None:
+    def __init__(self, material: Material, recipe: dict, durability: int, power: int) -> None:
         
         super().__init__("sword", "/", material, recipe, durability, power)
 
-    #Temporary solution:
-    #Predefined target parameter to avoid error when calling the shared effect()
-    #while harvesting. Otherwise target argument would be given without corresponding
-    #parameter. 
-    def effect(self, target = None):
+    #Same as base class regarding target = None 
+    def effect(self, player, target = None):
 
         if target is None:
 
-            self.durability -= 1
-            return self.power
+            return super().effect(player)
         
-        super().effect(target)
-        
+        #Default is None and cannot be multiplied with players strength;
+        #rather 1 to not effect strength whilst not causing errors
+        return 1
     
+
 class Axe(Tool):
     
-    def __init__(self, material: str, recipe: dict, durability: int, power: int) -> None:
+    def __init__(self, material: Material, recipe: dict, durability: int, power: int) -> None:
         
         super().__init__("axe", "P", material, recipe, durability, power)
     
-    def effect(self, target):
+    def effect(self, player, target):
         
         if target.material == Material.WOOD:
             
-            self.durability -= 1
-            return self.power
+            return super().effect(player)
         
-        super().effect(target)
+        return 1
         
 
 class Pickaxe(Tool):
 
-    def __init__(self, material: str, recipe: dict, durability: int, power: int) -> None:
+    def __init__(self, material: Material, recipe: dict, durability: int, power: int) -> None:
         
         super().__init__("pickaxe", "T", material, recipe, durability, power)
     
-    def effect(self, target):
+    def effect(self, player, target):
 
         if target.material == Material.STONE:
 
-            self.durability -= 1
-            return self.power
+            return super().effect(player)
         
-        super().effect(target)
+        return 1
