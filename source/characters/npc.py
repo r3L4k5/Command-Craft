@@ -65,6 +65,10 @@ class NPC(Character):
                 return
 
             self.movement(direction, world)
+        
+        else:
+            pass
+            
 
 
     def update_npc(self, game):

@@ -3,7 +3,7 @@ from items.items import Item
 
 class Slot():
     
-    def __init__(self, item, amount: int = 0) -> None:
+    def __init__(self, item = "-Empty-", amount: int = 0) -> None:
         
         self.item = item
         self.amount = amount

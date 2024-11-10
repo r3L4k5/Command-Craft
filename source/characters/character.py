@@ -1,6 +1,6 @@
 
-
 from systems.worldobject import WorldObject, ObjectCategory
+
 
 class Character(WorldObject):
     

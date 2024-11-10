@@ -17,14 +17,14 @@ class Harvestable():
         self.resource = resource
 
 
-    def harvest(self, player: WorldObject | Character, world):
+    def harvest(self, player: Character, world):
 
         total_strength: int = player.strength
 
         if isinstance(player.equipped, Tool):
 
-            total_strength *= player.equipped.effect(self.resource)
-        
+            total_strength *= player.equipped.effect(player, self.resource)
+   
         if self.hitpoints - total_strength > 0:
 
             self.hitpoints -= total_strength
@@ -74,7 +74,7 @@ class Tree(WorldObject, Harvestable):
 
                 above.delete(world)
             
-            elif isinstance(above, cha.Character):
+            elif isinstance(above, Character):
         
                 above.ground = gro.Grass(above.y, above.x) 
 
