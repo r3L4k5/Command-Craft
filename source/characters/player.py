@@ -46,11 +46,6 @@ class Player(Character):
         
         world[self.y][self.x] = self  
 
-        #For devolopement, so no need to harvest 
-        #resources to craft
-        self.inventory.add_item(res.Wood(10))
-        self.inventory.add_item(res.Stone(10))
-
 
     def display_health(self) -> str:
 
@@ -274,14 +269,6 @@ class Player(Character):
             
             self.open_inventory()
         
-        elif self.input_queue[0] == '-':
-
-            self.health = uti.clamp(self.health - 1, 10, 0)
-        
-        elif self.input_queue[0] == '+':
-
-            self.health = uti.clamp(self.health + 1 , 10, 0)
-            
         self.input_queue.pop(0)
     
 
