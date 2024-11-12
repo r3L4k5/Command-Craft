@@ -42,7 +42,7 @@ class Game():
                 game.npcs.remove(npc)
                 npc.delete(game.world)
 
-            npc.update_npc(game)
+            npc.update_npc(game.world)
     
 
     def update_game(game):
@@ -53,9 +53,11 @@ class Game():
 
         player.display_hud()
 
+        player.update_player()
+
         game.display_world()
         
-        player.update_player(game.world)
+        player.input_handler(game.world)
 
         clear()
 

@@ -4,6 +4,7 @@ from characters.npc import NPC
 from characters.character import Character
 
 
+
 class Dog(NPC):
 
     def __init__(self, y: int, x: int) -> None:
@@ -12,15 +13,8 @@ class Dog(NPC):
     
     
     def react(self, actor: Character, world: list):
-        input("Ruff!")
+
+        input(self.display_name() + ": Ruff!")
     
 
-    def detection(self, world: list):
-
-        vision_field = self.vision_calc(world)
-
-        for y in range(vision_field["north"], vision_field["south"]):
-            for x in range(vision_field["west"], vision_field["east"]):
-                
-                self.move_toward(world[y][x], world)
 

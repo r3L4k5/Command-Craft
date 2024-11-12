@@ -2,6 +2,7 @@
 from characters.character import Character
 from systems.worldobject import ObjectCategory, WorldObject
 from utility import clamp
+from random import choice
 
 class NPC(Character):
 
@@ -32,16 +33,24 @@ class NPC(Character):
     def detection(self, world: list):
 
         vision_field = self.vision_calc(world)
+        targets: dict =  {}
 
         for y in range(vision_field["north"], vision_field["south"]):
             for x in range(vision_field["west"], vision_field["east"]):
+
+                targets[world[y][x].name] = world[y][x]
+            
+        return targets
                 
-                self.move_toward(world[y][x], world)
+            
+    def move_toward(self, world: list):
 
+        targets: dict = self.detection(world)
 
-    def move_toward(self, target: WorldObject, world: list):
         
-        if target.name == "player":
+        if "player" in targets:
+
+            target: Character = targets["player"]
 
             distance: list = {"y-axis": 0, "x-axis": 0}
             direction: str = ''
@@ -66,15 +75,15 @@ class NPC(Character):
 
             self.movement(direction, world)
         
-        else:
-            pass
-            
+        else: 
+            random_direction = choice(["north", "south", "west", "east"])
+            self.movement(random_direction, world)
 
 
-    def update_npc(self, game):
+    def update_npc(self, world: list):
 
-        world: list = game.world
         self.detection(world)
+        self.move_toward(world)
 
         return self.alive()
 

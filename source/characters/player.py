@@ -12,6 +12,7 @@ from items.items import Item
 from characters.npc import NPC
 from items.item_access import get_item
 from copy import deepcopy
+from termcolor import colored
 
 
 controls = {
@@ -32,21 +33,40 @@ class Player(Character):
     
     def __init__(self, world: list) -> None:
         
-        super().__init__("player", " I", 0, 10, ObjectCategory.PLAYER)
+        super().__init__("player", colored(" \"", on_color="on_white", attrs=["bold"]), 
+                         0, 10, ObjectCategory.PLAYER)
+        
+        self.max_health: int = 10
 
         self.input_queue = []
 
         self.inventory: Storage = Storage(12, 10, name= "Inventory")
+
         self.equipped: Item | None = None
+        
+        world[self.y][self.x] = self  
 
         #For devolopement, so no need to harvest 
         #resources to craft
         self.inventory.add_item(res.Wood(10))
         self.inventory.add_item(res.Stone(10))
-        
-        world[self.y][self.x] = self   
 
-    
+
+    def display_health(self) -> str:
+
+        fraction: int = round(self.health / self.max_health, 2)
+        bar: str = uti.blank_space(int(10 * fraction))
+        color = "on_green"
+
+        if 0.3 < fraction <= 0.66:
+            color = "on_yellow"
+        
+        elif 0 < fraction <= 0.33:
+            color = "on_red"
+
+        return f"{uti.bold("Health: ")}{colored(bar, on_color=color, attrs=["bold"])}"
+
+
     def display_equip(self) -> str:
 
         if self.equipped is not None:
@@ -63,7 +83,7 @@ class Player(Character):
 
         print(f"{self.display_equip()}", end="     ")
 
-        print(f"{uti.bold('Health: ')}{self.health}")
+        print(f"{self.display_health()}")
 
 
     def equip_item(self, item: str) -> None:
@@ -213,13 +233,26 @@ class Player(Character):
                 else:
                     target.react(self, world)
         
+
+    def update_sprite(self) -> None:
+
+        match self.facing:
+
+            case "east":
+                self.sprite = colored(" \"", on_color="on_white", attrs=["bold"])
+
+            case "west":
+                self.sprite = colored("\" ", on_color="on_white", attrs=["bold"])
+        
+        if not self.alive():
+            self.sprite = colored("**", on_color="on_white", attrs=["bold"])
     
-    
+
     def input_handler(self, world: list) -> None:
     
         if len(self.input_queue) == 0:
 
-            incoming_input = list(input(" Action: ").strip())
+            incoming_input = list(input(uti.bold("Action: ")).strip())
 
             if len(incoming_input) == 0: 
                 return
@@ -241,9 +274,14 @@ class Player(Character):
             
             self.open_inventory()
         
-        else:
-            pass
+        elif self.input_queue[0] == '-':
 
+            self.health = uti.clamp(self.health - 1, 10, 0)
+        
+        elif self.input_queue[0] == '+':
+
+            self.health = uti.clamp(self.health + 1 , 10, 0)
+            
         self.input_queue.pop(0)
     
 
@@ -253,13 +291,15 @@ class Player(Character):
         target.health -= total_strength
 
         if target.alive() == False and target.loot is not None:
+
             for item in target.loot:
                 self.inventory.add_item(item)
 
-    def update_player(self, world: list) -> None:
 
-        self.alive()
-        self.input_handler(world)
+    def update_player(self) -> bool:
 
+        self.update_sprite()
+        return self.alive()
+ 
     
 

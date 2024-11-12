@@ -1,6 +1,7 @@
 
 from enum import Enum, auto
 from enviorment.ground import Grass
+from utility import bold
 
 
 class ObjectCategory(Enum):
@@ -32,6 +33,11 @@ class WorldObject():
         
         world[self.y][self.x] = self.ground
         del self
+    
+    #Show name for presentation, such as dialogue
+    def display_name(self):
+        return bold(self.name.capitalize())
+
 
     
     
