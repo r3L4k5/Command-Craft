@@ -79,6 +79,8 @@ class NPC(Character):
             random_direction = choice(["north", "south", "west", "east"])
             self.movement(random_direction, world)
 
+    def react(self, actor: Character, world: list, friendly: bool):
+        pass
 
     def update_npc(self, world: list):
 

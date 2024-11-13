@@ -223,10 +223,10 @@ class Player(Character):
             case ObjectCategory.NPC:
 
                 if isinstance(self.equipped, too.Sword):
-                    self.attack(target)
+                    self.attack(target, world)
                 
                 else:
-                    target.react(self, world)
+                    target.react(self, world, True)
         
 
     def update_sprite(self) -> None:
@@ -272,7 +272,7 @@ class Player(Character):
         self.input_queue.pop(0)
     
 
-    def attack(self, target: NPC):
+    def attack(self, target: NPC, world: list):
 
         total_strength = self.strength * self.equipped.effect(self)
         target.health -= total_strength
@@ -281,6 +281,10 @@ class Player(Character):
 
             for item in target.loot:
                 self.inventory.add_item(item)
+        
+        else:
+            target.react(self, world, False)
+    
 
 
     def update_player(self) -> bool:

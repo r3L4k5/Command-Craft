@@ -12,9 +12,15 @@ class Dog(NPC):
         super().__init__("dog", " m", y, x, health= 6, strength= 1, speed= 1, vision= 6, loot= [get_item("wood")])
     
     
-    def react(self, actor: Character, world: list):
+    def react(self, actor: Character, world: list, friendly: bool):
 
-        input(self.display_name() + ": Ruff!")
+        if friendly:
+            input(self.display_name() + ": Ruff!")
+
+        else:
+
+            input(f"{self.display_name()}: Grrh! [Attcking]")
+            self.attack(actor)
     
 
 

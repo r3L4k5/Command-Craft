@@ -68,8 +68,9 @@ class Character(WorldObject):
                 world[self.y][self.x] = self
     
 
-    def react(self, actor, world: list):
-        pass
+    def attack(self, target: object):
+        
+        target.health -= self.strength
 
 
     def alive(self):
