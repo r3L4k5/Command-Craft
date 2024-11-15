@@ -29,7 +29,7 @@ facing_directions = {
     'd': "east"
 }
 
-inventory_mode = ["craft", "equip", "use"]
+inventory_modes = {'e' :"craft", 'r': "equip", 't': "use"}
 
 
 class Player(Character):
@@ -44,6 +44,11 @@ class Player(Character):
         self.equipped: Item | None = None
         
         world[self.y][self.x] = self  
+
+        meat: Consumable = get_item("meat")
+        meat.amount = 10
+
+        self.inventory.add_item(meat)
 
 
     def display_health(self) -> str:
@@ -127,6 +132,9 @@ class Player(Character):
         
         consumed_items = []
 
+        if not hasattr(to_craft, "recipe"):
+            return
+
         for ingredient in to_craft.recipe.keys():
             
             if ingredient in inventory_count and inventory_count[ingredient] >= to_craft.recipe[ingredient]:
@@ -180,7 +188,6 @@ class Player(Character):
             
             print(f"~{mode}", end="\n\n\n")
 
-
             for index, slot in enumerate(self.inventory.slots, 1):
 
                 if slot.empty: 
@@ -197,9 +204,9 @@ class Player(Character):
             if action == 'q':
                 break
 
-            elif action in ["craft", "equip", "use"]:
+            elif action in inventory_modes.keys():
 
-                mode = action
+                mode = inventory_modes[action]
                 continue
             
             try:

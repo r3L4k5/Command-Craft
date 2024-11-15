@@ -1,6 +1,8 @@
 
 from items.items import Item, Material
 from characters.character import Character
+from termcolor import colored
+from random import randint
 
 
 class Consumable(Item):
@@ -20,5 +22,27 @@ class Consumable(Item):
             player.health += player.max_health * 0.1 
         
         del self
+
+class Meat(Consumable):
+
+    def  __init__(self, amount: int = 1) -> None:
+
+        super().__init__("meat", colored("||", on_color="on_red", attrs=["bold"]), True, amount)
     
+    def effect(self, player: Character):
+        
+        if self.cooked:
+            player.health += player.max_health * 0.2
+
+        else:
+            random_effect: int = randint(1, 2)
+
+            if random_effect == 1:
+                player.health += player.max_health * 0.1 
+            
+            else:
+                player.health -= player.max_health * 0.1
+        
+        del self
+
 

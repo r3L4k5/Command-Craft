@@ -31,6 +31,6 @@ item_access: dict[str:Item] = {
     "stonepickaxe": too.Pickaxe(mat.STONE, {"stone": 3, "wood": 1}, 20, 4),
 
     #Consumables
-    "meat": con.Consumable("meat", colored("||", on_color="on_red", attrs=["bold"]), True)
+    "meat": con.Meat(1)
 }
  
