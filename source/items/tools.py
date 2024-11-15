@@ -11,8 +11,8 @@ def material_color(sprite: str, material: str) -> str:
         case Material.WOOD:
             return colored(sprite, "red", attrs=["bold", "dark"])
         
-        case Material.STONE:
-            return colored(sprite, "dark_grey", attrs=["bold"])
+        case Material.MINERAL:
+            return colored(sprite, "dark_grey", attrs=["bold", "dark"])
         
         case _:
             raise "Material not found"
@@ -96,7 +96,7 @@ class Pickaxe(Tool):
     
     def effect(self, player, target):
 
-        if target.material == Material.STONE:
+        if target.material == Material.MINERAL:
 
             return super().effect(player)
         

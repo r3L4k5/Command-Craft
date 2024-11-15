@@ -1,6 +1,7 @@
 
 import utility as uti
 import items.tools as too
+import items.supplies as sup
 
 from characters.character import Character
 from systems.worldobject import WorldObject
@@ -8,7 +9,7 @@ from systems.storage import Storage
 from items.items import Item
 from characters.npc import NPC
 from enviorment.harvestable import Harvestable
-from items.consumable import Consumable
+from items.consumables import Consumable
 
 from items.item_access import get_item
 from copy import deepcopy
@@ -36,7 +37,7 @@ class Player(Character):
     
     def __init__(self, world: list[list]) -> None:
         
-        super().__init__("player", colored(" \"", on_color="on_white", attrs=["bold"]), y= 0, x= 10)
+        super().__init__("player", colored(" \"", color="black", on_color="on_white", attrs=["bold"]), y= 0, x= 10)
         
         self.input_queue = []
 
@@ -45,7 +46,7 @@ class Player(Character):
         
         world[self.y][self.x] = self  
 
-        meat: Consumable = get_item("meat")
+        meat: Consumable = get_item("torch")
         meat.amount = 10
 
         self.inventory.add_item(meat)
@@ -242,7 +243,10 @@ class Player(Character):
         
         target: WorldObject = self.target_register(world)
         
-        if isinstance(target, Harvestable):
+        if isinstance(self.equipped, sup.Torch):
+            self.equipped.effect(self, world)
+        
+        elif isinstance(target, Harvestable):
             target.harvest(self, world)
         
         elif isinstance(target, NPC):
@@ -255,6 +259,7 @@ class Player(Character):
 
         elif isinstance(self.equipped, Consumable):
             self.equipped.effect(self)
+        
         
 
     def update_sprite(self) -> None:

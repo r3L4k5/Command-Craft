@@ -4,6 +4,7 @@ from characters.player import Player
 from characters.npc import NPC
 from time import sleep
 
+
 from utility import clear
 from enviorment.fill_world import fill_world
 
@@ -16,7 +17,7 @@ class Game():
 
         game.npcs: list[NPC] = []
         
-        fill_world(game)
+        fill_world(game.world, game.npcs)
         
         global player
         player = Player(game.world)
@@ -26,9 +27,9 @@ class Game():
         
         for row in game.world:
             print()
-            
+
             for tile in row:
-                print(tile.sprite, end="")
+                print(tile, end="")
         
         print(end="\n\n")
     

@@ -14,6 +14,10 @@ class Consumable(Item):
         self.can_cook = can_cook
         self.cooked = False
 
+    def cook(self):
+        if not self.can_cook:
+            return
+
     def effect(self, player: Character):
 
         if self.cooked:
@@ -22,6 +26,7 @@ class Consumable(Item):
             player.health += player.max_health * 0.1 
         
         del self
+        
 
 class Meat(Consumable):
 
@@ -44,5 +49,3 @@ class Meat(Consumable):
                 player.health -= player.max_health * 0.1
         
         del self
-
-

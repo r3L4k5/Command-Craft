@@ -13,7 +13,9 @@ class Grass():
         self.x = x
 
         self.collision = False
-        
+
+    def __str__(self) -> str:
+        return self.sprite
     
 
 

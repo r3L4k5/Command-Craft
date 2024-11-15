@@ -19,7 +19,7 @@ class Harvestable(WorldObject):
         self.hitpoint = hitpoint
         self.resource = resource
 
-    def harvest(self, actor: Character, world):
+    def harvest(self, actor: Character, world: list[list]):
 
         total_strength: int = actor.strength
 
@@ -37,27 +37,19 @@ class Harvestable(WorldObject):
         self.delete(world)
 
 
-class Rock(Harvestable):
-
-    def __init__(self, y: int, x: int) -> None:
-        
-        super().__init__("rock", colored("()", "dark_grey", attrs=["bold"]), y, x, 7, res.Stone())
         
 
 class Tree(Harvestable):
     
-    def __init__(self, y: int, x: int, world) -> None:
+    def __init__(self, y: int, x: int, world: list[list]) -> None:
             
         super().__init__("tree", colored("||", "red", attrs=["bold", "dark"]), y, x, 3, res.Wood())
 
         for i in range(1, self.y):
 
             if isinstance(world[self.y - i][self.x], Leaves):
-                continue
-                
-            else:
-                self.resource.amount = i - 1
-                break
+
+                self.resource.amount += 1
 
                 
     def delete(self, world: list[list]):
@@ -82,8 +74,20 @@ class Tree(Harvestable):
       
 class Leaves(WorldObject):
     
-    def __init__(self, y: int, x: int, world = None) -> None:
+    def __init__(self, y: int, x: int) -> None:
         
         super().__init__("leaves", colored("  ", on_color= "on_green", attrs=["bold"]), y, x, False)
 
-        world[self.y][self.x] = self
+
+class Rock(Harvestable):
+
+    def __init__(self, y: int, x: int) -> None:
+        
+        super().__init__("rock", colored("()", "dark_grey", attrs=["bold", "dark"]), y, x, 7, res.Stone())
+
+
+class CoalOre(Harvestable):
+
+    def __init__(self, y: int, x: int) -> None:
+        super().__init__("coal", colored(" C", "dark_grey", attrs=["bold", "dark"]), y, x, 9, res.Coal())
+

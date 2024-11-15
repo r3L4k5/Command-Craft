@@ -3,7 +3,7 @@ from enum import Enum, auto
 
 class Material(Enum):
     WOOD = auto(),
-    STONE = auto(),
+    MINERAL = auto(),
     NONE = auto()
 
 

@@ -10,15 +10,19 @@ from random import randint
 
 def random_enviorment(y: int, x: int, world: list[list]):
     
-    probability: int = randint(1, 100)
+    probability: int = randint(1, 1000)
     
-    if probability == 1: 
+    if probability in range(1, 3):
+
+        return har.CoalOre(y, x)
+    
+    elif probability in range(1, 20): 
         
         return har.Rock(y, x)
     
-    elif probability in range(1,6) and y != 0:
+    elif probability in range(1, 100) and y > 0:
         
-        har.Leaves(y - 1, x, world)
+        world[y - 1][x] = har.Leaves(y - 1, x)
         
         return har.Tree(y, x, world)
     
@@ -40,10 +44,7 @@ def spawn_npc(y: int, x: int , world: list[list], npc_list: list):
     return new_npc
 
 
-def fill_world(game: object):
-
-    world: list[list] = game.world
-    npcs: list[NPC] = game.npcs
+def fill_world(world: list[list], npcs: list):
    
     for y in range(len(world)):
         
