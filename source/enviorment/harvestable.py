@@ -2,55 +2,53 @@
 import items.resources as res
 import enviorment.ground as gro
 
-from systems.worldobject import WorldObject, ObjectCategory
+from systems.worldobject import WorldObject
 from characters.character import Character
 from items.tools import Tool
 from items.items import Item
 from termcolor import colored
 
 
-class Harvestable():
+class Harvestable(WorldObject):
     
-    def __init__(self, resource: Item, hitpoints: int ):
+    def __init__(self, name: str, sprite: str, y: int, x: int, 
+                 hitpoint: int, resource: Item, collision: bool = True) -> None:
         
-        self.hitpoints = hitpoints
+        super().__init__(name, sprite, y, x, collision)
+
+        self.hitpoint = hitpoint
         self.resource = resource
 
+    def harvest(self, actor: Character, world):
 
-    def harvest(self, player: Character, world):
+        total_strength: int = actor.strength
 
-        total_strength: int = player.strength
+        if isinstance(actor.equipped, Tool):
 
-        if isinstance(player.equipped, Tool):
-
-            total_strength *= player.equipped.effect(player, self.resource)
+            total_strength *= actor.equipped.effect(actor, self.resource)
    
-        if self.hitpoints - total_strength > 0:
+        if self.hitpoint - total_strength > 0:
 
-            self.hitpoints -= total_strength
+            self.hitpoint -= total_strength
             return
             
-        player.inventory.add_item(self.resource)
+        actor.inventory.add_item(self.resource)
         
         self.delete(world)
 
 
-class Rock(WorldObject, Harvestable):
+class Rock(Harvestable):
 
     def __init__(self, y: int, x: int) -> None:
         
-        super().__init__("rock", colored("()", "dark_grey", attrs=["bold"]), y, x, ObjectCategory.HARVESTABLE)
+        super().__init__("rock", colored("()", "dark_grey", attrs=["bold"]), y, x, 7, res.Stone())
         
-        Harvestable.__init__(self, res.Stone(), 7)
 
-
-class Tree(WorldObject, Harvestable):
+class Tree(Harvestable):
     
     def __init__(self, y: int, x: int, world) -> None:
             
-        super().__init__("tree", colored("||", "red", attrs=["bold", "dark"]), y, x, ObjectCategory.HARVESTABLE)
-        
-        Harvestable.__init__(self, res.Wood(), 3)
+        super().__init__("tree", colored("||", "red", attrs=["bold", "dark"]), y, x, 3, res.Wood())
 
         for i in range(1, self.y):
 
@@ -62,7 +60,7 @@ class Tree(WorldObject, Harvestable):
                 break
 
                 
-    def delete(self, world):
+    def delete(self, world: list[list]):
         
         super().delete(world)
         
@@ -86,6 +84,6 @@ class Leaves(WorldObject):
     
     def __init__(self, y: int, x: int, world = None) -> None:
         
-        super().__init__("leaves", colored("  ", on_color= "on_green", attrs=["bold"]), y, x, ObjectCategory.HARVESTABLE, False)
+        super().__init__("leaves", colored("  ", on_color= "on_green", attrs=["bold"]), y, x, False)
 
         world[self.y][self.x] = self

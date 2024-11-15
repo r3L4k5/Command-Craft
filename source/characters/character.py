@@ -1,15 +1,18 @@
 
-from systems.worldobject import WorldObject, ObjectCategory
+from systems.worldobject import WorldObject
+from utility import clamp
+
 
 
 class Character(WorldObject):
     
-    def __init__(self, name: str, sprite: str, y: int, x: int, category: ObjectCategory, 
-                 collison: bool = True,  health: int = 10, strength: int = 1, speed: int = 1) -> None:
+    def __init__(self, name: str, sprite: str, y: int, x: int, 
+                 collison: bool = True, health: int = 10, strength: int = 1, speed: int = 1) -> None:
 
-        super().__init__(name, sprite, y, x, category, collison)
+        super().__init__(name, sprite, y, x, collison)
         
-        self. health = health
+        self.health = health
+        self.max_health = health
         self.strength = strength 
         self.speed = speed
         
@@ -37,7 +40,7 @@ class Character(WorldObject):
         return step
             
 
-    def will_collide(self, step: dict, world: list):
+    def will_collide(self, step: dict, world: list[list]):
         
         try:
             if world[self.y + step["y-axis"]][self.x + step["x-axis"]].collision == False:
@@ -50,7 +53,9 @@ class Character(WorldObject):
             return True
     
     
-    def movement(self, direction: str, world: list):
+    def movement(self, direction: str, world: list[list]):
+
+        self.facing = direction
 
         for _ in range(self.speed):
 
@@ -68,9 +73,9 @@ class Character(WorldObject):
                 world[self.y][self.x] = self
     
 
-    def attack(self, target: object):
+    def attack(self, target: WorldObject):
         
-        target.health -= self.strength
+        target.health = clamp(target.health - self.strength, target.max_health, 0)
 
 
     def alive(self):

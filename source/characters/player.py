@@ -1,15 +1,15 @@
 
 import utility as uti
-import items.resources as res
 import items.tools as too
 
-
-
 from characters.character import Character
-from systems.worldobject import WorldObject, ObjectCategory
+from systems.worldobject import WorldObject
 from systems.storage import Storage
 from items.items import Item
 from characters.npc import NPC
+from enviorment.harvestable import Harvestable
+from items.consumable import Consumable
+
 from items.item_access import get_item
 from copy import deepcopy
 from termcolor import colored
@@ -18,7 +18,8 @@ from termcolor import colored
 controls = {
     "movement": ['w', 's', 'a', 'd'],
     "inventory": 'q',
-    "interact": 'e'
+    "interact": 'e',
+    "use_equip": 'r'
 }
 
 facing_directions = {
@@ -28,20 +29,18 @@ facing_directions = {
     'd': "east"
 }
 
+inventory_mode = ["craft", "equip", "use"]
+
 
 class Player(Character):
     
-    def __init__(self, world: list) -> None:
+    def __init__(self, world: list[list]) -> None:
         
-        super().__init__("player", colored(" \"", on_color="on_white", attrs=["bold"]), 
-                         0, 10, ObjectCategory.PLAYER)
+        super().__init__("player", colored(" \"", on_color="on_white", attrs=["bold"]), y= 0, x= 10)
         
-        self.max_health: int = 10
-
         self.input_queue = []
 
         self.inventory: Storage = Storage(12, 10, name= "Inventory")
-
         self.equipped: Item | None = None
         
         world[self.y][self.x] = self  
@@ -146,6 +145,26 @@ class Player(Character):
 
         self.inventory.add_item(to_craft)
 
+
+    def use_item(self, item: str) -> None:
+
+        to_use: Item = get_item(item)
+
+        inventory_count: dict = self.count_items()
+
+        if not isinstance(to_use, Consumable):
+            return
+
+        elif to_use.name in inventory_count:
+
+            to_use.effect(self)
+            self.inventory.remove_item(to_use)
+        
+        elif to_use == self.equipped:
+
+            to_use.effect(self)
+            self.inventory.remove_item(to_use)
+        
     
     def open_inventory(self) -> None:
         
@@ -175,19 +194,13 @@ class Player(Character):
             
             action = uti.del_space(input("\nAction: ")).lower()
             
-            match action:
-                
-                case 'q': 
-                    return
+            if action == 'q':
+                break
 
-                case 'e':
-                    
-                    if mode == "craft": 
-                        mode = "equip"
-                    else:
-                        mode = "craft"
-                    
-                    continue
+            elif action in ["craft", "equip", "use"]:
+
+                mode = action
+                continue
             
             try:
                 match mode:
@@ -197,13 +210,16 @@ class Player(Character):
 
                     case "equip":
                         self.equip_item(action)
+                    
+                    case "use":
+                        self.use_item(action)
             
             except KeyError:
                 continue
         
-    
-    def interact(self, world: list) -> None:
-        
+
+    def target_register(self, world: list[list]):
+
         direction: dict = self.direction_calc(self.facing)
 
         try:
@@ -212,21 +228,26 @@ class Player(Character):
         except IndexError:
             return
         
-        if not hasattr(target, "category"):
-            return
+        return target
 
-        match target.category:
 
-            case ObjectCategory.HARVESTABLE:
-                target.harvest(self, world)
+    def interact(self, world: list[list]) -> None:
+        
+        target: WorldObject = self.target_register(world)
+        
+        if isinstance(target, Harvestable):
+            target.harvest(self, world)
+        
+        elif isinstance(target, NPC):
 
-            case ObjectCategory.NPC:
+            if isinstance(self.equipped, too.Sword):
+                self.attack(target, world)
+            
+            else:
+                target.react(self, world, True)
 
-                if isinstance(self.equipped, too.Sword):
-                    self.attack(target, world)
-                
-                else:
-                    target.react(self, world, True)
+        elif isinstance(self.equipped, Consumable):
+            self.equipped.effect(self)
         
 
     def update_sprite(self) -> None:
@@ -243,7 +264,7 @@ class Player(Character):
             self.sprite = colored("**", on_color="on_white", attrs=["bold"])
     
 
-    def input_handler(self, world: list) -> None:
+    def input_handler(self, world: list[list]) -> None:
     
         if len(self.input_queue) == 0:
 
@@ -257,9 +278,9 @@ class Player(Character):
 
         if self.input_queue[0] in controls["movement"]:
             
-            self.facing = facing_directions[self.input_queue[0]]
+            direction: str = facing_directions[self.input_queue[0]]
             
-            self.movement(self.facing, world)
+            self.movement(direction, world)
         
         elif self.input_queue[0] == controls["interact"]:
             
@@ -272,10 +293,10 @@ class Player(Character):
         self.input_queue.pop(0)
     
 
-    def attack(self, target: NPC, world: list):
+    def attack(self, target: NPC, world: list[list]):
 
         total_strength = self.strength * self.equipped.effect(self)
-        target.health -= total_strength
+        target.health = uti.clamp(target.health - total_strength, target.max_health, 0)
 
         if target.alive() == False and target.loot is not None:
 
@@ -285,7 +306,6 @@ class Player(Character):
         else:
             target.react(self, world, False)
     
-
 
     def update_player(self) -> bool:
 

@@ -1,6 +1,6 @@
 
 from characters.character import Character
-from systems.worldobject import ObjectCategory, WorldObject
+from systems.worldobject import WorldObject
 from utility import clamp
 from random import choice
 
@@ -9,7 +9,7 @@ class NPC(Character):
     def __init__(self, name: str, sprite: str, y: int, x: int, health: int, strength: int, speed: int, 
                  vision: int, loot: list | None = None) -> None:
 
-        super().__init__(name, sprite, y, x, ObjectCategory.NPC, True, health, strength, speed)
+        super().__init__(name, sprite, y, x, True, health, strength, speed)
 
         self.vision = vision
         self.loot = loot
@@ -30,7 +30,7 @@ class NPC(Character):
         return vision_field
 
 
-    def detection(self, world: list):
+    def detection(self, world: list[list]):
 
         vision_field = self.vision_calc(world)
         targets: dict =  {}
@@ -43,7 +43,7 @@ class NPC(Character):
         return targets
                 
             
-    def move_toward(self, world: list):
+    def move_toward(self, world: list[list]):
 
         targets: dict = self.detection(world)
 
@@ -79,10 +79,12 @@ class NPC(Character):
             random_direction = choice(["north", "south", "west", "east"])
             self.movement(random_direction, world)
 
-    def react(self, actor: Character, world: list, friendly: bool):
+
+    def react(self, actor: Character, world: list[list], friendly: bool):
         pass
 
-    def update_npc(self, world: list):
+
+    def update_npc(self, world: list[list]):
 
         self.detection(world)
         self.move_toward(world)

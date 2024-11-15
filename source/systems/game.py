@@ -2,7 +2,7 @@
 
 from characters.player import Player
 from characters.npc import NPC
-from characters.neutral.dog import Dog
+from time import sleep
 
 from utility import clear
 from enviorment.fill_world import fill_world
@@ -11,7 +11,7 @@ class Game():
 
     def __init__(game) -> None:
 
-        game.world: list = [[],[],[],[],[],[],[],[],[],[],
+        game.world: list[list] = [[],[],[],[],[],[],[],[],[],[],
                     [],[],[],[],[],[],[],[],[],[]]
 
         game.npcs: list[NPC] = []
@@ -52,12 +52,10 @@ class Game():
         game.update_all_npc()
 
         player.display_hud()
-
         player.update_player()
 
         game.display_world()
         
+        sleep(0.015)
+
         player.input_handler(game.world)
-
-        clear()
-

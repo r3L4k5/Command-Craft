@@ -31,7 +31,6 @@ def spawn_npc(y: int, x: int , world: list[list], npc_list: list):
     new_npc: NPC 
 
     if probability == 1:
-       
        new_npc = Dog(y, x)
     
     else:

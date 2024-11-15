@@ -1,22 +1,14 @@
 
-from enum import Enum, auto
 from enviorment.ground import Grass
 from utility import bold
 
 
-class ObjectCategory(Enum):
-    HARVESTABLE = auto()
-    PLAYER = auto()
-    NPC = auto()
- 
-
 class WorldObject():
     
-    def __init__(self, name: str, sprite: str, y: int, x: int, category: ObjectCategory, collision: bool = True) -> None:
+    def __init__(self, name: str, sprite: str, y: int, x: int, collision: bool = True) -> None:
         
         self.sprite = sprite
         self.collision = collision
-        self.category = category
         self.name = name
         
         self.y = y
@@ -31,7 +23,7 @@ class WorldObject():
         
         world[self.y][self.x] = self.ground
         del self
-    
+
     #Show name for presentation, such as dialogue
     def display_name(self):
         return bold(self.name.capitalize())

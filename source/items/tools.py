@@ -1,7 +1,6 @@
 
-from unicodedata import category
 from items.items import Item, Material
-from systems.worldobject import ObjectCategory, WorldObject
+from systems.worldobject import WorldObject
 from termcolor import colored
 
 
@@ -34,7 +33,7 @@ class Tool(Item):
     #Predefined target parameter because it is not needed and to avoid error when 
     #calling the shared effect() while harvesting. Otherwise target argument 
     #would be given without corresponding parameter in certain cases 
-    def effect(self, player: WorldObject, target = None):
+    def effect(self, player: WorldObject, target: Item | WorldObject = None):
         
         if self.durability == 1:
 
@@ -64,10 +63,9 @@ class Sword(Tool):
         super().__init__("sword", "/", material, recipe, durability, power)
 
     #Same as base class regarding target = None 
-    def effect(self, player, target = None):
+    def effect(self, player: WorldObject, target = None):
 
         if target is None:
-
             return super().effect(player)
         
         #Default is None and cannot be multiplied with players strength;
