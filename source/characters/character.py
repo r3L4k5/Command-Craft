@@ -68,6 +68,8 @@ class Character(WorldObject):
 
     def update(self, world: list[list]):
 
+        super().update(world)
+
         if self.health <= 0:
             self.delete(world)
 

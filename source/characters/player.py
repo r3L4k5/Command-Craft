@@ -303,7 +303,12 @@ class Player(Character):
 
     def update(self, world: list[list]):
 
+        super().update(world)
         self.update_sprite()
+
+        if self.health == 0:
+            input("Game Over!")
+            quit()
  
     
 

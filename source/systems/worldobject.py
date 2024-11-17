@@ -25,13 +25,17 @@ class WorldObject():
         del self
     
     def update(self, world: list[list]):
+
+        if isinstance(self.ground, WorldObject):
+            self.ground.update(world)
+            
         pass
 
     #Show name for presentation, such as dialogue
     def display_name(self):
         return bold(self.name.capitalize())
 
-    def direction_calc(self, direction: str, increment: int = 1):
+    def direction_calc(self, direction: str | None = None, increment: int = 1):
     
         step: dict = {"y-axis": 0, "x-axis": 0}
 
@@ -48,10 +52,11 @@ class WorldObject():
 
             case 'west':
                 step["x-axis"] -= increment
+            
 
         return step
 
-    def get_target(self, world: list[list], direction: str) -> object:
+    def get_target(self, world: list[list], direction: str| None = None) -> object:
 
         step: dict = self.direction_calc(direction)
 

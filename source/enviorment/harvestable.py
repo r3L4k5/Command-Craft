@@ -74,19 +74,6 @@ class Leaves(WorldObject):
     def __init__(self, y: int, x: int) -> None:
         
         super().__init__("leaves", colored("  ", on_color= "on_green", attrs=["bold"]), y, x, False)
-
-    def update(self, world):
-
-        if len(world) < 20:
-            return
-        
-        elif isinstance(world[self.y + 1][self.x], Tree):
-            return
-        
-        elif isinstance(world[self.y + 1][self.x], Leaves):
-            return
-            
-        self.delete(world)
     
 
 class Rock(Harvestable):

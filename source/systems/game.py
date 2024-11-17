@@ -23,8 +23,7 @@ class Game():
         
         for row in game.world:
             for tile in row:
-
-                tile: WorldObject
+                
                 tile.update(game.world)
 
         for row in game.world:
@@ -41,7 +40,6 @@ class Game():
         clear()
 
         player.display_hud()
-        player.update(game.world)
 
         game.update_world()
         

@@ -1,5 +1,7 @@
 
 from systems.worldobject import WorldObject
+from characters.character import Character
+
 from termcolor import colored
 from random import choice, randint
 
@@ -21,11 +23,12 @@ class Fire(WorldObject):
 
             self.ground = target.ground
             target.delete(world)
-   
+        
         else:
             self.ground = target
         
         world[self.y][self.x] = self
+
 
     def fires_nearby(self, world: list[list]) -> int:
 
@@ -46,11 +49,9 @@ class Fire(WorldObject):
         return fires
 
 
-    def update(self, world: list[list]):
+    def spread(self, world: list[list]):
 
-        
         if self.spread_time > 0:
-
             self.spread_time -= int(5 / self.fires_nearby(world))
             return
         
@@ -65,6 +66,22 @@ class Fire(WorldObject):
 
             self.spread_time = 25
 
+
+    def burn_damage(self, world: list[list]):
+
+        target: WorldObject = self.get_target(world)
+
+        if isinstance(target, Character):
+            target.health -= 2
+
+
+    def update(self, world: list[list]):
+
+        self.spread(world)
+        self.burn_damage(world)
+
+        
+        
          
 
         
