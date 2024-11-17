@@ -2,6 +2,7 @@
 import utility as uti
 import items.tools as too
 import items.supplies as sup
+import items.consumables as con
 
 from characters.character import Character
 from systems.worldobject import WorldObject
@@ -46,10 +47,7 @@ class Player(Character):
         
         world[self.y][self.x] = self  
 
-        meat: Consumable = get_item("torch")
-        meat.amount = 10
-
-        self.inventory.add_item(meat)
+        self.equipped = get_item("torch")
 
 
     def display_health(self) -> str:
@@ -71,7 +69,7 @@ class Player(Character):
 
         if self.equipped is not None:
 
-            return f"{uti.bold('Equipped:')} [{self.equipped} {self.equipped.name.capitalize()}]" 
+            return f"{uti.bold('Equipped:')} [{self.equipped.sprite} {self.equipped.name.capitalize()}]" 
             
         else:
             return uti.bold('Equipped:') + " []"
@@ -87,6 +85,11 @@ class Player(Character):
 
 
     def equip_item(self, item: str) -> None:
+
+        if item == "none":
+            self.inventory.add_item(self.equipped)
+            self.equipped = None
+            return
         
         to_equip: Item = get_item(item)
 
@@ -117,10 +120,10 @@ class Player(Character):
 
             elif slot.item.name in item_count:
 
-                item_count[slot.item.name] += slot.amount
+                item_count[slot.item.name] += slot.item.amount
 
             else:
-                item_count[slot.item.name] = slot.amount
+                item_count[slot.item.name] = slot.item.amount
         
         return item_count
 
@@ -172,7 +175,7 @@ class Player(Character):
         elif to_use == self.equipped:
 
             to_use.effect(self)
-            self.inventory.remove_item(to_use)
+            self.equipped = None
         
     
     def open_inventory(self) -> None:
@@ -191,16 +194,12 @@ class Player(Character):
 
             for index, slot in enumerate(self.inventory.slots, 1):
 
-                if slot.empty: 
-                    print(f"  [{slot.item}]", end= " ")
-                
-                else:
-                    print(f"  [{str(slot.item)} {slot.item.name.capitalize()} x{slot.amount}]", end= " ")
+                print(f"  {slot}", end= " ")
                 
                 uti.row_break(index, 4, 2)
 
             
-            action = uti.del_space(input("\nAction: ")).lower()
+            action = uti.standardize(input("\nAction: "))
             
             if action == 'q':
                 break
@@ -224,29 +223,16 @@ class Player(Character):
             
             except KeyError:
                 continue
-        
-
-    def target_register(self, world: list[list]):
-
-        direction: dict = self.direction_calc(self.facing)
-
-        try:
-            target: WorldObject = world[self.y + direction["y-axis"]][self.x + direction["x-axis"]]
-        
-        except IndexError:
-            return
-        
-        return target
 
 
     def interact(self, world: list[list]) -> None:
-        
-        target: WorldObject = self.target_register(world)
-        
-        if isinstance(self.equipped, sup.Torch):
+
+        if "supplies" in getattr(self.equipped, "__module__", []):
             self.equipped.effect(self, world)
         
-        elif isinstance(target, Harvestable):
+        target: WorldObject = self.get_target(world)
+        
+        if isinstance(target, Harvestable):
             target.harvest(self, world)
         
         elif isinstance(target, NPC):
@@ -256,12 +242,8 @@ class Player(Character):
             
             else:
                 target.react(self, world, True)
-
-        elif isinstance(self.equipped, Consumable):
-            self.equipped.effect(self)
         
         
-
     def update_sprite(self) -> None:
 
         match self.facing:
@@ -272,7 +254,7 @@ class Player(Character):
             case "west":
                 self.sprite = colored("\" ", on_color="on_white", attrs=["bold"])
         
-        if not self.alive():
+        if self.health <= 0:
             self.sprite = colored("**", on_color="on_white", attrs=["bold"])
     
 
@@ -310,7 +292,7 @@ class Player(Character):
         total_strength = self.strength * self.equipped.effect(self)
         target.health = uti.clamp(target.health - total_strength, target.max_health, 0)
 
-        if target.alive() == False and target.loot is not None:
+        if target.health == 0 and target.loot is not None:
 
             for item in target.loot:
                 self.inventory.add_item(item)
@@ -319,10 +301,9 @@ class Player(Character):
             target.react(self, world, False)
     
 
-    def update_player(self) -> bool:
+    def update(self, world: list[list]):
 
         self.update_sprite()
-        return self.alive()
  
     
 

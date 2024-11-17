@@ -47,7 +47,6 @@ class NPC(Character):
 
         targets: dict = self.detection(world)
 
-        
         if "player" in targets:
 
             target: Character = targets["player"]
@@ -84,10 +83,12 @@ class NPC(Character):
         pass
 
 
-    def update_npc(self, world: list[list]):
+    def update(self, world: list[list]):
+
+        super().update(world)
 
         self.detection(world)
         self.move_toward(world)
 
-        return self.alive()
+
 

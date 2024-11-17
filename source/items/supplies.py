@@ -21,16 +21,15 @@ class Torch(Item):
 
     def effect(self, player: Character, world: list[list]):
         
-        target: WorldObject | object = player.target_register(world)
+        target: WorldObject | object = player.get_target(world)
 
-        fire: WorldObject = Fire(target.y, target.x)
+        Fire(target, world)
 
-        if isinstance(target, WorldObject):
+        if player.equipped == self:
+            player.equipped = None
 
-            fire.ground = target.ground
-            target.delete(world)
-        
-        world[fire.y][fire.x] = fire
+        else:
+            player.inventory.remove_item(self)
 
             
         

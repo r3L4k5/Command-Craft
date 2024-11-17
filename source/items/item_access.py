@@ -24,14 +24,14 @@ item_access: dict[str:Item] = {
     "coal": res.Coal(),
 
     #Tools
-    "woodensword": too.Sword(mat.WOOD, {"wood": 4}, 10, 2),
-    "stonesword": too.Sword(mat.MINERAL, {"stone": 3, "wood": 1}, 20, 4),
+    "woodensword": too.Sword(mat.WOOD, {"wood": 4}, 50, 2),
+    "stonesword": too.Sword(mat.MINERAL, {"stone": 3, "wood": 1}, 100, 4),
 
-    "woodenaxe": too.Axe(mat.WOOD, {"wood": 4}, 10, 2),
-    "stoneaxe": too.Axe(mat.MINERAL, {"stone": 3, "wood": 1}, 20, 4),
+    "woodenaxe": too.Axe(mat.WOOD, {"wood": 4}, 50, 2),
+    "stoneaxe": too.Axe(mat.MINERAL, {"stone": 3, "wood": 1}, 100, 4),
 
-    "woodenpickaxe": too.Pickaxe(mat.WOOD, {"wood": 4}, 10, 2),
-    "stonepickaxe": too.Pickaxe(mat.MINERAL, {"stone": 3, "wood": 1}, 20, 4),
+    "woodenpickaxe": too.Pickaxe(mat.WOOD, {"wood": 4}, 50, 2),
+    "stonepickaxe": too.Pickaxe(mat.MINERAL, {"stone": 3, "wood": 1}, 100, 4),
 
     #Consumables
     "meat": con.Meat(),

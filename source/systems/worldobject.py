@@ -19,14 +19,50 @@ class WorldObject():
     def __str__(self) -> str:
         return self.sprite
     
-    def delete(self, world) -> None:
-        
+    def delete(self, world: list[list]) -> None:
+
         world[self.y][self.x] = self.ground
         del self
+    
+    def update(self, world: list[list]):
+        pass
 
     #Show name for presentation, such as dialogue
     def display_name(self):
         return bold(self.name.capitalize())
+
+    def direction_calc(self, direction: str, increment: int = 1):
+    
+        step: dict = {"y-axis": 0, "x-axis": 0}
+
+        match direction:
+
+            case 'north':
+                step["y-axis"] -= increment
+
+            case 'south':
+                step["y-axis"] += increment
+
+            case 'east':
+                step["x-axis"] += increment
+
+            case 'west':
+                step["x-axis"] -= increment
+
+        return step
+
+    def get_target(self, world: list[list], direction: str) -> object:
+
+        step: dict = self.direction_calc(direction)
+
+        try:
+            target: WorldObject = world[self.y + step["y-axis"]][self.x + step["x-axis"]]
+        
+        except IndexError:
+            return
+        
+        return target
+        
 
 
     

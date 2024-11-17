@@ -4,6 +4,7 @@ import enviorment.ground as env
 
 from characters.neutral.dog import Dog
 from characters.npc import NPC
+from systems.worldobject import WorldObject
 
 from random import randint
 
@@ -29,22 +30,20 @@ def random_enviorment(y: int, x: int, world: list[list]):
     return env.Grass(y, x)
 
 
-def spawn_npc(y: int, x: int , world: list[list], npc_list: list):
+def spawn_npc(y: int, x: int , world: list[list]):
 
     probability: int = randint(1, 500)
-    new_npc: NPC 
 
-    if probability == 1:
-       new_npc = Dog(y, x)
-    
-    else:
+    if isinstance(world[y][x], WorldObject):
         return world[y][x]
     
-    npc_list.append(new_npc)
-    return new_npc
+    elif probability == 1:
+        return Dog(y, x)
+    
+    return world[y][x]
+    
 
-
-def fill_world(world: list[list], npcs: list):
+def fill_world(world: list[list]):
    
     for y in range(len(world)):
         
@@ -56,7 +55,7 @@ def fill_world(world: list[list], npcs: list):
 
         for x in range(len(world[y])):
 
-            world[y][x] = spawn_npc(y, x, world, npcs)
+            world[y][x] = spawn_npc(y, x, world)
 
 
 

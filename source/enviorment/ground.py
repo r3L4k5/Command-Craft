@@ -16,7 +16,9 @@ class Grass():
 
     def __str__(self) -> str:
         return self.sprite
-    
+
+    def update(self, *args):
+        pass
 
 
 

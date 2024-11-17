@@ -3,7 +3,6 @@ from systems.worldobject import WorldObject
 from utility import clamp
 
 
-
 class Character(WorldObject):
     
     def __init__(self, name: str, sprite: str, y: int, x: int, 
@@ -19,38 +18,28 @@ class Character(WorldObject):
         self.facing = 'north'   
 
 
-    def direction_calc(self, direction: str):
-        
-        step: dict = {"y-axis": 0, "x-axis": 0}
-        
-        match direction:
-            
-            case 'north':
-                step["y-axis"] -= 1
-            
-            case 'south':
-                step["y-axis"] += 1
-            
-            case 'east':
-                step["x-axis"] += 1
-            
-            case 'west':
-                step["x-axis"] -= 1
-        
-        return step
-            
+    def will_collide(self, world: list[list]):
 
-    def will_collide(self, step: dict, world: list[list]):
+        target: Character = self.get_target(world)
         
+        if hasattr(target, "collision") and target.collision == False:
+            return False
+        
+        else:
+            return True
+        
+    
+    def get_target(self, world: list[list]) -> WorldObject:
+
+        step: dict = self.direction_calc(self.facing)
+
         try:
-            if world[self.y + step["y-axis"]][self.x + step["x-axis"]].collision == False:
-                return False
-            
-            else:
-                return True
+            target: WorldObject = world[self.y + step["y-axis"]][self.x + step["x-axis"]]
         
         except IndexError:
-            return True
+            return
+        
+        return target
     
     
     def movement(self, direction: str, world: list[list]):
@@ -61,7 +50,7 @@ class Character(WorldObject):
 
             step = self.direction_calc(direction)
             
-            if not self.will_collide(step, world):
+            if not self.will_collide(world):
             
                 world[self.y][self.x] = self.ground
 
@@ -74,15 +63,13 @@ class Character(WorldObject):
     
 
     def attack(self, target: WorldObject):
-        
         target.health = clamp(target.health - self.strength, target.max_health, 0)
 
 
-    def alive(self):
+    def update(self, world: list[list]):
 
         if self.health <= 0:
-            return False
-        
-        else:
-            return True
+            self.delete(world)
+
+            
         

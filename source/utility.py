@@ -20,13 +20,16 @@ def clamp(value, max = None, min = None):
     return value
 
 #Breaks into new line after a certain length
-def row_break(index, row_length, line_breaks = 1):
+def row_break(index: int, row_length: int, line_breaks: int = 1):
 
     if index % row_length == 0: 
         print(end= "\n" * line_breaks)
 
 #Deletes all spaces in string
-def del_space(text: str):
+def standardize(text: str):
 
-    return "".join(list(filter(lambda x: x != " ", text)))
+    return "".join(list(filter(lambda x: x != " ", text))).lower()
+
+
+
 
