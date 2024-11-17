@@ -14,7 +14,6 @@ class Fire(WorldObject):
         
         super().__init__("fire", colored("ww", color= "yellow", on_color="on_red", attrs=["bold"]), target.y, target.x, False)
 
-        self.burn_time: int = randint(1, 5)
         self.spread_time: int = 25
 
         if isinstance(target, WorldObject):
