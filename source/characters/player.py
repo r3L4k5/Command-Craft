@@ -1,8 +1,6 @@
 
 import utility as uti
 import items.tools as too
-import items.supplies as sup
-import items.consumables as con
 
 from characters.character import Character
 from systems.worldobject import WorldObject
@@ -46,9 +44,7 @@ class Player(Character):
         self.equipped: Item | None = None
         
         world[self.y][self.x] = self  
-
-        self.equipped = get_item("torch")
-
+        
 
     def display_health(self) -> str:
 
@@ -230,6 +226,10 @@ class Player(Character):
         if "supplies" in getattr(self.equipped, "__module__", []):
             self.equipped.effect(self, world)
         
+        elif isinstance(self.equipped, Consumable):
+            self.equipped.effect(self)
+        
+
         target: WorldObject = self.get_target(world)
         
         if isinstance(target, Harvestable):
