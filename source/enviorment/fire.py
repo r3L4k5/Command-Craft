@@ -1,7 +1,7 @@
 
 from systems.worldobject import WorldObject
 from termcolor import colored
-from random import choice, randint
+from random import choice
 
 
 class Fire(WorldObject):
@@ -25,6 +25,7 @@ class Fire(WorldObject):
             self.ground = target
         
         world[self.y][self.x] = self
+        
 
     def fires_nearby(self, world: list[list]) -> int:
 
