@@ -3,7 +3,7 @@ import utility as uti
 import items.tools as too
 
 from characters.character import Character
-from systems.worldobject import WorldObject
+from systems.worldobject import WorldObject, Material
 from systems.storage import Storage
 from items.items import Item
 from characters.npc import NPC
@@ -36,7 +36,7 @@ class Player(Character):
     
     def __init__(self, world: list[list]) -> None:
         
-        super().__init__("player", colored(" \"", color="black", on_color="on_white", attrs=["bold"]), y= 0, x= 10)
+        super().__init__("player", colored(" \"", color="black", on_color="on_white", attrs=["bold"]), y= 0, x= 10, material= Material.FLESH)
         
         self.input_queue = []
 
@@ -139,10 +139,10 @@ class Player(Character):
             
             if ingredient in inventory_count and inventory_count[ingredient] >= to_craft.recipe[ingredient]:
                 
-                resource: Item = get_item(ingredient)
-                resource.amount = to_craft.recipe[ingredient]
+                consumed: Item = get_item(ingredient)
+                consumed.amount = to_craft.recipe[ingredient]
 
-                consumed_items.append(resource)
+                consumed_items.append(consumed)
                  
             else:
                 return
@@ -223,7 +223,10 @@ class Player(Character):
 
     def interact(self, world: list[list]) -> None:
 
-        if "supplies" in getattr(self.equipped, "__module__", []):
+        if self.equipped is not None:
+            self.equipped.effect()
+
+        '''if "supplies" in getattr(self.equipped, "__module__", []):
             self.equipped.effect(self, world)
         
         elif isinstance(self.equipped, Consumable):
@@ -241,7 +244,7 @@ class Player(Character):
                 self.attack(target, world)
             
             else:
-                target.react(self, world, True)
+                target.react(self, world, True)'''
         
         
     def update_sprite(self) -> None:

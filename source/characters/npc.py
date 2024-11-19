@@ -1,15 +1,16 @@
 
 from characters.character import Character
-from systems.worldobject import WorldObject
+from systems.worldobject import Material
 from utility import clamp
 from random import choice
 
+
 class NPC(Character):
 
-    def __init__(self, name: str, sprite: str, y: int, x: int, health: int, strength: int, speed: int, 
+    def __init__(self, name: str, sprite: str, y: int, x: int, material: Material, health: int, strength: int, speed: int, 
                  vision: int, loot: list | None = None) -> None:
 
-        super().__init__(name, sprite, y, x, True, health, strength, speed)
+        super().__init__(name, sprite, y, x, material, True, health, strength, speed)
 
         self.vision = vision
         self.loot = loot

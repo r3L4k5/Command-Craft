@@ -1,5 +1,5 @@
 
-from items.items import Item, Material
+from items.items import Item
 from characters.character import Character
 from termcolor import colored
 from random import randint
@@ -9,7 +9,7 @@ class Consumable(Item):
 
     def __init__(self, name: str, sprite: str, can_cook: bool, amount: int = 1) -> None:
 
-        super().__init__(name, sprite, Material.NONE, amount)
+        super().__init__(name, sprite, amount)
 
         self.can_cook = can_cook
         self.cooked = False

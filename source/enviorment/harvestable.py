@@ -1,8 +1,7 @@
 
 import items.resources as res
-import enviorment.ground as gro
 
-from systems.worldobject import WorldObject
+from systems.worldobject import WorldObject, Material
 from characters.character import Character
 from items.tools import Tool
 from items.items import Item
@@ -12,9 +11,9 @@ from termcolor import colored
 class Harvestable(WorldObject):
     
     def __init__(self, name: str, sprite: str, y: int, x: int, 
-                 hitpoint: int, resource: Item) -> None:
+                 hitpoint: int, resource: Item, material: Material) -> None:
         
-        super().__init__(name, sprite, y, x)
+        super().__init__(name, sprite, y, x, material)
 
         self.hitpoint = hitpoint
         self.resource = resource
@@ -41,7 +40,7 @@ class Tree(Harvestable):
     
     def __init__(self, y: int, x: int, world: list[list]) -> None:
             
-        super().__init__("tree", colored("||", "red", attrs=["bold", "dark"]), y, x, 7, res.Wood(3))
+        super().__init__("tree", colored("||", "red", attrs=["bold", "dark"]), y, x, 8, res.Wood(3), Material.PLANT)
 
         for i in range(1, self.y + 1):
 
@@ -69,23 +68,24 @@ class Tree(Harvestable):
         
         super().delete(world)
             
+
 class Leaves(WorldObject):
     
     def __init__(self, y: int, x: int) -> None:
         
-        super().__init__("leaves", colored("  ", on_color= "on_green", attrs=["bold"]), y, x, False)
+        super().__init__("leaves", colored("  ", on_color= "on_green", attrs=["bold"]), y, x, Material.PLANT, False)
     
 
 class Rock(Harvestable):
 
     def __init__(self, y: int, x: int) -> None:
         
-        super().__init__("rock", colored("()", "dark_grey", attrs=["bold", "dark"]), y, x, 15, res.Stone(3))
+        super().__init__("rock", colored("()", "dark_grey", attrs=["bold", "dark"]), y, x, 15, res.Stone(3), Material.MINERAL)
 
 
 class CoalOre(Harvestable):
 
     def __init__(self, y: int, x: int) -> None:
 
-        super().__init__("coal", colored(" C", "dark_grey", attrs=["bold", "dark"]), y, x, 20, res.Coal(3))
+        super().__init__("coal", colored(" C", "dark_grey", attrs=["bold", "dark"]), y, x, 20, res.Coal(3), Material.MINERAL)
 

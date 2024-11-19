@@ -1,22 +1,14 @@
 
-from enum import Enum, auto
-
-class Material(Enum):
-    WOOD = auto(),
-    MINERAL = auto(),
-    NONE = auto()
-
 
 class Item():
     
-    def __init__(self, name: str, sprite: str, material: Material = Material.NONE, amount: int = 1) -> None:
+    def __init__(self, name: str, sprite: str, amount: int = 1) -> None:
         
         self.name: str = name
         self.sprite: str = sprite
         self.amount: int = amount
-        self.material: Material = material
     
-    def effect(*args):
+    def effect(self, world, player, target):
         pass
     
     def __str__(self) -> str:

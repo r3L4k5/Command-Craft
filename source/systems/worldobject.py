@@ -1,15 +1,25 @@
 
 from enviorment.ground import Grass
+from enum import Enum, auto
 from utility import bold
 
 
+class Material(Enum):
+    PLANT = auto(),
+    FLESH = auto(),
+    MINERAL = auto(),
+    MISC = auto()
+
+
 class WorldObject():
+
     
-    def __init__(self, name: str, sprite: str, y: int, x: int, collision: bool = True) -> None:
+    def __init__(self, name: str, sprite: str, y: int, x: int, material: Material, collision: bool = True) -> None:
         
         self.sprite = sprite
         self.collision = collision
         self.name = name
+        self.material = material
         
         self.y = y
         self.x = x

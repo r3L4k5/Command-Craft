@@ -1,32 +1,36 @@
 
-from items.items import Item, Material
-from systems.worldobject import WorldObject
+from items.items import Item
+from systems.worldobject import WorldObject, Material
 from termcolor import colored
+from enum import Enum, auto
 
+class Resource(Enum):
+    WOOD = auto(),
+    STONE = auto(),
 
-def material_color(sprite: str, material: str) -> str:
+def resource_color(sprite: str, resource: str) -> str:
 
-    match material:
+    match resource:
 
-        case Material.WOOD:
+        case Resource.WOOD:
             return colored(sprite, "red", attrs=["bold", "dark"])
         
-        case Material.MINERAL:
+        case Resource.STONE:
             return colored(sprite, "dark_grey", attrs=["bold", "dark"])
         
         case _:
-            raise "Material not found"
+            raise "Resource not found"
 
 
 class Tool(Item):
     
-    def __init__(self, name: str, sprite: str, material: Material, recipe: dict, durability: int, power: int) -> None:
+    def __init__(self, name: str, sprite: str, resource: Resource, recipe: dict, durability: int, power: int) -> None:
         
-        super().__init__(name, material_color(sprite, material), material)
+        super().__init__(name, resource_color(sprite, resource))
 
         self.recipe = recipe
         self.durability = durability
-        self.material = material
+        self.resource = resource
         self.power = power
 
     #Temporary solution:
@@ -35,32 +39,27 @@ class Tool(Item):
     #would be given without corresponding parameter in certain cases 
     def effect(self, player: WorldObject, target: Item | WorldObject = None):
         
+        power: int = self.power
+
         if self.durability == 1:
-
-            #Tools power stored in variable, due to not beeing
-            #accesible after deletion of item
-            power: int = self.power 
-
             player.equipped = None
-            del self    
-
-            return power
+            del self
         
         self.durability -= 1
-        return self.power
+        return power
 
 
     def __eq__(self, value: object) -> bool:
         
-        if type(self) == type(value) and self.material == value.material:
+        if type(self) == type(value) and self.resource == value.resource:
             return True
         
     
 class Sword(Tool):
 
-    def __init__(self, material: Material, recipe: dict, durability: int, power: int) -> None:
+    def __init__(self, resource: Resource, recipe: dict, durability: int, power: int) -> None:
         
-        super().__init__("sword", "/", material, recipe, durability, power)
+        super().__init__("sword", "/", resource, recipe, durability, power)
 
     #Same as base class regarding target = None 
     def effect(self, player: WorldObject, target = None):
@@ -75,13 +74,13 @@ class Sword(Tool):
 
 class Axe(Tool):
     
-    def __init__(self, material: Material, recipe: dict, durability: int, power: int) -> None:
+    def __init__(self, resource: Resource, recipe: dict, durability: int, power: int) -> None:
         
-        super().__init__("axe", "P", material, recipe, durability, power)
+        super().__init__("axe", "P", resource, recipe, durability, power)
     
-    def effect(self, player, target):
+    def effect(self, player: WorldObject, target: WorldObject):
         
-        if target.material == Material.WOOD:
+        if target.material == Resource.WOOD:
             
             return super().effect(player)
         
@@ -90,11 +89,11 @@ class Axe(Tool):
 
 class Pickaxe(Tool):
 
-    def __init__(self, material: Material, recipe: dict, durability: int, power: int) -> None:
+    def __init__(self, resource: Resource, recipe: dict, durability: int, power: int) -> None:
         
-        super().__init__("pickaxe", "T", material, recipe, durability, power)
+        super().__init__("pickaxe", "T", resource, recipe, durability, power)
     
-    def effect(self, player, target):
+    def effect(self, player: WorldObject, target: WorldObject):
 
         if target.material == Material.MINERAL:
 

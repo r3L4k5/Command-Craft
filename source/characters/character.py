@@ -1,14 +1,14 @@
 
-from systems.worldobject import WorldObject
+from systems.worldobject import WorldObject, Material
 from utility import clamp
 
 
 class Character(WorldObject):
     
-    def __init__(self, name: str, sprite: str, y: int, x: int, 
+    def __init__(self, name: str, sprite: str, y: int, x: int, material: Material,
                  collison: bool = True, health: int = 10, strength: int = 1, speed: int = 1) -> None:
 
-        super().__init__(name, sprite, y, x, collison)
+        super().__init__(name, sprite, y, x, material, collison)
         
         self.health = health
         self.max_health = health
@@ -17,10 +17,9 @@ class Character(WorldObject):
         
         self.facing = 'north'   
 
-
     def will_collide(self, world: list[list]):
 
-        target: Character = self.get_target(world)
+        target: WorldObject = self.get_target(world)
         
         if hasattr(target, "collision") and target.collision == False:
             return False

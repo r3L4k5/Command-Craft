@@ -1,5 +1,5 @@
 
-from items.items import Item, Material
+from items.items import Item
 from characters.character import Character
 from systems.worldobject import WorldObject
 from enviorment.fire import Fire
@@ -14,7 +14,7 @@ class Torch(Item):
         super().__init__("torch", 
                          colored("/", color="red", attrs=["bold", "dark"]) + 
                          colored("*", color="yellow", attrs=["bold", "dark"]), 
-                         Material.NONE, amount)
+                         amount)
 
         self.recipe: dict = {"wood": 1, "coal": 1}
     

@@ -3,7 +3,7 @@ from systems.worldobject import WorldObject
 from characters.character import Character
 
 from termcolor import colored
-from random import choice, randint
+from random import choice
 
 
 class Fire(WorldObject):
@@ -16,8 +16,7 @@ class Fire(WorldObject):
         
         super().__init__("fire", colored("ww", color= "yellow", on_color="on_red", attrs=["bold"]), target.y, target.x, False)
 
-        self.burn_time: int = randint(1, 5)
-        self.spread_time: int = 25
+        self.spread_timerr: int = 25
 
         if isinstance(target, WorldObject):
 
@@ -51,8 +50,8 @@ class Fire(WorldObject):
 
     def spread(self, world: list[list]):
 
-        if self.spread_time > 0:
-            self.spread_time -= int(5 / self.fires_nearby(world))
+        if self.spread_timer > 0:
+            self.spread_timer -= int(5 / self.fires_nearby(world))
             return
         
         else:
@@ -64,7 +63,7 @@ class Fire(WorldObject):
 
                 Fire(target, world)
 
-            self.spread_time = 25
+            self.spread_timer = 25
 
 
     def burn_damage(self, world: list[list]):
