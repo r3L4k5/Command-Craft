@@ -1,4 +1,5 @@
 
+from systems.worldobject import WorldObject
 
 class Item():
     
@@ -8,7 +9,7 @@ class Item():
         self.sprite: str = sprite
         self.amount: int = amount
     
-    def effect(self, world, player, target):
+    def effect(self, world: list[list], player: WorldObject, target: WorldObject):
         pass
     
     def __str__(self) -> str:

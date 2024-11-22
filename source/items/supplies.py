@@ -1,6 +1,5 @@
 
 from items.items import Item
-from characters.character import Character
 from systems.worldobject import WorldObject
 from enviorment.fire import Fire
 
@@ -19,7 +18,7 @@ class Torch(Item):
         self.recipe: dict = {"wood": 1, "coal": 1}
     
 
-    def effect(self, player: Character, world: list[list]):
+    def effect(self, world: list[list], player: WorldObject, target: WorldObject):
         
         target: WorldObject | object = player.get_target(world)
 

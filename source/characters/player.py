@@ -290,23 +290,8 @@ class Player(Character):
         self.input_queue.pop(0)
     
 
-    def attack(self, target: NPC, world: list[list]):
-
-        total_strength = self.strength * self.equipped.effect(self)
-        target.health = uti.clamp(target.health - total_strength, target.max_health, 0)
-
-        if target.health == 0 and target.loot is not None:
-
-            for item in target.loot:
-                self.inventory.add_item(item)
-        
-        else:
-            target.react(self, world, False)
-    
-
     def update(self, world: list[list]):
 
-        super().update(world)
         self.update_sprite()
 
         if self.health == 0:

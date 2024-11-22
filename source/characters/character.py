@@ -61,8 +61,9 @@ class Character(WorldObject):
                 world[self.y][self.x] = self
     
 
-    def attack(self, target: WorldObject):
-        target.health = clamp(target.health - self.strength, target.max_health, 0)
+    def take_damage(self, actor: WorldObject):
+        self.health = clamp(self.health - actor.strength, self.max_health, 0)
+
 
 
     def update(self, world: list[list]):

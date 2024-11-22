@@ -11,12 +11,11 @@ class Fire(WorldObject):
     def __init__(self, target: WorldObject, world: list[list]) -> None:
 
         if isinstance(target, WorldObject) and target.collision == False:
-
             return
         
         super().__init__("fire", colored("ww", color= "yellow", on_color="on_red", attrs=["bold"]), target.y, target.x, False)
 
-        self.spread_timerr: int = 25
+        self.spread_timer: int = 25
 
         if isinstance(target, WorldObject):
 
@@ -59,14 +58,14 @@ class Fire(WorldObject):
 
             target: WorldObject = self.get_target(world, direction)
 
-            if target is not None and not isinstance(target, Fire):
+            if target is not (None or isinstance(target, Fire)):
 
                 Fire(target, world)
 
             self.spread_timer = 25
 
 
-    def burn_damage(self, world: list[list]):
+    def damage(self, world: list[list]):
 
         target: WorldObject = self.get_target(world)
 
@@ -77,7 +76,7 @@ class Fire(WorldObject):
     def update(self, world: list[list]):
 
         self.spread(world)
-        self.burn_damage(world)
+        self.damage(world)
 
         
         

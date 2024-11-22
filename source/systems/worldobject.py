@@ -41,7 +41,7 @@ class WorldObject():
             
         pass
 
-    #Show name for presentation, such as dialogue
+    #Show name for presentation, such as dialogues
     def display_name(self):
         return bold(self.name.capitalize())
 
@@ -77,6 +77,9 @@ class WorldObject():
             return
         
         return target
+
+    def interacted(self, actor: object, world: list[list]):
+        pass
         
 
 

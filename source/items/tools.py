@@ -1,6 +1,9 @@
 
 from items.items import Item
 from systems.worldobject import WorldObject, Material
+from characters.character import Character
+from enviorment.harvestable import Harvestable
+
 from termcolor import colored
 from enum import Enum, auto
 
@@ -33,21 +36,18 @@ class Tool(Item):
         self.resource = resource
         self.power = power
 
-    #Temporary solution:
-    #Predefined target parameter because it is not needed and to avoid error when 
-    #calling the shared effect() while harvesting. Otherwise target argument 
-    #would be given without corresponding parameter in certain cases 
-    def effect(self, player: WorldObject, target: Item | WorldObject = None):
-        
-        power: int = self.power
+    def effect(self, world: list[list], actor: Character, target: WorldObject): 
 
-        if self.durability == 1:
-            player.equipped = None
-            del self
+        actor.strength *= self.power
+
+        target.interacted(actor, world)
+
+        actor.strength /= self.power
         
         self.durability -= 1
-        return power
-
+        
+        if self.durability == 0:
+            del self
 
     def __eq__(self, value: object) -> bool:
         
@@ -62,15 +62,12 @@ class Sword(Tool):
         super().__init__("sword", "/", resource, recipe, durability, power)
 
     #Same as base class regarding target = None 
-    def effect(self, player: WorldObject, target = None):
+    def effect(self, world: list[list], actor: Character, target: Character):
 
-        if target is None:
-            return super().effect(player)
-        
-        #Default is None and cannot be multiplied with players strength;
-        #rather 1 to not effect strength whilst not causing errors
-        return 1
-    
+        if target.material == Material.FLESH:
+            target.take_damage(actor.strength)
+            if target.
+
 
 class Axe(Tool):
     
@@ -78,13 +75,10 @@ class Axe(Tool):
         
         super().__init__("axe", "P", resource, recipe, durability, power)
     
-    def effect(self, player: WorldObject, target: WorldObject):
+    def effect(self, world: list[list], actor: WorldObject, target: WorldObject):
         
-        if target.material == Resource.WOOD:
-            
-            return super().effect(player)
-        
-        return 1
+        if target.material == Material.PLANT:
+            super().effect(world, actor, target)
         
 
 class Pickaxe(Tool):
@@ -93,10 +87,11 @@ class Pickaxe(Tool):
         
         super().__init__("pickaxe", "T", resource, recipe, durability, power)
     
-    def effect(self, player: WorldObject, target: WorldObject):
+    def effect(self, world: list[list], actor: WorldObject, target: WorldObject):
 
         if target.material == Material.MINERAL:
+            super().effect(world, actor, target)
 
-            return super().effect(player)
+            
+
         
-        return 1

@@ -1,6 +1,10 @@
 
 from characters.character import Character
+from source.systems.worldobject import WorldObject
 from systems.worldobject import Material
+from characters.player import Player
+from items.item_access import get_item
+
 from utility import clamp
 from random import choice
 
@@ -39,7 +43,7 @@ class NPC(Character):
         for y in range(vision_field["north"], vision_field["south"]):
             for x in range(vision_field["west"], vision_field["east"]):
 
-                targets[world[y][x].name] = world[y][x]
+                targets[world[y][x]] = world[y][x]
             
         return targets
                 
@@ -80,9 +84,23 @@ class NPC(Character):
             self.movement(random_direction, world)
 
 
-    def react(self, actor: Character, world: list[list], friendly: bool):
+    def interacted(self, actor: Player, world: list[list], friendly: bool = True):
         pass
 
+
+    def drop_loot(self, actor: Player):
+
+        if isinstance(actor, Player):
+            for item in self.loot:
+                actor.inventory.add_item(item)
+
+    
+    def take_damage(self, actor: Character):
+        super().take_damage(actor)
+
+        if actor.health == 0:
+            self.drop_loot(actor)
+        
 
     def update(self, world: list[list]):
 
