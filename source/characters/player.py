@@ -1,13 +1,10 @@
 
 import utility as uti
-import items.tools as too
 
 from characters.character import Character
 from systems.worldobject import WorldObject, Material
 from systems.storage import Storage
 from items.items import Item
-from characters.npc import NPC
-from enviorment.harvestable import Harvestable
 from items.consumables import Consumable
 
 from items.item_access import get_item
@@ -40,7 +37,7 @@ class Player(Character):
         
         self.input_queue = []
 
-        self.inventory: Storage = Storage(12, 10, name= "Inventory")
+        self.inventory: Storage = Storage(12, 20, name= "Inventory")
         self.equipped: Item | None = None
         
         world[self.y][self.x] = self  
@@ -49,7 +46,9 @@ class Player(Character):
     def display_health(self) -> str:
 
         fraction: int = round(self.health / self.max_health, 2)
+
         bar: str = uti.blank_space(int(10 * fraction))
+
         color = "on_green"
 
         if 0.3 < fraction <= 0.66:
@@ -69,7 +68,7 @@ class Player(Character):
             
         else:
             return uti.bold('Equipped:') + " []"
-
+        
 
     def display_hud(self) -> None:
         
@@ -94,10 +93,6 @@ class Player(Character):
         if to_equip.name in inventory_count:
 
             if self.equipped is not None:
-
-                #Sloppy fix, should be worked on in the future
-                #Otherwise, it would give back an item with zero amount
-                #self.equipped.amount = 1
                 self.inventory.add_item(self.equipped)
 
             #Deepcopy so as to not assing the same object in memory
@@ -143,7 +138,7 @@ class Player(Character):
                 consumed.amount = to_craft.recipe[ingredient]
 
                 consumed_items.append(consumed)
-                 
+            
             else:
                 return
         
@@ -223,8 +218,16 @@ class Player(Character):
 
     def interact(self, world: list[list]) -> None:
 
-        if self.equipped is not None:
-            self.equipped.effect()
+        target: WorldObject = self.get_target(world)
+
+        if not isinstance(target, WorldObject):
+            return
+
+        elif self.equipped is not None:
+            self.equipped.effect(world, self, target)
+        
+        else:
+            target.interacted(self, world)
 
         '''if "supplies" in getattr(self.equipped, "__module__", []):
             self.equipped.effect(self, world)

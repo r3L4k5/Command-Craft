@@ -9,7 +9,7 @@ class Item():
         self.sprite: str = sprite
         self.amount: int = amount
     
-    def effect(self, world: list[list], player: WorldObject, target: WorldObject):
+    def effect(self, world: list[list], actor: WorldObject, target: WorldObject):
         pass
     
     def __str__(self) -> str:

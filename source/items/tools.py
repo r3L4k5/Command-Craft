@@ -61,12 +61,19 @@ class Sword(Tool):
         
         super().__init__("sword", "/", resource, recipe, durability, power)
 
-    #Same as base class regarding target = None 
+
     def effect(self, world: list[list], actor: Character, target: Character):
 
         if target.material == Material.FLESH:
+
+            actor.strength *= self.power
+
             target.take_damage(actor.strength)
-            if target.
+
+            actor.strength /= self.power
+
+            if target.health == 0:
+                target.drop_loot(actor)
 
 
 class Axe(Tool):

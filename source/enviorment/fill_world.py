@@ -13,7 +13,7 @@ def random_enviorment(y: int, x: int, world: list[list]):
     
     probability: int = randint(1, 1000)
     
-    if probability in range(1, 3):
+    if probability in range(1, 5):
 
         return har.CoalOre(y, x)
     
@@ -54,6 +54,9 @@ def fill_world(world: list[list]):
     for y in range(len(world)):
 
         for x in range(len(world[y])):
+
+            if isinstance(world[y][x], WorldObject) and world[y][x].collision == True:
+                continue
 
             world[y][x] = spawn_npc(y, x, world)
 

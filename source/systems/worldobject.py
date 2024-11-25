@@ -12,7 +12,6 @@ class Material(Enum):
 
 
 class WorldObject():
-
     
     def __init__(self, name: str, sprite: str, y: int, x: int, material: Material, collision: bool = True) -> None:
         
@@ -26,24 +25,27 @@ class WorldObject():
 
         self.ground = Grass(y, x)      
 
+
     def __str__(self) -> str:
         return self.sprite
     
+
     def delete(self, world: list[list]) -> None:
 
         world[self.y][self.x] = self.ground
         del self
-    
+
+
     def update(self, world: list[list]):
 
         if isinstance(self.ground, WorldObject):
             self.ground.update(world)
             
-        pass
 
     #Show name for presentation, such as dialogues
     def display_name(self):
         return bold(self.name.capitalize())
+
 
     def direction_calc(self, direction: str | None = None, increment: int = 1):
     
@@ -62,9 +64,9 @@ class WorldObject():
 
             case 'west':
                 step["x-axis"] -= increment
-            
 
         return step
+    
 
     def get_target(self, world: list[list], direction: str| None = None) -> object:
 
@@ -77,6 +79,7 @@ class WorldObject():
             return
         
         return target
+    
 
     def interacted(self, actor: object, world: list[list]):
         pass

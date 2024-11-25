@@ -1,9 +1,7 @@
 
 from characters.character import Character
-from source.systems.worldobject import WorldObject
 from systems.worldobject import Material
 from characters.player import Player
-from items.item_access import get_item
 
 from utility import clamp
 from random import choice

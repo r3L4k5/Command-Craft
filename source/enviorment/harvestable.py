@@ -3,7 +3,9 @@ import items.resources as res
 
 from systems.worldobject import WorldObject, Material
 from characters.character import Character
+from enviorment.ground import Grass
 from items.items import Item
+
 from termcolor import colored
 
 
@@ -55,7 +57,7 @@ class Tree(Harvestable):
                 above.delete(world)
             
             elif isinstance(above, Character):
-                above.ground = Leaves(above.y, above.x)
+                above.ground = Grass(above.y, above.x)
             
             else:
                 break

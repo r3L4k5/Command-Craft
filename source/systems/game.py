@@ -24,7 +24,13 @@ class Game():
         for row in game.world:
             for tile in row:
                 
+                if not isinstance(tile, WorldObject):
+                    return
+                
                 tile.update(game.world)
+
+    
+    def display_world(game):
 
         for row in game.world:
             print()
@@ -42,6 +48,7 @@ class Game():
         player.display_hud()
 
         game.update_world()
+        game.display_world()
         
         sleep(0.015)
 
