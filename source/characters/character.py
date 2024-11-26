@@ -42,7 +42,7 @@ class Character(WorldObject):
     
     
     def movement(self, direction: str, world: list[list]):
-
+    
         self.facing = direction
 
         for _ in range(self.speed):
@@ -61,10 +61,8 @@ class Character(WorldObject):
                 world[self.y][self.x] = self
     
 
-    def take_damage(self, actor: WorldObject):
-        self.health = clamp(self.health - actor.strength, self.max_health, 0)
-
-
+    def take_damage(self, damage: int):
+        self.health = clamp(self.health - damage, self.max_health, 0)
 
     def update(self, world: list[list]):
 

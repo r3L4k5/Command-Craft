@@ -62,7 +62,7 @@ class Tree(Harvestable):
             else:
                 break
         
-        
+
 class Leaves(WorldObject):
     
     def __init__(self, y: int, x: int) -> None:

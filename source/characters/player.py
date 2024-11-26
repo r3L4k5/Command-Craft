@@ -5,7 +5,6 @@ from characters.character import Character
 from systems.worldobject import WorldObject, Material
 from systems.storage import Storage
 from items.items import Item
-from items.consumables import Consumable
 
 from items.item_access import get_item
 from copy import deepcopy
@@ -31,16 +30,16 @@ inventory_modes = {'e' :"craft", 'r': "equip", 't': "use"}
 
 class Player(Character):
     
-    def __init__(self, world: list[list]) -> None:
+    def __init__(self, y: int, x: int) -> None:
         
-        super().__init__("player", colored(" \"", color="black", on_color="on_white", attrs=["bold"]), y= 0, x= 10, material= Material.FLESH)
+        super().__init__("player", colored(" \"", color="black", on_color="on_white", attrs=["bold"]), y, x, Material.FLESH)
         
         self.input_queue = []
 
-        self.inventory: Storage = Storage(12, 20, name= "Inventory")
+        self.inventory: Storage = Storage(12, 15, name= "Inventory")
         self.equipped: Item | None = None
         
-        world[self.y][self.x] = self  
+        self.inventory.add_item(get_item("torch"))
         
 
     def display_health(self) -> str:
@@ -82,13 +81,15 @@ class Player(Character):
     def equip_item(self, item: str) -> None:
 
         if item == "none":
+
             self.inventory.add_item(self.equipped)
             self.equipped = None
+
             return
         
         to_equip: Item = get_item(item)
 
-        inventory_count: dict = self.count_items()
+        inventory_count: dict = self.inventory.count_items()
 
         if to_equip.name in inventory_count:
 
@@ -98,32 +99,13 @@ class Player(Character):
             #Deepcopy so as to not assing the same object in memory
             self.equipped = deepcopy(to_equip)
             self.inventory.remove_item(to_equip) 
-        
-
-    def count_items(self) -> dict:
-
-        item_count = {}
-        
-        for slot in self.inventory.slots:
-
-            if slot.empty: 
-                continue
-
-            elif slot.item.name in item_count:
-
-                item_count[slot.item.name] += slot.item.amount
-
-            else:
-                item_count[slot.item.name] = slot.item.amount
-        
-        return item_count
 
 
     def craft_item(self, item: str) -> None:
 
         to_craft: Item = get_item(item)
         
-        inventory_count = self.count_items()
+        inventory_count = self.inventory.count_items()
         
         consumed_items = []
 
@@ -149,27 +131,27 @@ class Player(Character):
         self.inventory.add_item(to_craft)
 
 
-    def use_item(self, item: str) -> None:
+    def use_item(self, world: list[list], item: str) -> None:
 
         to_use: Item = get_item(item)
 
-        inventory_count: dict = self.count_items()
+        inventory_count: dict = self.inventory.count_items()
 
-        if not isinstance(to_use, Consumable):
+        target: WorldObject = self.get_target(world)
+
+        if not to_use.use_in_inventory:
             return
 
         elif to_use.name in inventory_count:
 
-            to_use.effect(self)
-            self.inventory.remove_item(to_use)
+            to_use.effect(world, self, target)
         
         elif to_use == self.equipped:
 
-            to_use.effect(self)
-            self.equipped = None
-        
+            to_use.effect(world, self, target)
+
     
-    def open_inventory(self) -> None:
+    def open_inventory(self, world) -> None:
         
         mode = "craft"
 
@@ -210,7 +192,7 @@ class Player(Character):
                         self.equip_item(action)
                     
                     case "use":
-                        self.use_item(action)
+                        self.use_item(world, action)
             
             except KeyError:
                 continue
@@ -220,36 +202,13 @@ class Player(Character):
 
         target: WorldObject = self.get_target(world)
 
-        if not isinstance(target, WorldObject):
-            return
-
-        elif self.equipped is not None:
+        if self.equipped is not None:
             self.equipped.effect(world, self, target)
         
-        else:
+        elif isinstance(target, WorldObject):
             target.interacted(self, world)
-
-        '''if "supplies" in getattr(self.equipped, "__module__", []):
-            self.equipped.effect(self, world)
-        
-        elif isinstance(self.equipped, Consumable):
-            self.equipped.effect(self)
         
 
-        target: WorldObject = self.get_target(world)
-        
-        if isinstance(target, Harvestable):
-            target.harvest(self, world)
-        
-        elif isinstance(target, NPC):
-
-            if isinstance(self.equipped, too.Sword):
-                self.attack(target, world)
-            
-            else:
-                target.react(self, world, True)'''
-        
-        
     def update_sprite(self) -> None:
 
         match self.facing:
@@ -288,12 +247,14 @@ class Player(Character):
         
         elif self.input_queue[0] == controls["inventory"]:
             
-            self.open_inventory()
+            self.open_inventory(world)
         
         self.input_queue.pop(0)
     
 
     def update(self, world: list[list]):
+
+        super().update(world)
 
         self.update_sprite()
 

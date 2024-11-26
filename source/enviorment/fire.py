@@ -9,21 +9,13 @@ from random import choice
 class Fire(WorldObject):
     
     def __init__(self, target: WorldObject, world: list[list]) -> None:
-
-        if isinstance(target, WorldObject) and target.collision == False:
-            return
         
         super().__init__("fire", colored("ww", color= "yellow", on_color="on_red", attrs=["bold"]), target.y, target.x, False)
 
         self.spread_timer: int = 25
+        self.ground = target.ground
 
-        if isinstance(target, WorldObject):
-
-            self.ground = target.ground
-            target.delete(world)
-        
-        else:
-            self.ground = target
+        target.delete(world)
         
         world[self.y][self.x] = self
 

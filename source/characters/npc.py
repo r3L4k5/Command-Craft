@@ -41,7 +41,7 @@ class NPC(Character):
         for y in range(vision_field["north"], vision_field["south"]):
             for x in range(vision_field["west"], vision_field["east"]):
 
-                targets[world[y][x]] = world[y][x]
+                targets[world[y][x].name] = world[y][x]
             
         return targets
                 
@@ -92,13 +92,6 @@ class NPC(Character):
             for item in self.loot:
                 actor.inventory.add_item(item)
 
-    
-    def take_damage(self, actor: Character):
-        super().take_damage(actor)
-
-        if actor.health == 0:
-            self.drop_loot(actor)
-        
 
     def update(self, world: list[list]):
 

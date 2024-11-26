@@ -31,39 +31,6 @@ class Storage():
         self.name = name
     
 
-    def add_item_specific(self, new_item: Item, place: int):
-        
-        target = self.slots[place]
-        new_amount = target.item.amount + new_item.amount        
-        
-        if target.item == new_item:
-
-            if new_amount <= self.max_stack :
-                
-                target.item.amount = new_amount
-                return
-
-            else:
-                target.item.amount = self.max_stack
-                new_item.amount -= self.max_stack
-
-                return new_item
-                
-        else:
-            target.item = new_item
-            target.empty = False
-            
-            if new_amount >= self.max_stack :
-                   
-                target.item.amount = self.max_stack
-                new_item.amount -= self.max_stack
-                
-                return new_item
-            
-            else:
-                target.item.amount = new_amount
-
-
     def add_item(self, new_item: Item):
     
         matching_slots = list(filter(lambda slot: slot.item == new_item, self.slots))
@@ -91,8 +58,6 @@ class Storage():
             if new_item.amount <= self.max_stack:
                 
                 slot.item = new_item
-                #slot.item.amount += new_item.amount
-                
                 return 
             
             elif new_item.amount > self.max_stack:
@@ -123,6 +88,24 @@ class Storage():
             
         else:
             return del_item
+    
+    def count_items(self) -> dict:
+
+        item_count = {}
+        
+        for slot in self.slots:
+
+            if slot.empty: 
+                continue
+
+            elif slot.item.name in item_count:
+
+                item_count[slot.item.name] += slot.item.amount
+
+            else:
+                item_count[slot.item.name] = slot.item.amount
+        
+        return item_count
 
 
 

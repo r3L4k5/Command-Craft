@@ -2,6 +2,7 @@
 from items.items import Item
 from systems.worldobject import WorldObject
 from enviorment.fire import Fire
+from characters.character import Character
 
 from termcolor import colored
 
@@ -13,22 +14,23 @@ class Torch(Item):
         super().__init__("torch", 
                          colored("/", color="red", attrs=["bold", "dark"]) + 
                          colored("*", color="yellow", attrs=["bold", "dark"]), 
-                         amount)
+                         True, amount)
 
         self.recipe: dict = {"wood": 1, "coal": 1}
     
 
-    def effect(self, world: list[list], player: WorldObject, target: WorldObject):
+    def effect(self, world: list[list], actor: Character, target: WorldObject):
         
-        target: WorldObject | object = player.get_target(world)
+        target: WorldObject = actor.get_target(world)
 
         Fire(target, world)
 
-        if player.equipped == self:
-            player.equipped = None
-
+        if self == actor.equipped:
+            actor.equipped = None
         else:
-            player.inventory.remove_item(self)
+            actor.inventory.remove_item(self)
+
+        
 
             
         

@@ -18,10 +18,12 @@ class Dog(NPC):
             input(f"\n{self.display_name()}: Ruff!")
 
         else:
-            self.take_damage(actor.strength)
             input(f"\n{self.display_name()}: Grrh! [Attcking]")
+
+            self.take_damage(actor.strength)
             actor.take_damage(self.strength)
 
+    
 
 
 

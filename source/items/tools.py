@@ -2,7 +2,7 @@
 from items.items import Item
 from systems.worldobject import WorldObject, Material
 from characters.character import Character
-from enviorment.harvestable import Harvestable
+from characters.npc import NPC
 
 from termcolor import colored
 from enum import Enum, auto
@@ -29,7 +29,7 @@ class Tool(Item):
     
     def __init__(self, name: str, sprite: str, resource: Resource, recipe: dict, durability: int, power: int) -> None:
         
-        super().__init__(name, resource_color(sprite, resource))
+        super().__init__(name, resource_color(sprite, resource), False)
 
         self.recipe = recipe
         self.durability = durability
@@ -62,13 +62,13 @@ class Sword(Tool):
         super().__init__("sword", "/", resource, recipe, durability, power)
 
 
-    def effect(self, world: list[list], actor: Character, target: Character):
+    def effect(self, world: list[list], actor: Character, target: NPC):
 
         if target.material == Material.FLESH:
 
             actor.strength *= self.power
 
-            target.take_damage(actor.strength)
+            target.interacted(actor, world, False)
 
             actor.strength /= self.power
 

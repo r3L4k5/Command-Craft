@@ -1,5 +1,4 @@
 
-from enviorment.ground import Grass
 from enum import Enum, auto
 from utility import bold
 
@@ -9,6 +8,7 @@ class Material(Enum):
     FLESH = auto(),
     MINERAL = auto(),
     MISC = auto()
+
 
 
 class WorldObject():
@@ -23,7 +23,7 @@ class WorldObject():
         self.y = y
         self.x = x
 
-        self.ground = Grass(y, x)      
+        self.ground = None
 
 
     def __str__(self) -> str:

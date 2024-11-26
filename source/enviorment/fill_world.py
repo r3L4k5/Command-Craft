@@ -2,14 +2,15 @@
 import enviorment.harvestable as har
 import enviorment.ground as env
 
-from characters.neutral.dog import Dog
-from characters.npc import NPC
 from systems.worldobject import WorldObject
+from characters.neutral.dog import Dog
+from characters.player import Player
+from characters.npc import NPC
 
 from random import randint
 
 
-def random_enviorment(y: int, x: int, world: list[list]):
+def random_enviorment(y: int, x: int, world: list[list]) -> WorldObject:
     
     probability: int = randint(1, 1000)
     
@@ -30,35 +31,51 @@ def random_enviorment(y: int, x: int, world: list[list]):
     return env.Grass(y, x)
 
 
-def spawn_npc(y: int, x: int , world: list[list]):
+def spawn_npc(y: int, x: int , world: list[list]) -> NPC:
 
-    probability: int = randint(1, 500)
+    probability: int = randint(1, 100)
 
-    if isinstance(world[y][x], WorldObject):
-        return world[y][x]
-    
-    elif probability == 1:
+    if probability == 1:
         return Dog(y, x)
     
     return world[y][x]
-    
+
+def spawn_player(world: list[list]):
+
+    y = randint(0, len(world))
+    x = randint(0, len(world[y]))
+
+    player = Player(y, x)
+    player.ground = env.Grass(y, x)
+
+    world[y][x] = player
+
+    return player
+
 
 def fill_world(world: list[list]):
    
     for y in range(len(world)):
         
         for x in range(40):
-            
-            world[y].append(random_enviorment(y, x, world))
+
+            new_enviorment = random_enviorment(y, x, world)
+            new_enviorment.ground = env.Grass(y, x)
+
+            #Appending instead of assigning, due to list position not existing yet
+            world[y].append(new_enviorment)
     
     for y in range(len(world)):
 
         for x in range(len(world[y])):
 
-            if isinstance(world[y][x], WorldObject) and world[y][x].collision == True:
-                continue
+            
+    
+            new_NPC = spawn_npc(y, x, world)
+            new_NPC.ground = env.Grass(y, x)
 
-            world[y][x] = spawn_npc(y, x, world)
+            world[y][x] = new_NPC
+
 
 
 

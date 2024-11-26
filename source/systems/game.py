@@ -4,7 +4,8 @@ from systems.worldobject import WorldObject
 from time import sleep
 
 from utility import clear
-from enviorment.fill_world import fill_world
+from enviorment.fill_world import fill_world, spawn_player
+
 
 class Game():
 
@@ -16,16 +17,16 @@ class Game():
         fill_world(game.world)
         
         global player
-        player = Player(game.world)
-              
-
-    def update_world(game):
+        player = spawn_player(game.world)
         
+        
+    def update_world(game):
+
         for row in game.world:
             for tile in row:
                 
                 if not isinstance(tile, WorldObject):
-                    return
+                    continue
                 
                 tile.update(game.world)
 
@@ -39,8 +40,8 @@ class Game():
                 print(tile, end="")
         
         print(end="\n\n")
-    
 
+        
     def update_game(game):
 
         clear()
@@ -50,6 +51,8 @@ class Game():
         game.update_world()
         game.display_world()
         
-        sleep(0.015)
+        sleep(0.05)
 
         player.input_handler(game.world)
+
+        clear()
