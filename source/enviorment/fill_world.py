@@ -33,7 +33,7 @@ def random_enviorment(y: int, x: int, world: list[list]) -> WorldObject:
 
 def spawn_npc(y: int, x: int , world: list[list]) -> NPC:
 
-    probability: int = randint(1, 100)
+    probability: int = randint(1, 300)
 
     if probability == 1:
         return Dog(y, x)

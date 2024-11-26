@@ -1,7 +1,6 @@
 
 from characters.character import Character
 from systems.worldobject import Material
-from characters.player import Player
 
 from utility import clamp
 from random import choice
@@ -82,13 +81,14 @@ class NPC(Character):
             self.movement(random_direction, world)
 
 
-    def interacted(self, actor: Player, world: list[list], friendly: bool = True):
+    def interacted(self, actor: Character, world: list[list], friendly: bool = True):
         pass
 
 
-    def drop_loot(self, actor: Player):
+    def drop_loot(self, actor: Character):
 
-        if isinstance(actor, Player):
+        if isinstance(actor, Character):
+            
             for item in self.loot:
                 actor.inventory.add_item(item)
 

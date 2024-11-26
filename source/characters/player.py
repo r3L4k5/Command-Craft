@@ -227,7 +227,7 @@ class Player(Character):
     
         if len(self.input_queue) == 0:
 
-            incoming_input = list(input(uti.bold("Action: ")).strip())
+            incoming_input = list(input(uti.standardize(uti.bold("Action: "))))
 
             if len(incoming_input) == 0: 
                 return
