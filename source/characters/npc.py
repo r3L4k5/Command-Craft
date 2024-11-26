@@ -88,7 +88,7 @@ class NPC(Character):
     def drop_loot(self, actor: Character):
 
         if isinstance(actor, Character):
-            
+
             for item in self.loot:
                 actor.inventory.add_item(item)
 
