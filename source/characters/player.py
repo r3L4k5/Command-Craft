@@ -210,14 +210,6 @@ class Player(Character):
         
 
     def update_sprite(self) -> None:
-
-        match self.facing:
-
-            case "east":
-                self.sprite = colored(" \"", on_color="on_white", attrs=["bold"])
-
-            case "west":
-                self.sprite = colored("\" ", on_color="on_white", attrs=["bold"])
         
         if self.health <= 0:
             self.sprite = colored("**", on_color="on_white", attrs=["bold"])

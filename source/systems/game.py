@@ -24,10 +24,7 @@ class Game():
 
         for row in game.world:
             for tile in row:
-                
-                if not isinstance(tile, WorldObject):
-                    continue
-                
+                tile: WorldObject
                 tile.update(game.world)
 
     

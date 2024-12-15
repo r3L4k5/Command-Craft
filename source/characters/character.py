@@ -14,6 +14,8 @@ class Character(WorldObject):
         self.max_health = health
         self.strength = strength 
         self.speed = speed
+
+        self.reversed_sprite = self.sprite[::-1]
         
         self.facing = 'north'   
 
@@ -21,12 +23,8 @@ class Character(WorldObject):
 
         target: WorldObject = self.get_target(world)
         
-        if hasattr(target, "collision") and target.collision == False:
-            return False
-        
-        else:
-            return True
-        
+        return target.collision
+    
     
     def get_target(self, world: list[list]) -> WorldObject:
 
@@ -39,7 +37,6 @@ class Character(WorldObject):
             return
         
         return target
-    
     
     def movement(self, direction: str, world: list[list]):
     
@@ -59,8 +56,8 @@ class Character(WorldObject):
                 self.ground = world[self.y][self.x]
                 
                 world[self.y][self.x] = self
-    
 
+    
     def take_damage(self, damage: int):
         self.health = clamp(self.health - damage, self.max_health, 0)
 

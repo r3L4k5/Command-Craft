@@ -24,8 +24,6 @@ def random_enviorment(y: int, x: int, world: list[list]) -> WorldObject:
     
     elif probability in range(1, 100) and y > 0:
         
-        world[y - 1][x] = har.Leaves(y - 1, x)
-        
         return har.Tree(y, x, world)
     
     return env.Grass(y, x)
@@ -33,24 +31,12 @@ def random_enviorment(y: int, x: int, world: list[list]) -> WorldObject:
 
 def spawn_npc(y: int, x: int , world: list[list]) -> NPC:
 
-    probability: int = randint(1, 300)
+    probability: int = randint(1, 500)
 
     if probability == 1:
         return Dog(y, x)
     
     return world[y][x]
-
-def spawn_player(world: list[list]):
-
-    y = randint(0, len(world))
-    x = randint(0, len(world[y]))
-
-    player = Player(y, x)
-    player.ground = env.Grass(y, x)
-
-    world[y][x] = player
-
-    return player
 
 
 def fill_world(world: list[list]):
@@ -69,12 +55,28 @@ def fill_world(world: list[list]):
 
         for x in range(len(world[y])):
 
+            if world[y][x].collision == False:
+                return
             
-    
             new_NPC = spawn_npc(y, x, world)
             new_NPC.ground = env.Grass(y, x)
 
-            world[y][x] = new_NPC
+
+def spawn_player(world: list[list]):
+
+    while True:
+        y = randint(0, len(world) - 1)
+        x = randint(0, len(world[y]) - 1)
+
+        if world[y][x].collision == False:
+            
+            player = Player(y, x)
+            break
+
+    player.ground = world[y][x]
+    world[y][x] = player
+
+    return player
 
 
 

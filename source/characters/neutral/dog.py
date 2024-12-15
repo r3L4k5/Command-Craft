@@ -9,7 +9,7 @@ class Dog(NPC):
 
     def __init__(self, y: int, x: int) -> None:
 
-        super().__init__("dog", " m", y, x, Material.FLESH, health = 6, strength= 1, speed= 1, vision= 6, loot= [get_item("meat")])
+        super().__init__("dog", "*m", y, x, Material.FLESH, health = 6, strength= 1, speed= 1, vision= 6, loot= [get_item("meat")])
     
     
     def interacted(self, actor: Character, world: list[list], friendly: bool = True):

@@ -36,6 +36,13 @@ class Tree(Harvestable):
             
         super().__init__("tree", colored("||", "red", attrs=["bold", "dark"]), y, x, 8, res.Wood(3), Material.PLANT)
 
+        #So every tree spawns with atleast one leaf above them
+        if y > 0:
+            leaf = Leaves(y - 1, x)
+            leaf.ground = world[y - 1][x]
+            world[y - 1][x] = leaf
+
+        #Too give more resources depending on how tall the tree is (amount of leaves above it)
         for i in range(1, self.y + 1):
 
             if isinstance(world[self.y - i][self.x], Leaves):

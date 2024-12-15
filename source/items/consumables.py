@@ -45,9 +45,4 @@ class Meat(Consumable):
                 actor.health -= actor.max_health * 0.1
         
 
-        if self == actor.equipped:
-
-            actor.equipped = None
-
-        else:
-            actor.inventory.remove_item(self)
+        self.delete(actor.inventory, actor.equipped)

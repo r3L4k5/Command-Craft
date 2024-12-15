@@ -48,7 +48,8 @@ class Tool(Item):
         
         if self.durability == 0:
             del self
-
+            
+            
     def __eq__(self, value: object) -> bool:
         
         if type(self) == type(value) and self.resource == value.resource:

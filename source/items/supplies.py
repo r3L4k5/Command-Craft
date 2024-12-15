@@ -1,7 +1,7 @@
 
 from items.items import Item
 from systems.worldobject import WorldObject
-from enviorment.fire import Fire
+from enviorment.elements import Fire
 from characters.character import Character
 
 from termcolor import colored

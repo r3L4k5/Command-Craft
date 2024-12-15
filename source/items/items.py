@@ -23,6 +23,7 @@ class Item():
 
         if self == equip:
             equip = None
+            
         else:
             storage.remove_item(self)
         
