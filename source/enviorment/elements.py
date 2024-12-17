@@ -1,5 +1,5 @@
 
-from systems.worldobject import WorldObject
+from systems.worldobject import WorldObject, Material
 from characters.character import Character
 
 from termcolor import colored
@@ -10,7 +10,7 @@ class Fire(WorldObject):
     
     def __init__(self, target: WorldObject, world: list[list]) -> None:
         
-        super().__init__("fire", colored("ww", color= "yellow", on_color="on_red", attrs=["bold"]), target.y, target.x, False)
+        super().__init__("fire", colored("ww", color= "yellow", on_color="on_red", attrs=["bold"]), target.y, target.x, Material.MISC, False)
 
         self.spread_timer: int = 25
         self.ground = target.ground

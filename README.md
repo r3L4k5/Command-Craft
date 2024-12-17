@@ -7,15 +7,16 @@ Set-up:
 
 How to play:
 
-  Play by entering keys and then pressing enter in the terminal. 
+  Play by entering keys in input terminal. 
   
-  You can move around, chop down trees, mine rocks and open the inventory.
+  You can move around, chop down trees, mine rocks, open the inventory, use items, et cetera.
   
-  You can walk around with WASD keys and chain them to move multiple times. 
-  For example to move up once you enter 'w' and press enter. But if you want to move up three tiles, you can eneter 'www' and press enter.
+  You can walk around with WASD keys.
+  You can chain actions by typing the keys and entering everything all at once. 
+  For example, to move up one tile, you type 'w' and press enter. But if you want to move up three tiles, you can type 'www' and press enter.
   
-  To mine rocks or chop down trees you need to stand next to one and face the objects direction. Then enter 'e' and press enter. Trees and rocks do have hitpoints,
-  so you'll need to use it multiple times. 
+  To mine rocks or chop down trees you need to stand next to one and face the objects direction. Then type 'e' and press enter. 
+  Trees and rocks do have hitpoints, so you'll need to do it multiple times. 
 
 
 Controls:
@@ -28,9 +29,16 @@ Controls:
   
   Right - 'd'
 
-  Interact - 'e'
+  Interact/ Use equipped - 'e'
 
-  Inventory - 'q'
+  Open/Close Inventory - 'q'
 
-  Exit inventory - 'q'
+  Inventory Modes:
+
+    Craft mode = 'e'
+
+    Equip mode = 'r'
+
+    Use mode = 't'
+
     

@@ -5,6 +5,7 @@ from characters.character import Character
 from systems.worldobject import WorldObject, Material
 from systems.storage import Storage
 from items.items import Item
+from items.craftable import Craftable
 
 from items.item_access import get_item
 from copy import deepcopy
@@ -32,19 +33,21 @@ class Player(Character):
     
     def __init__(self, y: int, x: int) -> None:
         
-        super().__init__("player", colored(" \"", color="black", on_color="on_white", attrs=["bold"]), y, x, Material.FLESH)
+        super().__init__("player", colored(" &", color="white", attrs=["bold"]), y, x, Material.FLESH)
+
+        self.alive = True
         
         self.input_queue = []
 
         self.inventory: Storage = Storage(12, 15, name= "Inventory")
         self.equipped: Item | None = None
         
-        self.inventory.add_item(get_item("torch"))
+        self.inventory.add_item(get_item("leather", 2))
         
 
     def display_health(self) -> str:
 
-        fraction: int = round(self.health / self.max_health, 2)
+        fraction: int = round(self.health / self.base_health, 2)
 
         bar: str = uti.blank_space(int(10 * fraction))
 
@@ -99,36 +102,26 @@ class Player(Character):
             #Deepcopy so as to not assing the same object in memory
             self.equipped = deepcopy(to_equip)
             self.inventory.remove_item(to_equip) 
+    
+
+    def equipped_passive_effect(self, world: list[list]):
+
+        if self.equipped is not None and self.equipped.passive == True:
+
+            self.equipped.effect(world, self, None)
 
 
     def craft_item(self, item: str) -> None:
 
         to_craft: Item = get_item(item)
-        
-        inventory_count = self.inventory.count_items()
-        
-        consumed_items = []
 
-        if not hasattr(to_craft, "recipe"):
+        if not isinstance(to_craft, Craftable):
+
             return
 
-        for ingredient in to_craft.recipe.keys():
-            
-            if ingredient in inventory_count and inventory_count[ingredient] >= to_craft.recipe[ingredient]:
+        elif to_craft.craft(self.inventory):
                 
-                consumed: Item = get_item(ingredient)
-                consumed.amount = to_craft.recipe[ingredient]
-
-                consumed_items.append(consumed)
-            
-            else:
-                return
-        
-        for consumed in consumed_items:
-            
-            self.inventory.remove_item(consumed)
-
-        self.inventory.add_item(to_craft)
+            self.inventory.add_item(to_craft)
 
 
     def use_item(self, world: list[list], item: str) -> None:
@@ -213,6 +206,12 @@ class Player(Character):
         
         if self.health <= 0:
             self.sprite = colored("**", on_color="on_white", attrs=["bold"])
+        
+        elif self.facing == "west":
+            self.sprite = self.sprite = colored("\" ", on_color="on_white", attrs=["bold"])
+        
+        else:
+            self.sprite = self.sprite = colored(" \"", on_color="on_white", attrs=["bold"])
     
 
     def input_handler(self, world: list[list]) -> None:
@@ -248,11 +247,12 @@ class Player(Character):
 
         super().update(world)
 
-        self.update_sprite()
+        #self.update_sprite()
+        self.equipped_passive_effect(world)
 
         if self.health == 0:
-            input("Game Over!")
-            quit()
+            self.alive = False
+
  
     
 

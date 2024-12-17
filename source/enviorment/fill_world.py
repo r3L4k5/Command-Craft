@@ -33,7 +33,7 @@ def spawn_npc(y: int, x: int , world: list[list]) -> NPC:
 
     probability: int = randint(1, 500)
 
-    if probability == 1:
+    if probability == 5:
         return Dog(y, x)
     
     return world[y][x]
@@ -45,7 +45,7 @@ def fill_world(world: list[list]):
         
         for x in range(40):
 
-            new_enviorment = random_enviorment(y, x, world)
+            new_enviorment: WorldObject = random_enviorment(y, x, world)
             new_enviorment.ground = env.Grass(y, x)
 
             #Appending instead of assigning, due to list position not existing yet
@@ -55,23 +55,28 @@ def fill_world(world: list[list]):
 
         for x in range(len(world[y])):
 
-            if world[y][x].collision == False:
-                return
+            if world[y][x].collision == True:
+                continue
             
-            new_NPC = spawn_npc(y, x, world)
+            new_NPC: NPC | WorldObject = spawn_npc(y, x, world)
             new_NPC.ground = env.Grass(y, x)
+
+            world[y][x] = new_NPC
 
 
 def spawn_player(world: list[list]):
 
     while True:
+
         y = randint(0, len(world) - 1)
         x = randint(0, len(world[y]) - 1)
 
-        if world[y][x].collision == False:
-            
-            player = Player(y, x)
-            break
+        if world[y][x].collision == True:
+            continue
+    
+        break
+
+    player: Player = Player(y, x)
 
     player.ground = world[y][x]
     world[y][x] = player

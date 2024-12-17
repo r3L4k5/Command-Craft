@@ -1,13 +1,15 @@
 
 from systems.worldobject import WorldObject
 
+
 class Item():
     
-    def __init__(self, name: str, sprite: str, use_in_inventory: bool, amount: int = 1) -> None:
+    def __init__(self, name: str, sprite: str, use_in_inventory: bool, passive: bool, amount: int = 1) -> None:
         
         self.name: str = name
         self.sprite: str = sprite
         self.amount: int = amount
+        self.passive: bool = passive
         self.use_in_inventory: bool = use_in_inventory
     
     def effect(self, world: list[list], actor: WorldObject, target: WorldObject):
@@ -27,7 +29,4 @@ class Item():
         else:
             storage.remove_item(self)
         
-
-    
-
 

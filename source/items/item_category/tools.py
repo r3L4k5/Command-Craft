@@ -1,5 +1,6 @@
 
 from items.items import Item
+from items.craftable import Craftable
 from systems.worldobject import WorldObject, Material
 from characters.character import Character
 from characters.npc import NPC
@@ -7,9 +8,11 @@ from characters.npc import NPC
 from termcolor import colored
 from enum import Enum, auto
 
+
 class Resource(Enum):
     WOOD = auto(),
-    STONE = auto(),
+    STONE = auto()
+
 
 def resource_color(sprite: str, resource: str) -> str:
 
@@ -25,13 +28,14 @@ def resource_color(sprite: str, resource: str) -> str:
             raise "Resource not found"
 
 
-class Tool(Item):
+class Tool(Item, Craftable):
     
     def __init__(self, name: str, sprite: str, resource: Resource, recipe: dict, durability: int, power: int) -> None:
         
-        super().__init__(name, resource_color(sprite, resource), False)
+        super().__init__(name, resource_color(sprite, resource), False, False)
 
-        self.recipe = recipe
+        Craftable.__init__(self, recipe)
+
         self.durability = durability
         self.resource = resource
         self.power = power
@@ -74,6 +78,7 @@ class Sword(Tool):
             actor.strength /= self.power
 
             if target.health == 0:
+
                 target.drop_loot(actor)
 
 
@@ -86,6 +91,7 @@ class Axe(Tool):
     def effect(self, world: list[list], actor: WorldObject, target: WorldObject):
         
         if target.material == Material.PLANT:
+
             super().effect(world, actor, target)
         
 
@@ -98,6 +104,7 @@ class Pickaxe(Tool):
     def effect(self, world: list[list], actor: WorldObject, target: WorldObject):
 
         if target.material == Material.MINERAL:
+
             super().effect(world, actor, target)
 
             

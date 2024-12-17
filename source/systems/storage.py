@@ -1,5 +1,6 @@
 
 from items.items import Item
+from utility import standardize
 
 class Slot():
     
@@ -98,12 +99,12 @@ class Storage():
             if slot.empty: 
                 continue
 
-            elif slot.item.name in item_count:
+            elif standardize(slot.item.name) in item_count:
 
-                item_count[slot.item.name] += slot.item.amount
+                item_count[standardize(slot.item.name)] += slot.item.amount
 
             else:
-                item_count[slot.item.name] = slot.item.amount
+                item_count[standardize(slot.item.name)] = slot.item.amount
         
         return item_count
 

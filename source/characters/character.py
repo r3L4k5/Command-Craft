@@ -11,21 +11,20 @@ class Character(WorldObject):
         super().__init__(name, sprite, y, x, material, collison)
         
         self.health = health
-        self.max_health = health
+        self.base_health = health
+        
         self.strength = strength 
-        self.speed = speed
+        self.base_strength = strength
 
-        self.reversed_sprite = self.sprite[::-1]
+        self.speed = speed
+        self.base_speed = speed
+
+        self.alive = True
+
+        #self.reversed_sprite = self.sprite[::-1]
         
         self.facing = 'north'   
 
-    def will_collide(self, world: list[list]):
-
-        target: WorldObject = self.get_target(world)
-        
-        return target.collision
-    
-    
     def get_target(self, world: list[list]) -> WorldObject:
 
         step: dict = self.direction_calc(self.facing)
@@ -38,6 +37,17 @@ class Character(WorldObject):
         
         return target
     
+
+    def will_collide(self, world: list[list]):
+
+        target: WorldObject = self.get_target(world)
+
+        if target is None:
+            return True
+        
+        return target.collision
+    
+
     def movement(self, direction: str, world: list[list]):
     
         self.facing = direction
@@ -59,7 +69,7 @@ class Character(WorldObject):
 
     
     def take_damage(self, damage: int):
-        self.health = clamp(self.health - damage, self.max_health, 0)
+        self.health = clamp(self.health - damage, self.base_health, 0)
 
     def update(self, world: list[list]):
 

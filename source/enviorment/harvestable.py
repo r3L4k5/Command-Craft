@@ -1,5 +1,5 @@
 
-import items.resources as res
+import items.item_category.resources as res
 
 from systems.worldobject import WorldObject, Material
 from characters.character import Character

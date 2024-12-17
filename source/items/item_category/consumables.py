@@ -9,7 +9,7 @@ class Consumable(Item):
 
     def __init__(self, name: str, sprite: str, can_cook: bool, amount: int = 1) -> None:
 
-        super().__init__(name, sprite, True, amount)
+        super().__init__(name, sprite, True, False, amount)
 
         self.can_cook = can_cook
         self.cooked = False
@@ -33,16 +33,16 @@ class Meat(Consumable):
     def effect(self, world: list[list], actor: Character, target = None):
         
         if self.cooked:
-            actor.health += actor.max_health * 0.2
+            actor.health += actor.base_health * 0.2
 
         else:
             random_effect: int = randint(1, 2)
 
             if random_effect == 1:
-                actor.health += actor.max_health * 0.1 
+                actor.health += actor.base_health * 0.1 
             
             else:
-                actor.health -= actor.max_health * 0.1
+                actor.health -= actor.base_health * 0.1
         
 
         self.delete(actor.inventory, actor.equipped)

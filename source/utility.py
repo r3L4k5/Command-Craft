@@ -1,6 +1,7 @@
 
 import os
 
+
 blank_space = lambda amount: " " * amount #Creates a specified amount of blank spaces   
  
 clear = lambda: (os.system("cls"), print("\n")) #Named after powershell command; clears the terminal and adds an empty line
@@ -19,11 +20,13 @@ def clamp(value, max = None, min = None):
         
     return value
 
+
 #Breaks into new line after a certain length
 def row_break(index: int, row_length: int, line_breaks: int = 1):
 
     if index % row_length == 0: 
         print(end= "\n" * line_breaks)
+
 
 #Deletes all spaces in string
 def standardize(text: str):

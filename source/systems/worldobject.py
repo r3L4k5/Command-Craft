@@ -10,11 +10,10 @@ class Material(Enum):
     MISC = auto()
 
 
-
 class WorldObject():
     
     def __init__(self, name: str, sprite: str, y: int, x: int, material: Material, collision: bool = True) -> None:
-        
+
         self.sprite = sprite
         self.collision = collision
         self.name = name
