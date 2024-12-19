@@ -58,18 +58,21 @@ class Character(WorldObject):
             
             if not self.will_collide(world):
             
-                world[self.y][self.x] = self.ground
+                world[self.y][self.x] = self.behind
 
                 self.y += step["y-axis"]
                 self.x += step["x-axis"]
                 
-                self.ground = world[self.y][self.x]
+                self.behind = world[self.y][self.x]
                 
                 world[self.y][self.x] = self
 
     
     def take_damage(self, damage: int):
-        self.health = clamp(self.health - damage, self.base_health, 0)
+        self.health = clamp(self.health - damage, min=0)
+    
+    def heal(self, regeneration: int):
+        self.health = clamp(self.health + regeneration, max=self.base_health)
 
     def update(self, world: list[list]):
 

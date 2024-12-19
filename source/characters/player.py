@@ -9,7 +9,7 @@ from items.craftable import Craftable
 
 from items.item_access import get_item
 from copy import deepcopy
-from termcolor import colored
+import termcolor as ter
 
 
 controls = {
@@ -33,7 +33,7 @@ class Player(Character):
     
     def __init__(self, y: int, x: int) -> None:
         
-        super().__init__("player", colored(" &", color="white", attrs=["bold"]), y, x, Material.FLESH)
+        super().__init__("player", ter.colored(" &", color="white", attrs=["bold"]), y, x, Material.FLESH)
 
         self.alive = True
         
@@ -41,9 +41,7 @@ class Player(Character):
 
         self.inventory: Storage = Storage(12, 15, name= "Inventory")
         self.equipped: Item | None = None
-        
-        self.inventory.add_item(get_item("leather", 2))
-        
+
 
     def display_health(self) -> str:
 
@@ -59,7 +57,7 @@ class Player(Character):
         elif 0 < fraction <= 0.33:
             color = "on_red"
 
-        return f"{uti.bold("Health: ")}{colored(bar, on_color=color, attrs=["bold"])}"
+        return f"{uti.bold("Health: ")}{self.health} {ter.colored(bar, on_color= color, attrs=["bold"])}"
 
 
     def display_equip(self) -> str:
@@ -78,7 +76,10 @@ class Player(Character):
 
         print(f"{self.display_equip()}", end="     ")
 
-        print(f"{self.display_health()}")
+        print(f"{self.display_health()}", end="    ")
+
+        print(f"{uti.bold("Behind: ")}[{uti.standardize(self.behind.sprite, lower=False)}]")
+
 
 
     def equip_item(self, item: str) -> None:
@@ -99,24 +100,28 @@ class Player(Character):
             if self.equipped is not None:
                 self.inventory.add_item(self.equipped)
 
-            #Deepcopy so as to not assing the same object in memory
+            #Deepcopy so as to not assign the same object in memory
             self.equipped = deepcopy(to_equip)
             self.inventory.remove_item(to_equip) 
     
 
     def equipped_passive_effect(self, world: list[list]):
 
-        if self.equipped is not None and self.equipped.passive == True:
+        if self.equipped is not None:
 
-            self.equipped.effect(world, self, None)
+            self.equipped.passive_effect(world, self, None)
 
 
     def craft_item(self, item: str) -> None:
 
+        empty_slots = list(filter(lambda slot: slot.empty, self.inventory.slots))
+
+        if len(empty_slots) == 0:
+            return
+        
         to_craft: Item = get_item(item)
-
+        
         if not isinstance(to_craft, Craftable):
-
             return
 
         elif to_craft.craft(self.inventory):
@@ -132,16 +137,13 @@ class Player(Character):
 
         target: WorldObject = self.get_target(world)
 
-        if not to_use.use_in_inventory:
-            return
+        if to_use.name in inventory_count:
 
-        elif to_use.name in inventory_count:
-
-            to_use.effect(world, self, target)
+            to_use.inventory_effect(world, self, target)
         
         elif to_use == self.equipped:
 
-            to_use.effect(world, self, target)
+            to_use.equipped_effect(world, self, target)
 
     
     def open_inventory(self, world) -> None:
@@ -196,22 +198,25 @@ class Player(Character):
         target: WorldObject = self.get_target(world)
 
         if self.equipped is not None:
-            self.equipped.effect(world, self, target)
-        
-        elif isinstance(target, WorldObject):
-            target.interacted(self, world)
+
+            response: None | str = self.equipped.equipped_effect(world, self, target)
+            
+            if response != "No effect":
+                return
+
+        target.interacted(self, world)
         
 
     def update_sprite(self) -> None:
         
         if self.health <= 0:
-            self.sprite = colored("**", on_color="on_white", attrs=["bold"])
+            self.sprite = ter.colored("**", on_color="on_white", attrs=["bold"])
         
         elif self.facing == "west":
-            self.sprite = self.sprite = colored("\" ", on_color="on_white", attrs=["bold"])
+            self.sprite = self.sprite = ter.colored("\" ", on_color="on_white", attrs=["bold"])
         
         else:
-            self.sprite = self.sprite = colored(" \"", on_color="on_white", attrs=["bold"])
+            self.sprite = self.sprite = ter.colored(" \"", on_color="on_white", attrs=["bold"])
     
 
     def input_handler(self, world: list[list]) -> None:
@@ -247,7 +252,6 @@ class Player(Character):
 
         super().update(world)
 
-        #self.update_sprite()
         self.equipped_passive_effect(world)
 
         if self.health == 0:

@@ -34,3 +34,4 @@ class Craftable():
            source.remove_item(consumed)
         
         return True
+        

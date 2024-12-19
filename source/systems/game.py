@@ -1,19 +1,18 @@
 
 from characters.player import Player
 from systems.worldobject import WorldObject
-from enviorment.fill_world import fill_world, spawn_player
+from enviorment.create_world import create_world, spawn_player
+
 from time import sleep
 from utility import clear
+
 
 
 class Game():
 
     def __init__(game) -> None:
 
-        game.world: list[list] = [[],[],[],[],[],[],[],[],[],[],
-                    [],[],[],[],[],[],[],[],[],[]]
-        
-        fill_world(game.world)
+        game.world: list[list] = create_world(20, 40)
 
         game.player: Player = spawn_player(game.world)
         

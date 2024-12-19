@@ -30,7 +30,7 @@ class Storage():
         self.slots = [Slot(placeholder) for _ in range(size)]
         self.max_stack = max_stack
         self.name = name
-    
+        self.size = size
 
     def add_item(self, new_item: Item):
     
@@ -90,6 +90,7 @@ class Storage():
         else:
             return del_item
     
+
     def count_items(self) -> dict:
 
         item_count = {}

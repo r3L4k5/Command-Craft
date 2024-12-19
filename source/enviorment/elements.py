@@ -1,19 +1,22 @@
 
+import termcolor as ter
+import random as ran
+
 from systems.worldobject import WorldObject, Material
 from characters.character import Character
-
-from termcolor import colored
-from random import choice
 
 
 class Fire(WorldObject):
     
     def __init__(self, target: WorldObject, world: list[list]) -> None:
+
+        if target.material != (Material.FLESH and Material.PLANT):
+            return
         
-        super().__init__("fire", colored("ww", color= "yellow", on_color="on_red", attrs=["bold"]), target.y, target.x, Material.MISC, False)
+        super().__init__("fire", ter.colored("ww", color= "yellow", on_color="on_red", attrs=["bold"]), target.y, target.x, Material.MISC, False)
 
         self.spread_timer: int = 25
-        self.ground = target.ground
+        self.behind = target.behind
 
         target.delete(world)
         
@@ -46,7 +49,7 @@ class Fire(WorldObject):
             return
         
         else:
-            direction: str = choice(["north", "south", "west", "east"])
+            direction: str = ran.choice(["north", "south", "west", "east"])
 
             target: WorldObject = self.get_target(world, direction)
 
@@ -71,9 +74,39 @@ class Fire(WorldObject):
         self.damage(world)
 
         
-        
-         
+class Water(WorldObject):
 
+    def __init__(self, y: int, x: int, world: list[list], core : bool= True):
+
+        super().__init__("water", ter.colored("~~", on_color="on_blue", attrs=["dark"]), y, x, Material.MISC, False)
+
+        self.size: int = ran.randint(8, 15)
+
+        if not core:
+            return
+
+        for _ in range(self.size):
+
+            direction = ran.choice(["north", "south", "east", "west"])
+
+            target: WorldObject = self.get_target(world, direction)
+
+            if target is None or target.collision == True:
+                continue
+
+            elif target.in_air:
+                target.behind = self
+
+            elif isinstance(target, Water):
+                continue
+
+            else:
+                new_water = Water(y, x, world, False)
+                new_water.behind = target.behind
+
+                world[target.y][target.x] = new_water
+
+        
         
         
 

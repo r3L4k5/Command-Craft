@@ -28,9 +28,19 @@ def row_break(index: int, row_length: int, line_breaks: int = 1):
         print(end= "\n" * line_breaks)
 
 
-#Deletes all spaces in string
-def standardize(text: str):
-    return "".join(list(filter(lambda x: x != " ", text))).lower()
+#Standardizes
+def standardize(text: str, lower: bool = True, del_space: bool = True):
+
+    if del_space:
+        text = "".join(list(filter(lambda x: x != " ", text)))
+    
+    if lower:
+
+        text.lower()
+    
+    return text
+
+
 
 
 

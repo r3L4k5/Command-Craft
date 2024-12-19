@@ -5,7 +5,7 @@ from systems.worldobject import WorldObject, Material
 from characters.character import Character
 from characters.npc import NPC
 
-from termcolor import colored
+import termcolor as ter
 from enum import Enum, auto
 
 
@@ -19,10 +19,10 @@ def resource_color(sprite: str, resource: str) -> str:
     match resource:
 
         case Resource.WOOD:
-            return colored(sprite, "red", attrs=["bold", "dark"])
+            return ter.colored(sprite, "red", attrs=["bold", "dark"])
         
         case Resource.STONE:
-            return colored(sprite, "dark_grey", attrs=["bold", "dark"])
+            return ter.colored(sprite, "dark_grey", attrs=["bold", "dark"])
         
         case _:
             raise "Resource not found"
@@ -32,7 +32,7 @@ class Tool(Item, Craftable):
     
     def __init__(self, name: str, sprite: str, resource: Resource, recipe: dict, durability: int, power: int) -> None:
         
-        super().__init__(name, resource_color(sprite, resource), False, False)
+        super().__init__(name, resource_color(sprite, resource))
 
         Craftable.__init__(self, recipe)
 
@@ -40,11 +40,15 @@ class Tool(Item, Craftable):
         self.resource = resource
         self.power = power
 
-    def effect(self, world: list[list], actor: Character, target: WorldObject): 
+    def equipped_effect(self, world: list[list], actor: Character, target: WorldObject): 
 
         actor.strength *= self.power
 
-        target.interacted(actor, world)
+        if target.material == Material.FLESH:
+            target.interacted(actor, world, False)
+
+        else:
+            target.interacted(actor, world)
 
         actor.strength /= self.power
         
@@ -67,18 +71,13 @@ class Sword(Tool):
         super().__init__("sword", "/", resource, recipe, durability, power)
 
 
-    def effect(self, world: list[list], actor: Character, target: NPC):
+    def equipped_effect(self, world: list[list], actor: Character, target: NPC):
 
         if target.material == Material.FLESH:
 
-            actor.strength *= self.power
-
-            target.interacted(actor, world, False)
-
-            actor.strength /= self.power
+            super().equipped_effect(world, actor, target)
 
             if target.health == 0:
-
                 target.drop_loot(actor)
 
 
@@ -88,11 +87,11 @@ class Axe(Tool):
         
         super().__init__("axe", "P", resource, recipe, durability, power)
     
-    def effect(self, world: list[list], actor: WorldObject, target: WorldObject):
+    def equipped_effect(self, world: list[list], actor: WorldObject, target: WorldObject):
         
         if target.material == Material.PLANT:
 
-            super().effect(world, actor, target)
+            super().equipped_effect(world, actor, target)
         
 
 class Pickaxe(Tool):
@@ -101,11 +100,11 @@ class Pickaxe(Tool):
         
         super().__init__("pickaxe", "T", resource, recipe, durability, power)
     
-    def effect(self, world: list[list], actor: WorldObject, target: WorldObject):
+    def equipped_effect(self, world: list[list], actor: WorldObject, target: WorldObject):
 
         if target.material == Material.MINERAL:
 
-            super().effect(world, actor, target)
+            super().equipped_effect(world, actor, target)
 
             
 

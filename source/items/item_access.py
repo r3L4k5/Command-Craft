@@ -11,16 +11,14 @@ from copy import deepcopy
 
 
 def get_item(item_name: str, amount: int = 1) -> object:
-    input(get_item.counter)
-    get_item.counter += 1
-    new_item: Item = deepcopy(item_access[item_name])
+
+    new_item: Item = deepcopy(item_dict[item_name])
     new_item.amount = amount
 
     return new_item
 
-get_item.counter = 0
 
-item_access: dict[str:Item] = {
+item_dict: dict[str:Item] = {
 
     #Resources
     "wood": res.Wood(),
@@ -40,9 +38,11 @@ item_access: dict[str:Item] = {
 
     #Consumables
     "meat": con.Meat(),
+    "fruit": con.Fruit(),
 
-    #Supply
+    #Supplies
     "torch": sup.Torch(),
     "shoes": sup.Shoes(),
+    "bucket": sup.Bucket(),
 }
  

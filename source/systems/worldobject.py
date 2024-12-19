@@ -22,23 +22,23 @@ class WorldObject():
         self.y = y
         self.x = x
 
-        self.ground = None
-
+        self.behind = None
+        self.in_air = False
 
     def __str__(self) -> str:
-        return self.sprite
-    
+        return self.sprite 
 
     def delete(self, world: list[list]) -> None:
 
-        world[self.y][self.x] = self.ground
+        world[self.y][self.x] = self.behind
         del self
-
 
     def update(self, world: list[list]):
 
-        if isinstance(self.ground, WorldObject):
-            self.ground.update(world)
+        if isinstance(self.behind, WorldObject):
+
+            #print(self.name, self.behind, world[self.y + 1][self.x].behind, self.y, self.x)
+            self.behind.update(world)
             
 
     #Show name for presentation, such as dialogues
@@ -67,7 +67,7 @@ class WorldObject():
         return step
     
 
-    def get_target(self, world: list[list], direction: str| None = None) -> object:
+    def get_target(self, world: list[list], direction: str) -> object:
 
         step: dict = self.direction_calc(direction)
 
