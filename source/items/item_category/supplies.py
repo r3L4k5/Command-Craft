@@ -69,13 +69,15 @@ class Bucket(Item, Craftable):
 
     def equipped_effect(self, world: list[list], actor: Character, target: WorldObject):
 
-        if self.content is None:
+        #(target.behind is not None) Prevent picking up the ground, i.e grass
+        if self.content is None and target.behind is not None:
 
             self.content = target
-            world[target.y][target.x] = target.behind 
+            world[target.y][target.x] = target.behind
 
-            self.name = f"bucket ({self.content.name.capitalize()})"
+            self.name = f"bucket ({self.content})"
 
+        
         else:
             self.content.y = target.y
             self.content.x = target.x

@@ -102,7 +102,7 @@ class Water(WorldObject):
 
             else:
                 new_water = Water(y, x, world, False)
-                new_water.behind = target.behind
+                new_water.behind = target
 
                 world[target.y][target.x] = new_water
 
